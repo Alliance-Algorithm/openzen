@@ -174,7 +174,7 @@ typedef struct ZenImuData
     double timestamp;
 
     /// Calibrated accelerometer sensor data.
-    /// Unit: m/s^2
+    /// Unit: g
     float a[3];
 
     /// Calibrated gyroscope sensor data.
@@ -186,7 +186,7 @@ typedef struct ZenImuData
     float b[3];
 
     /// Raw accelerometer sensor data.
-    /// Unit: m/s^2
+    /// Unit: g
     float aRaw[3];
 
     /// Raw gyroscope sensor data.
@@ -225,7 +225,7 @@ typedef struct ZenImuData
     float pressure;
 
     /// Linear acceleration x, y and z.
-    /// Unit: m/s^2
+    /// Unit: g
     float linAcc[3];
 
     /// Gyroscope temperature.
