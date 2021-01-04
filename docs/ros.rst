@@ -17,7 +17,7 @@ The OpenZen ROS driver is part of the official ROS distribution and you can conv
 manager of your Linux distribution. Please check this website to see if the OpenZen ROS driver is available
 for the ROS distribution you use:
 
-https://index.ros.org/p/openzen_sensor/bitbucket-lpresearch-openzenros/
+https://index.ros.org/p/openzen_sensor/bitbucket-lpresearch-openzenros/#melodic
 
 For example, on Ubuntu 18.04 and with ROS distribution Melodic Morenia, the OpenZen ROS driver
 can be installed with this command:
