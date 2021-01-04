@@ -151,54 +151,57 @@ PYBIND11_MODULE(openzen, m) {
     py::class_<ZenImuData>(m,"ZenImuData")
         .def_property_readonly("a", [](const ZenImuData & data) {
             return OpenZenPythonHelper::toStlArray<float, 3>(data.a);
-        }, "Calibrated accelerometer sensor data")
+        }, "Calibrated accelerometer sensor data, Unit: g")
         .def_property_readonly("g", [](const ZenImuData & data) {
             return OpenZenPythonHelper::toStlArray<float, 3>(data.g);
-        }, "Calibrated gyroscope sensor data")
+        }, "Calibrated gyroscope sensor data, Unit: degree/s")
         .def_property_readonly("b", [](const ZenImuData & data) {
             return OpenZenPythonHelper::toStlArray<float, 3>(data.b);
-        }, "Calibrated magnetometer sensor data")
+        }, "Calibrated magnetometer sensor data, Unit: micro Tesla")
         .def_property_readonly("a_raw", [](const ZenImuData & data) {
             return OpenZenPythonHelper::toStlArray<float, 3>(data.aRaw);
-        }, "Raw accelerometer sensor data")
+        }, "Raw accelerometer sensor data, Unit: g")
         .def_property_readonly("g_raw", [](const ZenImuData & data) {
             return OpenZenPythonHelper::toStlArray<float, 3>(data.gRaw);
-        }, "Raw gyroscope sensor data")
+        }, "Raw gyroscope sensor data, Unit: degree/s")
         .def_property_readonly("b_raw", [](const ZenImuData & data) {
             return OpenZenPythonHelper::toStlArray<float, 3>(data.bRaw);
-        }, "Raw magnetometer sensor data")
+        }, "Raw magnetometer sensor data, Unit: micro Tesla")
         .def_property_readonly("w", [](const ZenImuData & data) {
             return OpenZenPythonHelper::toStlArray<float, 3>(data.w);
-        }, "Angular velocity data")
+        }, "Angular velocity data. This angular velocity takes into account if an orientation offset "
+           "has been set while the g and gRaw values in this struct "
+           "do not, Unit: degree/s")
         .def_property_readonly("r", [](const ZenImuData & data) {
             return OpenZenPythonHelper::toStlArray<float, 3>(data.r);
-        }, "Euler angle data")
+        }, "Euler angle data, Unit: degree/s")
         .def_property_readonly("q", [](const ZenImuData & data) {
             return OpenZenPythonHelper::toStlArray<float, 4>(data.q);
-        }, "Quaternion orientation data. The component order is w, x, y, z")
+        }, "Quaternion orientation data. The component order is w, x, y, z "
+            "Unit: no unit")
         .def_property_readonly("rotation_m", [](const ZenImuData & data) {
             return OpenZenPythonHelper::toStlArray<float, 9>(data.rotationM);
-        }, "Orientation data as rotation matrix without offset")
+        }, "Orientation data as rotation matrix without offset, Unit: no unit")
         .def_property_readonly("rot_offset_m", [](const ZenImuData & data) {
             return OpenZenPythonHelper::toStlArray<float, 9>(data.rotOffsetM);
-        }, "Orientation data as rotation matrix after zeroing")
+        }, "Orientation data as rotation matrix after zeroing, Unit: no unit")
         .def_readonly("pressure", &ZenImuData::pressure,
-            "Barometric pressure")
+            "Barometric pressure, Unit: mPascal")
         .def_readonly("frame_count", &ZenImuData::frameCount,
             "Index of the data frame")
         .def_property_readonly("lin_acc", [](const ZenImuData & data) {
             return OpenZenPythonHelper::toStlArray<float, 3>(data.linAcc);
-        }, "Linear acceleration x, y and z")
+        }, "Linear acceleration x, y and z, Unit: g")
         .def_readonly("g_temp", &ZenImuData::gTemp,
-            "Gyroscope temperature")
+            "Gyroscope temperature, Unit: Degree Celcius")
         .def_readonly("altitude", &ZenImuData::altitude,
-            "Altitude")
+            "Altitude, Unit: meter")
         .def_readonly("temperature", &ZenImuData::temperature,
-            "Temperature")
+            "Temperature, Unit: Degree Celcius ")
         .def_readonly("timestamp", &ZenImuData::timestamp,
-            "Sampling time of the data in seconds")
+            "Sampling time of the data in seconds, Unit: second")
         .def_readonly("heave_motion", &ZenImuData::heaveMotion,
-            "heave motion (not supported by all sensor firmware versions)");
+            "heave motion (not supported by all sensor firmware versions), Unit: meter");
 
     py::enum_<ZenGnssFixType>(m, "ZenGnssFixType")
         .value("NoFix", ZenGnssFixType_NoFix)
@@ -214,35 +217,78 @@ PYBIND11_MODULE(openzen, m) {
         .value("FixedAmbiguities", ZenGnssFixCarrierPhaseSolution_FixedAmbiguities);
 
     py::class_<ZenGnssData>(m,"ZenGnssData")
-        .def_readonly("frameCount", &ZenGnssData::frameCount)
-        .def_readonly("timestamp", &ZenGnssData::timestamp)
-        .def_readonly("latitude", &ZenGnssData::latitude)
-        .def_readonly("horizontal_accuracy", &ZenGnssData::horizontalAccuracy)
-        .def_readonly("longitude", &ZenGnssData::longitude)
-        .def_readonly("vertical_accuracy", &ZenGnssData::verticalAccuracy)
-        .def_readonly("height", &ZenGnssData::height)
-        .def_readonly("heading_of_motion", &ZenGnssData::headingOfMotion)
-        .def_readonly("heading_of_vehicle", &ZenGnssData::headingOfVehicle)
-        .def_readonly("heading_accuracy", &ZenGnssData::headingAccuracy)
-        .def_readonly("velocity", &ZenGnssData::velocity)
-        .def_readonly("velocity_accuracy", &ZenGnssData::velocityAccuracy)
-        .def_readonly("fix_type", &ZenGnssData::fixType)
-        .def_readonly("carrier_phase_solution", &ZenGnssData::carrierPhaseSolution)
-        .def_readonly("number_satellites_used", &ZenGnssData::numberSatellitesUsed)
-        .def_readonly("year", &ZenGnssData::year)
-        .def_readonly("month", &ZenGnssData::month)
-        .def_readonly("day", &ZenGnssData::day)
-        .def_readonly("hour", &ZenGnssData::hour)
-        .def_readonly("minute", &ZenGnssData::minute)
-        .def_readonly("second", &ZenGnssData::second)
-        .def_readonly("nano_second_correction", &ZenGnssData::nanoSecondCorrection);
+        .def_readonly("frameCount", &ZenGnssData::frameCount,
+            "Index of the data frame")
+        .def_readonly("timestamp", &ZenGnssData::timestamp,
+            "Sampling time of the data in seconds")
+        .def_readonly("latitude", &ZenGnssData::latitude,
+            "Latitude measurement provided by the GNSS "
+            "or the IMU/GNSS sensor fusion")
+        .def_readonly("horizontal_accuracy", &ZenGnssData::horizontalAccuracy,
+            "Accuracy of the horizontal measurement in m")
+        .def_readonly("longitude", &ZenGnssData::longitude,
+            "Longitude measurement provided by the GNSS "
+            "or the IMU/GNSS sensor fusion")
+        .def_readonly("vertical_accuracy", &ZenGnssData::verticalAccuracy,
+            "Accuracy of the vertical position measurement in m")
+        .def_readonly("height", &ZenGnssData::height,
+            "height above WGS84 ellipsoid in m")
+        .def_readonly("heading_of_motion", &ZenGnssData::headingOfMotion,
+            "Heading of sensor motion in degrees in clockwise counting "
+            "and 0 degree being north, only usable for Dead-reckoning GPS")
+        .def_readonly("heading_of_vehicle", &ZenGnssData::headingOfVehicle,
+            "Heading of Vehicle in degrees in clockwise counting "
+            "and 0 degree being north, only usable for Dead-reckoning GPS."
+            "This heading is not changing if the vehicle drives backwards for "
+            "example as it is aligned with the forward direction of the vehicle")
+        .def_readonly("heading_accuracy", &ZenGnssData::headingAccuracy,
+            "Heading Accuracy in degrees for both headingOfVehicle and headingOfMotion")
+        .def_readonly("velocity", &ZenGnssData::velocity,
+            "velocity over ground in m/s")
+        .def_readonly("velocity_accuracy", &ZenGnssData::velocityAccuracy,
+            "velocity accuracy over ground in m/s")
+        .def_readonly("fix_type", &ZenGnssData::fixType,
+            "type of the GNSS fix and dead-reckoning mode")
+        .def_readonly("carrier_phase_solution", &ZenGnssData::carrierPhaseSolution,
+            "Additional RTK carrier phase correction applied ",
+            "to improve the position solution")
+        .def_readonly("number_satellites_used", &ZenGnssData::numberSatellitesUsed,
+            "the number of satellites that have been used to "
+            "compute the position")
+        .def_readonly("year", &ZenGnssData::year,
+            "Year in UTC")
+        .def_readonly("month", &ZenGnssData::month,
+            "Month in UTC")
+        .def_readonly("day", &ZenGnssData::day,
+            "Day in UTC")
+        .def_readonly("hour", &ZenGnssData::hour,
+            "Hour in UTC")
+        .def_readonly("minute", &ZenGnssData::minute,
+            "Minute in UTC")
+        .def_readonly("second", &ZenGnssData::second,
+            "Second in UTC, exact time rounded to the nearest second. See nano_second_correction too.")
+        .def_readonly("nano_second_correction", &ZenGnssData::nanoSecondCorrection,
+            "All the date and time values above are rounded "
+            "so they can be represented as integeres. This "
+            "is the time in nanoseconds that the above date & time values need "
+            "to be shifted to arrive at the exact time measured by the GNSS receiver.");
 
     py::class_<ZenSensorDesc>(m,"ZenSensorDesc")
-        .def_readonly("name", &ZenSensorDesc::name)
-        .def_readonly("serial_number", &ZenSensorDesc::serialNumber)
-        .def_readonly("io_type", &ZenSensorDesc::ioType)
-        .def_readonly("identifier", &ZenSensorDesc::identifier)
-        .def_readonly("baud_rate", &ZenSensorDesc::baudRate);
+        .def_readonly("name", &ZenSensorDesc::name,
+            "User-readable name of the sensor device")
+        .def_readonly("serial_number", &ZenSensorDesc::serialNumber,
+            "Hardware serial number of the sensor. If the IO subsystem "
+            "cannot read of the serial number, this can be another form "
+            "of identification number.")
+        .def_readonly("io_type", &ZenSensorDesc::ioType,
+            "The IO Subsystem name this sensor is connected by.")
+        .def_readonly("identifier", &ZenSensorDesc::identifier,
+            "This identifier holds the actual hardware address of the sensor "
+            "and can be used by OpenZen to connect.")
+        .def_readonly("baud_rate", &ZenSensorDesc::baudRate,
+            "baud rate to use with the device. A baud rate of 0 indicates "
+            "that OpenZen should use the default baudrate or negotiagte a "
+            "suitable baud rate with the device.");
 
     py::class_<ZenEventData_SensorDisconnected>(m,"SensorDisconnected")
         .def_readonly("error", &ZenEventData_SensorDisconnected::error);
