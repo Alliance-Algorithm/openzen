@@ -497,6 +497,16 @@ else()
     # hide all non-exported symbols in the build
     set_target_properties(OpenZen PROPERTIES CXX_VISIBILITY_PRESET hidden)
     set_target_properties(OpenZen PROPERTIES VISIBILITY_INLINES_HIDDEN ON)
+
+    # ensure the symbols of static libraries are not visible in the final
+    # shared library. CMake does not take of this this !
+    # note: not needed for interface-only libraries
+    set_target_properties(spdlog PROPERTIES CXX_VISIBILITY_PRESET hidden)
+    set_target_properties(spdlog PROPERTIES VISIBILITY_INLINES_HIDDEN ON)
+
+    # this is not done for libzmq now, because it uses an old CMake policy
+    # which cannot be changed for subdirectories, so ZMQ symbols will be
+    # public (CMP0063)
 endif()
 
 target_compile_definitions(OpenZen
