@@ -97,7 +97,16 @@ namespace zen
             serialNumberConnectTo = std::string(desc.identifier);
         }
 
-        const auto ttyDevices = LinuxDeviceQuery::getDeviceFileForSiLabsSerial(serialNumberConnectTo);
+        const auto ttyDevices = [serialNumberConnectTo]() -> std::vector<std::string> {
+            const std::string strDeviceFile = "devicefile:";
+            if (serialNumberConnectTo.rfind(strDeviceFile, 0) == 0) {
+                const auto stDeviceFile = serialNumberConnectTo.substr(strDeviceFile.size());
+                spdlog::info("Connecting directly to devicefile {0}", stDeviceFile);
+                return {stDeviceFile};
+            } else {
+                return LinuxDeviceQuery::getDeviceFileForSiLabsSerial(serialNumberConnectTo);
+            }
+        }();
 
         if (ttyDevices.size() == 0) {
             spdlog::error("Cannot find USB sensor with serial number {0}", serialNumberConnectTo);

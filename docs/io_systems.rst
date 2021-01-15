@@ -115,11 +115,19 @@ Supported Platforms         Linux
 Supports auto-discovery     yes
 =======================     ===================
 
-Example to obtain a bluetooth sensor which has the name lpmscu2000573
+Example to obtain an USB sensor which has the name lpmscu2000573
 
 .. code-block:: cpp
 
     auto sensorPair = client.obtainSensorByName("LinuxDevice", "lpmscu2000573");
+
+Serial devices of sensors (for example /dev/ttyS0) can also be directly
+connected. This will not use the sensor name to lookup the device file
+but connect directly to this file.
+
+.. code-block:: cpp
+
+    auto sensorPair = client.obtainSensorByName("LinuxDevice", "devicefile:/dev/ttyS0");
 
 Network Streaming with ZeroMQ
 =============================

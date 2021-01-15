@@ -15,6 +15,15 @@
 
 namespace zen
 {
+    /**
+     * Connects to a device device by using the serial name of the sensor.
+     * This sensor name is looked up in the SiLabs USB sysfs and find the correct
+     * serial device.
+     * The serial device can also be connected directly by using this format
+     * as serialnumber:
+     *
+     * devicefile:/dev/ttyS0
+     */
     class LinuxDeviceSystem final : public IIoSystem
     {
     public:
