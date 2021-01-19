@@ -630,6 +630,7 @@ if (ZEN_TESTS)
     src/test/ModbusTest.cpp
     src/test/communication/ConnectionNegotiatorTest.cpp
     src/test/components/GnssComponentTest.cpp
+    src/test/components/ImuIg1ComponentTest.cpp
     src/test/streaming/SerializationTest.cpp
     src/test/OpenZenTests.cpp)
 

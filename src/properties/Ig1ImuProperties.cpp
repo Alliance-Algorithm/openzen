@@ -264,7 +264,9 @@ template <> struct OutputDataFlag<ZenImuProperty_OutputLowPrecision>
             return getInt32AsBool(property);
         else if (property == ZenImuProperty_DegRadOutput)
             // is cached
-            return m_cache.degGradOutput;
+            return m_cache.radOutput;
+        else if (property == ZenImuProperty_OutputLowPrecision)
+            return m_cache.lowPrecisionMode;
         else if (property == ZenImuProperty_OutputLinearAcc)
             return getOutputDataFlag<ZenImuProperty_OutputLinearAcc>(m_cache.outputDataBitset);
         else if (property == ZenImuProperty_OutputAltitude)
@@ -419,7 +421,7 @@ template <> struct OutputDataFlag<ZenImuProperty_OutputLowPrecision>
         } else if (property == ZenImuProperty_DegRadOutput) {
             auto cmdError = setInt32AsBool(ZenImuProperty_DegRadOutput, value);
             if (cmdError == ZenError_None) {
-                m_cache.degGradOutput = value;
+                m_cache.radOutput = value;
             }
             return cmdError;
         } else if (property == ZenImuProperty_GyrUseAutoCalibration)

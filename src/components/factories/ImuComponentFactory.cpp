@@ -92,7 +92,7 @@ namespace zen
                 static_cast<ZenProperty_t>(EDevicePropertyInternal::ConfigGetDegGradOutput), {}))
             {
                 spdlog::debug("Ig1 sensor outputs degrees: {}", degreeOutputConfigured.value() == 0 );
-                properties->setDegGradOutput(degreeOutputConfigured.value() > 0);
+                properties->setRadOutput(degreeOutputConfigured.value() > 0);
             }
             else
             {

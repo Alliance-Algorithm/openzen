@@ -74,8 +74,11 @@ namespace zen
         /** Manually initializes the output-data bitset */
         void setOutputDataBitset(uint32_t bitset) noexcept { m_cache.outputDataBitset = bitset; }
 
-        /** Manually initializes the output unit **/
-        void setDegGradOutput(uint32_t degGradOutput) noexcept { m_cache.degGradOutput = degGradOutput; }
+        /** If true, the sensor will output values in low-precision mode (16 bit for floats) */
+        void setLowPrecisionMode(bool modeOne) noexcept { m_cache.lowPrecisionMode = modeOne; }
+
+        /** Manually initializes the output unit, if true sensor will ouput angles in rad */
+        void setRadOutput(bool radOutput) noexcept { m_cache.radOutput = radOutput; }
 
     private:
 
@@ -87,7 +90,9 @@ namespace zen
 
         struct IMUState
         {
-            std::atomic_bool degGradOutput = false;
+            // if true, the angle outputs will be in rad
+            std::atomic_bool radOutput = false;
+            std::atomic_bool lowPrecisionMode = false;
             std::atomic_uint32_t outputDataBitset = 0;
         } m_cache;
 
