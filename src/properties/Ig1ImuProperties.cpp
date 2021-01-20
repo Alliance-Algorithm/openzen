@@ -408,6 +408,15 @@ namespace zen
                 notifyPropertyChange(property, value);
             }
             return ZenError_None;
+        } else if (property == ZenImuProperty_OutputLowPrecision) {
+            // setting 0 = 16-bit mode
+            // setting 1 = 32-bit mode
+            // that's why we need to negate here
+            auto cmdError = setInt32AsBool(ZenImuProperty_OutputLowPrecision, !value);
+            if (cmdError == ZenError_None) {
+                m_cache.lowPrecisionMode = value;
+            }
+            return cmdError;
         } else if (property == ZenImuProperty_DegRadOutput) {
             auto cmdError = setInt32AsBool(ZenImuProperty_DegRadOutput, value);
             if (cmdError == ZenError_None) {
