@@ -40,6 +40,11 @@ namespace zen
         v[2] *= r2d;
     }
 
+    inline float degToRad(float v) {
+        const auto d2r = 3.14159265359f / 180.0f;
+        return d2r * v;
+    }
+
     /**
     Set all data fields of the imu data class to zero or sensible values
     */
