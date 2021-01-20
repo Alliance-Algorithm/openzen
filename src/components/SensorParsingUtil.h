@@ -87,15 +87,14 @@ namespace zen {
 
         template<int N>
         inline nonstd::expected<bool, ZenError> readVectorNIfAvailable(ZenProperty_t checkProperty,
-            std::unique_ptr<ISensorProperties> const& properties, float denominator_16bit,
+            std::unique_ptr<ISensorProperties> const& properties, bool lowPrecision, float denominator_16bit,
             gsl::span<const std::byte>& data, float * targetArray) {
             auto enabled = properties->getBool(checkProperty);
             if (!enabled)
                 return enabled;
 
             if (*enabled) {
-                const auto lowPrec = properties->getBool(ZenImuProperty_OutputLowPrecision);
-                const size_t floatSize = *lowPrec ? sizeof(uint16_t) : sizeof(float);
+                const size_t floatSize = lowPrecision ? sizeof(uint16_t) : sizeof(float);
 
                 if (data.size() < int(N * floatSize)) {
                     spdlog::error("Cannot parse Vector{0} because data buffer too small", N);
@@ -103,25 +102,25 @@ namespace zen {
                 }
 
                 for (unsigned idx = 0; idx < N; ++idx)
-                    targetArray[idx] = *lowPrec ? parseFloat16(data, denominator_16bit) : parseFloat32(data);
+                    targetArray[idx] = lowPrecision ? parseFloat16(data, denominator_16bit) : parseFloat32(data);
             }
 
             return enabled;
         }
 
         inline nonstd::expected<bool, ZenError> readVector3IfAvailable(ZenProperty_t checkProperty,
-            std::unique_ptr<ISensorProperties> const& properties, float denominator_16bit,
+            std::unique_ptr<ISensorProperties> const& properties, bool lowPrecision, float denominator_16bit,
             gsl::span<const std::byte>& data, float * targetArray) {
 
-            return readVectorNIfAvailable<3>(checkProperty, properties, denominator_16bit,
+            return readVectorNIfAvailable<3>(checkProperty, properties, lowPrecision, denominator_16bit,
                 data, targetArray);
         }
 
         inline nonstd::expected<bool, ZenError> readVector4IfAvailable(ZenProperty_t checkProperty,
-            std::unique_ptr<ISensorProperties> const& properties, float denominator_16bit,
+            std::unique_ptr<ISensorProperties> const& properties, bool lowPrecision, float denominator_16bit,
             gsl::span<const std::byte>& data, float * targetArray) {
 
-            return readVectorNIfAvailable<4>(checkProperty, properties, denominator_16bit,
+            return readVectorNIfAvailable<4>(checkProperty, properties, lowPrecision, denominator_16bit,
                 data, targetArray);
         }
 
@@ -129,15 +128,14 @@ namespace zen {
         Templated function to read a scalar data type from a byte stream.
         */
         template <class TTypeToRead>
-        inline void parseAndStoreScalar(std::unique_ptr<ISensorProperties> const&,
-            gsl::span<const std::byte>& data, TTypeToRead *target, float denominator_16bit = 1.0f);
+        inline void parseAndStoreScalar(gsl::span<const std::byte>& data, TTypeToRead *target, bool useLowPrecision = false,
+            float denominator_16bit = 1.0f);
 
         /**
         Specialization for uint32_t
         */
         template <>
-        inline void parseAndStoreScalar(std::unique_ptr<ISensorProperties> const&,
-            gsl::span<const std::byte>& data, uint32_t *target, float) {
+        inline void parseAndStoreScalar(gsl::span<const std::byte>& data, uint32_t *target, bool, float) {
             (*target) = *reinterpret_cast<const uint32_t*>(data.data());
             safe_subspan(data, sizeof(uint32_t));
         }
@@ -146,8 +144,7 @@ namespace zen {
         Specialization for uint16_t
         */
         template <>
-        inline void parseAndStoreScalar(std::unique_ptr<ISensorProperties> const&,
-            gsl::span<const std::byte>& data, uint16_t *target, float) {
+        inline void parseAndStoreScalar(gsl::span<const std::byte>& data, uint16_t *target, bool, float) {
             (*target) = *reinterpret_cast<const uint16_t*>(data.data());
             safe_subspan(data, sizeof(uint16_t));
         }
@@ -156,8 +153,7 @@ namespace zen {
         Specialization for uint8_t
         */
         template <>
-        inline void parseAndStoreScalar(std::unique_ptr<ISensorProperties> const&,
-            gsl::span<const std::byte>& data, uint8_t *target, float) {
+        inline void parseAndStoreScalar(gsl::span<const std::byte>& data, uint8_t *target, bool, float) {
             (*target) = *reinterpret_cast<const uint8_t*>(data.data());
             safe_subspan(data, sizeof(uint8_t));
         }
@@ -166,8 +162,7 @@ namespace zen {
         Specialization for int32_t
         */
         template <>
-        inline void parseAndStoreScalar(std::unique_ptr<ISensorProperties> const&,
-            gsl::span<const std::byte>& data, int32_t *target, float) {
+        inline void parseAndStoreScalar(gsl::span<const std::byte>& data, int32_t *target, bool, float) {
             (*target) = *reinterpret_cast<const int32_t*>(data.data());
             safe_subspan(data, sizeof(int32_t));
         }
@@ -176,13 +171,11 @@ namespace zen {
         Specialization for float
         */
         template <>
-        inline void parseAndStoreScalar(std::unique_ptr<ISensorProperties> const& properties,
-            gsl::span<const std::byte>& data, float *target, float denominator_16bit) {
+        inline void parseAndStoreScalar(
+            gsl::span<const std::byte>& data, float *target, bool useLowPrecision, float denominator_16bit) {
+            const size_t floatSize = useLowPrecision ? sizeof(uint16_t) : sizeof(float);
 
-            const auto lowPrec = properties->getBool(ZenImuProperty_OutputLowPrecision);
-            const size_t floatSize = *lowPrec ? sizeof(uint16_t) : sizeof(float);
-
-            (*target) = *lowPrec ? parseFloat16(data, denominator_16bit) : parseFloat32(data);
+            (*target) = useLowPrecision ? parseFloat16(data, denominator_16bit) : parseFloat32(data);
             safe_subspan(data, floatSize);
         }
 
@@ -193,18 +186,17 @@ namespace zen {
         template <class TTypeToRead>
         inline nonstd::expected<bool, ZenError> readScalarIfAvailable(ZenProperty_t checkProperty,
             std::unique_ptr<ISensorProperties> const& properties,
-            gsl::span<const std::byte>& data, TTypeToRead * target, float denominator_16bit = 1.0f) {
+            gsl::span<const std::byte>& data, TTypeToRead * target, bool lowPrecision = false, float denominator_16bit = 1.0f) {
             auto enabled = properties->getBool(checkProperty);
             if (!enabled)
                 return enabled;
 
             if (*enabled) {
-                const auto lowPrec = properties->getBool(ZenImuProperty_OutputLowPrecision);
                 int checkSize = int(sizeof(TTypeToRead));
 
                 // in case of float and low-precision mode we only need to check for 16-bits
                 if (std::is_same<TTypeToRead, float>::value) {
-                    checkSize = lowPrec ? int(sizeof(int16_t)) : int(sizeof(float));
+                    checkSize = lowPrecision ? int(sizeof(int16_t)) : int(sizeof(float));
                 }
 
                 if (data.size() < checkSize) {
@@ -212,7 +204,7 @@ namespace zen {
                     return ZenError_Io_MsgCorrupt;
                 }
 
-                parseAndStoreScalar<TTypeToRead>(properties, data, target, denominator_16bit);
+                parseAndStoreScalar<TTypeToRead>(data, target, lowPrecision, denominator_16bit);
                 return true;
             }
 

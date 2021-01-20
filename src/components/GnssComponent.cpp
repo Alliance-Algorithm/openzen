@@ -135,7 +135,7 @@ namespace zen
             return nonstd::make_unexpected(ZenError_Io_MsgCorrupt);
         }
 
-        sensor_parsing_util::parseAndStoreScalar(m_properties, data, &gnssData.frameCount);
+        sensor_parsing_util::parseAndStoreScalar(data, &gnssData.frameCount);
         gnssData.timestamp = double(gnssData.frameCount) * 0.002;
 
         // most of the read out data are not transferred to the OpenZen data structure. Still we need to parse

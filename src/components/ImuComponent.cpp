@@ -194,7 +194,7 @@ namespace zen
         if (std::distance(begin, data.begin() + sizeof(uint32_t)) > size)
             return nonstd::make_unexpected(ZenError_Io_MsgCorrupt);;
 
-        sensor_parsing_util::parseAndStoreScalar(m_properties, data, &imuData.frameCount);
+        sensor_parsing_util::parseAndStoreScalar(data, &imuData.frameCount);
 
         float timestampMultiplier = 0.0f;
         if (const auto samplingRate = m_properties->getInt32(ZenImuProperty_SamplingRate)){

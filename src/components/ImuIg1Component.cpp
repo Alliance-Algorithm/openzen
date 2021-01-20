@@ -93,30 +93,31 @@ namespace zen
             return nonstd::make_unexpected(ZenError_Io_MsgCorrupt);
 
         const auto isRadOutput = *m_properties->getBool(ZenImuProperty_DegRadOutput);
+        const auto isLowPrecisionOutput = *m_properties->getBool(ZenImuProperty_OutputLowPrecision);
 
         // Timestamp needs to be multiplied by 0.002 to convert to seconds
         // according to the IG1 User Manual
         // also output the raw framecount as provided by the sensor
         // This will always be 32-bit, independent if low precission mode is selected
-        sensor_parsing_util::parseAndStoreScalar(m_properties, data, &imuData.frameCount);
+        sensor_parsing_util::parseAndStoreScalar(data, &imuData.frameCount);
         imuData.timestamp = imuData.frameCount * 0.002;
 
         // to store sensor values which are not forwaded to the ImuData class for Ig1
         float unusedValue[3];
         if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputRawAcc,
-            m_properties, 1000.0f, data, &imuData.aRaw[0])) {}
+            m_properties, isLowPrecisionOutput, 1000.0f, data, &imuData.aRaw[0])) {}
         else {
             return nonstd::make_unexpected(enabled.error());
         }
 
         if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputAccCalibrated,
-            m_properties, 1000.0f, data, &imuData.a[0])) {}
+            m_properties, isLowPrecisionOutput, 1000.0f, data, &imuData.a[0])) {}
         else {
             return nonstd::make_unexpected(enabled.error());
         }
 
         if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputRawGyr0,
-            m_properties, isRadOutput ? 1000.0f: 10.0f, data, &imuData.gRaw[0])) {
+            m_properties, isLowPrecisionOutput, isRadOutput ? 1000.0f: 10.0f, data, &imuData.gRaw[0])) {
             sensor_parsing_util::radToDegreesIfNeededVector3(m_properties, &imuData.gRaw[0]);
         } else {
             return nonstd::make_unexpected(enabled.error());
@@ -128,7 +129,7 @@ namespace zen
             secondGyroTargetRaw = &imuData.gRaw[0];
         }
         if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputRawGyr1,
-            m_properties, isRadOutput ? 100.0f: 10.0f, data, secondGyroTargetRaw)) {
+            m_properties, isLowPrecisionOutput, isRadOutput ? 100.0f: 10.0f, data, secondGyroTargetRaw)) {
             sensor_parsing_util::radToDegreesIfNeededVector3(m_properties, secondGyroTargetRaw);
             }
         else {
@@ -136,20 +137,20 @@ namespace zen
         }
 
         if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputGyr0BiasCalib,
-            m_properties, isRadOutput ? 1000.0f: 10.0f, data, &unusedValue[0])) {}
+            m_properties, isLowPrecisionOutput, isRadOutput ? 1000.0f: 10.0f, data, &unusedValue[0])) {}
         else {
             return nonstd::make_unexpected(enabled.error());
         }
 
         if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputGyr1BiasCalib,
-            m_properties, isRadOutput ? 100.0f: 10.0f, data, &unusedValue[0])) {}
+            m_properties, isLowPrecisionOutput, isRadOutput ? 100.0f: 10.0f, data, &unusedValue[0])) {}
         else {
             return nonstd::make_unexpected(enabled.error());
         }
 
         // alignment calibration also contains the static calibration correction
         if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputGyr0AlignCalib,
-            m_properties, isRadOutput ? 1000.0f: 10.0f, data, &imuData.g[0])) {
+            m_properties, isLowPrecisionOutput, isRadOutput ? 1000.0f: 10.0f, data, &imuData.g[0])) {
                 sensor_parsing_util::radToDegreesIfNeededVector3(m_properties, &imuData.g[0]);
             }
         else {
@@ -162,7 +163,7 @@ namespace zen
             secondGyroTarget = &imuData.g[0];
         }
         if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputGyr1AlignCalib,
-            m_properties, isRadOutput ? 100.0f: 10.0f, data, secondGyroTarget)) {
+            m_properties, isLowPrecisionOutput, isRadOutput ? 100.0f: 10.0f, data, secondGyroTarget)) {
                 sensor_parsing_util::radToDegreesIfNeededVector3(m_properties, secondGyroTarget);
             }
         else {
@@ -170,13 +171,13 @@ namespace zen
         }
 
         if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputRawMag,
-            m_properties, 100.0f, data, &imuData.bRaw[0])) {}
+            m_properties, isLowPrecisionOutput, 100.0f, data, &imuData.bRaw[0])) {}
         else {
             return nonstd::make_unexpected(enabled.error());
         }
 
         if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputMagCalib,
-            m_properties, 100.0f, data, &imuData.b[0])) {}
+            m_properties, isLowPrecisionOutput, 100.0f, data, &imuData.b[0])) {}
         else {
             return nonstd::make_unexpected(enabled.error());
         }
@@ -184,7 +185,7 @@ namespace zen
         // this is the angular velocity which takes into account when an orientation offset was
         // done
         if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputAngularVel,
-            m_properties, 100.0f, data, &imuData.w[0])) {
+            m_properties, isLowPrecisionOutput, 100.0f, data, &imuData.w[0])) {
                 sensor_parsing_util::radToDegreesIfNeededVector3(m_properties, &imuData.w[0]);
             }
         else {
@@ -192,13 +193,13 @@ namespace zen
         }
 
         if (auto enabled = sensor_parsing_util::readVector4IfAvailable(ZenImuProperty_OutputQuat,
-            m_properties, 10000.0f, data, &imuData.q[0])) {}
+            m_properties, isLowPrecisionOutput, 10000.0f, data, &imuData.q[0])) {}
         else {
             return nonstd::make_unexpected(enabled.error());
         }
 
         if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputEuler,
-            m_properties, isRadOutput ? 10000.0f: 100.0f, data, &imuData.r[0])) {
+            m_properties, isLowPrecisionOutput, isRadOutput ? 10000.0f: 100.0f, data, &imuData.r[0])) {
                 sensor_parsing_util::radToDegreesIfNeededVector3(m_properties, &imuData.r[0]);
             }
         else {
@@ -206,7 +207,7 @@ namespace zen
         }
 
         if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputLinearAcc,
-            m_properties, 1000.0f, data, &imuData.linAcc[0])) {}
+            m_properties, isLowPrecisionOutput, 1000.0f, data, &imuData.linAcc[0])) {}
         else {
             return nonstd::make_unexpected(enabled.error());
         }
@@ -215,19 +216,19 @@ namespace zen
         // and are not outputted. Still we will keep this code in place because the
         // output bits and data fields are still present
         if (auto enabled = sensor_parsing_util::readScalarIfAvailable(ZenImuProperty_OutputPressure,
-            m_properties, data, &imuData.pressure, 1.0f)) {}
+            m_properties, data, &imuData.pressure, isLowPrecisionOutput)) {}
         else {
             return nonstd::make_unexpected(enabled.error());
         }
 
         if (auto enabled = sensor_parsing_util::readScalarIfAvailable(ZenImuProperty_OutputAltitude,
-            m_properties, data, &imuData.altitude, 1.0f)) {}
+            m_properties, data, &imuData.altitude, isLowPrecisionOutput)) {}
         else {
             return nonstd::make_unexpected(enabled.error());
         }
 
         if (auto enabled = sensor_parsing_util::readScalarIfAvailable(ZenImuProperty_OutputTemperature,
-            m_properties, data, &imuData.temperature, 100.0f)) {}
+            m_properties, data, &imuData.temperature, isLowPrecisionOutput, 100.0f)) {}
         else {
             return nonstd::make_unexpected(enabled.error());
         }
