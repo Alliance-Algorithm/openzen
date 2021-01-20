@@ -29,6 +29,8 @@ enum class EDevicePropertyInternal : DeviceProperty_t
     ConfigGpsOutputDataBitset = 5,
     // loading configuration of the output units for Ig1
     ConfigGetDegGradOutput = 6,
+    // loading configuration of the ouput precision
+    ConfigGetLpBusDataPrecision = 7,
     Max
 };
 

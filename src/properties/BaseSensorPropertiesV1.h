@@ -33,6 +33,8 @@ namespace zen
                     return EDevicePropertyInternal::ConfigGpsOutputDataBitset;
                 else if (function == static_cast<uint16_t>( EDevicePropertyV1::GetDegGradOutput))
                     return EDevicePropertyInternal::ConfigGetDegGradOutput;
+                else if (function == static_cast<uint16_t>( EDevicePropertyV1::GetLpBusDataPrecision))
+                    return EDevicePropertyInternal::ConfigGetLpBusDataPrecision;
 
                 return {};
             }

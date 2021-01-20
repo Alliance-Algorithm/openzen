@@ -99,6 +99,20 @@ namespace zen
                 return nonstd::make_unexpected(ZenSensorInitError_RetrieveFailed);
             }
 
+            // check if we are in 16-bit low precision data mode
+            if (auto lowPrecisionConfigured =
+                communicator.sendAndWaitForResult<uint32_t>(0u, static_cast<DeviceProperty_t>(EDevicePropertyV1::GetLpBusDataPrecision),
+                static_cast<ZenProperty_t>(EDevicePropertyInternal::ConfigGetLpBusDataPrecision), {}))
+            {
+                spdlog::debug("Ig1 sensor outputs in low precision mode: {}", lowPrecisionConfigured.value() == 0 );
+                // if the value is 0, the sensor is in low-precision mode
+                properties->setLowPrecisionMode(lowPrecisionConfigured.value() == 0);
+            }
+            else
+            {
+                return nonstd::make_unexpected(ZenSensorInitError_RetrieveFailed);
+            }
+
             bool useSecondGyroAsPrimary = specialOptions & SpecialOptions_SecondGyroIsPrimary;
 
             return std::make_unique<ImuIg1Component>(std::move(properties), communicator, version, useSecondGyroAsPrimary);

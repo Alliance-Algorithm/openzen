@@ -422,6 +422,12 @@ namespace zen
                     return m_communicator->publishResult(static_cast<ZenProperty_t>(EDevicePropertyInternal::ConfigGetDegGradOutput),
                         ZenError_None, *reinterpret_cast<const uint32_t*>(data.data()));
 
+                case EDevicePropertyInternal::ConfigGetLpBusDataPrecision:
+                    if (data.size() != sizeof(uint32_t))
+                        return ZenError_Io_MsgCorrupt;
+                    return m_communicator->publishResult(static_cast<ZenProperty_t>(EDevicePropertyInternal::ConfigGetLpBusDataPrecision),
+                        ZenError_None, *reinterpret_cast<const uint32_t*>(data.data()));
+
                 case EDevicePropertyInternal::ConfigGpsOutputDataBitset:
                     if (data.size() != sizeof(uint32_t) * 2)
                         return ZenError_Io_MsgCorrupt;

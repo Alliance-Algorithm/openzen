@@ -75,6 +75,10 @@ namespace zen
             case ZenImuProperty_DegRadOutput:
                 return get_set(EDevicePropertyV1::GetDegGradOutput, EDevicePropertyV1::SetDegGradOutput);
 
+            // in Ig1, this is not part of the output flags but its own command
+            case ZenImuProperty_OutputLowPrecision:
+                return get_set(EDevicePropertyV1::GetLpBusDataPrecision, EDevicePropertyV1::SetLpBusDataPrecision);
+
             /* CAN bus properties */
             case ZenImuProperty_CanStartId:
                 return get_set(EDevicePropertyV1::GetCanStartId, EDevicePropertyV1::SetCanStartId);
