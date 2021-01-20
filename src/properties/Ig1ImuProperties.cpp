@@ -25,15 +25,6 @@ namespace zen
         struct OutputDataFlag
         {};
 
-        // change here for the new output flags of IG1
-/*
-not supported by Ig1 atm
-template <> struct OutputDataFlag<ZenImuProperty_OutputLowPrecision>
-        {
-            using index = std::integral_constant<unsigned int, 22>;
-        };
-        */
-
         template <> struct OutputDataFlag<ZenImuProperty_OutputRawAcc>
         {
             using index = std::integral_constant<unsigned int, 0>;
@@ -263,7 +254,6 @@ template <> struct OutputDataFlag<ZenImuProperty_OutputLowPrecision>
         else if (property == ZenImuProperty_GyrUseThreshold)
             return getInt32AsBool(property);
         else if (property == ZenImuProperty_DegRadOutput)
-            // is cached
             return m_cache.radOutput;
         else if (property == ZenImuProperty_OutputLowPrecision)
             return m_cache.lowPrecisionMode;
