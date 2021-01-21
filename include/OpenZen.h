@@ -68,44 +68,44 @@ inline bool operator==(const ZenComponentHandle& lhs, const ZenComponentHandle& 
     return lhs.handle == rhs.handle;
 }
 
-namespace details
-{
-    template <typename T>
-    struct PropertyType
-    {};
-
-#ifdef OPENZEN_CXX17
-    template <> struct PropertyType<std::byte>
-#else
-    template <> struct PropertyType<unsigned char>
-#endif
-    {
-        using type = std::integral_constant<ZenPropertyType, ZenPropertyType_Byte>;
-    };
-
-    template <> struct PropertyType<bool>
-    {
-        using type = std::integral_constant<ZenPropertyType, ZenPropertyType_Bool>;
-    };
-
-    template <> struct PropertyType<float>
-    {
-        using type = std::integral_constant<ZenPropertyType, ZenPropertyType_Float>;
-    };
-
-    template <> struct PropertyType<int32_t>
-    {
-        using type = std::integral_constant<ZenPropertyType, ZenPropertyType_Int32>;
-    };
-
-    template <> struct PropertyType<uint64_t>
-    {
-        using type = std::integral_constant<ZenPropertyType, ZenPropertyType_UInt64>;
-    };
-}
-
 namespace zen
 {
+    namespace details
+    {
+        template <typename T>
+        struct PropertyType
+        {};
+
+#ifdef OPENZEN_CXX17
+        template <> struct PropertyType<std::byte>
+#else
+        template <> struct PropertyType<unsigned char>
+#endif
+        {
+            using type = std::integral_constant<ZenPropertyType, ZenPropertyType_Byte>;
+        };
+
+        template <> struct PropertyType<bool>
+        {
+            using type = std::integral_constant<ZenPropertyType, ZenPropertyType_Bool>;
+        };
+
+        template <> struct PropertyType<float>
+        {
+            using type = std::integral_constant<ZenPropertyType, ZenPropertyType_Float>;
+        };
+
+        template <> struct PropertyType<int32_t>
+        {
+            using type = std::integral_constant<ZenPropertyType, ZenPropertyType_Int32>;
+        };
+
+        template <> struct PropertyType<uint64_t>
+        {
+            using type = std::integral_constant<ZenPropertyType, ZenPropertyType_UInt64>;
+        };
+    }
+
     class ZenClient;
 
     /**
