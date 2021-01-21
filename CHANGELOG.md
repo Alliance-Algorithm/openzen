@@ -2,6 +2,14 @@
 
 Changes and additions to OpenZen will be documented in this file.
 
+## master
+
+- added 16-bit data format parsing for IG1-protocol and unit tests for parsing code
+- updated cereal to prevent CMake warning
+- fixed sampling rate settings for IG1
+- improved documentations and examples
+- added configuration to hide private symbols from spdlog in the OpenZen shared file
+
 ## Version 1.2 - 2020/11/11
 
 - This release breaks the ABI compatibitly with previous OpenZen releases. If you want to use this version of
