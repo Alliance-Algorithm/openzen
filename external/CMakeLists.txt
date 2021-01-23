@@ -44,7 +44,10 @@ else()
 endif()
 
 if (ZEN_PYTHON)
-    add_subdirectory(pybind11)
+    find_package (Python3 REQUIRED COMPONENTS Development Interpreter)
+    add_library(pybind11 INTERFACE)
+    target_include_directories(pybind11 INTERFACE ./pybind11/include)
+    target_link_libraries(pybind11 INTERFACE Python3::Python)
 endif()
 
 # tells cereal to not build any tests

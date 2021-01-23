@@ -1,5 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
-project(OpenZen VERSION 1.0.0 LANGUAGES CXX;C)
+
+if (APPLE)
+# enable_language(OBJCXX) misidentifies .mm files as C++ when doing a Unity build,
+# so we have to use this if().
+project(OpenZen VERSION 1.0.0 LANGUAGES C;CXX;OBJCXX)
+else()
+project(OpenZen VERSION 1.0.0 LANGUAGES C;CXX)
+endif()
 
 option(ZEN_MSVC_RUNTIME_STATIC "Link the MSVC runtime statically, useful for library releases" OFF)
 
@@ -76,15 +83,6 @@ option(ZEN_USE_BINARY_LIBRARIES "If set to true, binaries libraries are download
 # Find includes in corresponding build include_directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-if(ZEN_PYTHON)
-    # this is only available in cmake 3.12 or newer
-    # look and build only for python3
-    find_package (Python3 REQUIRED COMPONENTS Development Interpreter)
-    # let the pybind11 cmake scripts know which Python version
-    # we intdent to use
-    set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE} CACHE STRING "")
-endif()
-
 add_subdirectory(external)
 
 # contains additional C/C++ precompiler defines
@@ -141,7 +139,7 @@ if(ZEN_PYTHON)
     list (APPEND zen_library_only_sources
         src/bindings/OpenZenPython.cpp
     )
-    list (APPEND zen_optional_libs Python3::Python pybind11)
+    list (APPEND zen_optional_libs pybind11)
     # select C++17 if we do a Python build because the C++17 interface of OpenZen.h
     # is more convenient than the C++11 version
     list (APPEND zen_optional_compile_definitions_private
