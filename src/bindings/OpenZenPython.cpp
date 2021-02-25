@@ -368,6 +368,7 @@ PYBIND11_MODULE(openzen, m) {
 
         .value("GyrAlignment", ZenImuProperty_GyrAlignment)
         .value("GyrBias", ZenImuProperty_GyrBias)
+        .value("GyrStaticBias", ZenImuProperty_GyrStaticBias)
         .value("GyrRange", ZenImuProperty_GyrRange)
         .value("GyrSupportedRanges", ZenImuProperty_GyrSupportedRanges)
         .value("GyrUseAutoCalibration", ZenImuProperty_GyrUseAutoCalibration)
