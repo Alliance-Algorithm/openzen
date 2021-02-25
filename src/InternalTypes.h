@@ -103,6 +103,11 @@ enum class EDevicePropertyV0 : DeviceProperty_t
     GetMagReference = 81,               // float[3]
     ResetOrientationOffset = 82,        // void
 
+    // not listed in LPMS documetation
+    // this is the value modified by the IMU in-situ gyro calibration
+    SetGyrStaticBias = 100,             // float[3]
+    GetGyrStaticBias = 101,             // float[3]
+
     SetBaudRate = 84,
     GetBaudRate = 85,
 

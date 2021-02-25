@@ -142,6 +142,7 @@ namespace zen
 
         case EDevicePropertyV0::GetAccBias:
         case EDevicePropertyV0::GetGyrBias:
+        case EDevicePropertyV0::GetGyrStaticBias:
         case EDevicePropertyV0::GetMagBias:
         case EDevicePropertyV0::GetMagReference:
         case EDevicePropertyV0::GetMagHardIronOffset:

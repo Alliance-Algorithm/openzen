@@ -881,6 +881,7 @@ namespace zen
         case ZenImuProperty_AccSupportedRanges:
         case ZenImuProperty_GyrAlignment:
         case ZenImuProperty_GyrBias:
+        case ZenImuProperty_GyrStaticBias:
         case ZenImuProperty_GyrSupportedRanges:
         case ZenImuProperty_MagAlignment:
         case ZenImuProperty_MagBias:
@@ -959,6 +960,7 @@ namespace zen
         case ZenImuProperty_AccBias:
         case ZenImuProperty_GyrAlignment:
         case ZenImuProperty_GyrBias:
+        case ZenImuProperty_GyrStaticBias:
         case ZenImuProperty_MagAlignment:
         case ZenImuProperty_MagBias:
         case ZenImuProperty_MagReference:

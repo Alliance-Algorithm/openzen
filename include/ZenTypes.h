@@ -533,6 +533,7 @@ typedef enum EZenImuProperty
 
     ZenImuProperty_GyrAlignment,                 // float[9]
     ZenImuProperty_GyrBias,                      // float[3]
+    ZenImuProperty_GyrStaticBias,                // float[3]
     ZenImuProperty_GyrRange,                     // int
     ZenImuProperty_GyrSupportedRanges,           // int[]
     ZenImuProperty_GyrUseAutoCalibration,        // bool
