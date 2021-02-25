@@ -351,6 +351,7 @@ namespace zen
                     return m_communicator->publishResult(function, ZenError_None, *reinterpret_cast<const uint32_t*>(data.data()));
 
                 default:
+                    spdlog::error("Unsupported function received as sensor base function: {0}", int(function));
                     return ZenError_Io_UnsupportedFunction;
                 }
             }
