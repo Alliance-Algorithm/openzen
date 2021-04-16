@@ -562,7 +562,7 @@ namespace zen
         {
             ZenComponentHandle_t* handles = nullptr;
             size_t nComponents;
-            if (auto error = ZenSensorComponents(m_clientHandle, m_sensorHandle, type.c_str(), &handles, &nComponents))
+            if (ZenSensorComponents(m_clientHandle, m_sensorHandle, type.c_str(), &handles, &nComponents) != ZenError_None)
                 return std::make_pair(false, ZenSensorComponent(m_clientHandle, m_sensorHandle, ZenComponentHandle_t{ 0 }));
 
             if (nComponents == 0)
@@ -677,6 +677,14 @@ namespace zen
          * will be empty.
          */
         std::optional<ZenEvent> pollNextEvent() noexcept
+        {
+            if (ZenEvent event; ZenPollNextEvent(m_handle, &event)) {
+                return event;
+            }
+            else {
+                return std::nullopt;
+            }
+        }
 #else
         /**
          * Poll the next event from the queue of this ZenClient. This method will
@@ -684,24 +692,16 @@ namespace zen
          * of the std::pair will be false.
          */
         std::pair<bool, ZenEvent> pollNextEvent() noexcept
-#endif
         {
             ZenEvent event;
-            if (ZenPollNextEvent(m_handle, &event))
-            {
-#ifdef OPENZEN_CXX17
-                return event;
-#else
+            if (ZenPollNextEvent(m_handle, &event)) {
                 return std::make_pair(true, std::move(event));
-#endif
             }
-
-#ifdef OPENZEN_CXX17
-            return std::nullopt;
-#else
-            return std::make_pair(false, std::move(event));
-#endif
+            else {
+                return std::make_pair(false, std::move(event));
+            }
         }
+#endif
 
 #ifdef OPENZEN_CXX17
         /**
@@ -713,6 +713,14 @@ namespace zen
          * will be empty.
          */
         std::optional<ZenEvent> waitForNextEvent() noexcept
+        {
+            if (ZenEvent event; ZenWaitForNextEvent(m_handle, &event)) {
+                return event;
+            }
+            else {
+                return std::nullopt;
+            }
+        }
 #else
         /**
          * Wait for the next event from the queue of this ZenClient. This method will
@@ -723,25 +731,17 @@ namespace zen
          * of the std::pair will be false.
          */
         std::pair<bool, ZenEvent> waitForNextEvent() noexcept
-#endif
         {
             ZenEvent event;
-            if (ZenWaitForNextEvent(m_handle, &event))
-            {
-#ifdef OPENZEN_CXX17
-                return event;
-#else
+            if (ZenWaitForNextEvent(m_handle, &event)) {
                 return std::make_pair(true, std::move(event));
-#endif
             }
-
-#ifdef OPENZEN_CXX17
-            return std::nullopt;
-#else
-            return std::make_pair(false, std::move(event));
-#endif
+            else {
+                return std::make_pair(false, std::move(event));
+            }
         }
     };
+#endif
 
     /**
     Use this function to create a ZenClient object. This instance of
