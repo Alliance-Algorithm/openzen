@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
     ZenSetLogLevel(ZenLogLevel_Info);
 
     // create OpenZen Clien
-    auto& [clientError, client] = make_client();
+    auto [clientError, client] = make_client();
 
     if (clientError) {
         std::cout << "Cannot create OpenZen client" << std::endl;
@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
     }
 
     // connect to sensor on IO System by the sensor name
-    auto& [obtainError, sensor] = client.obtainSensorByName("SiUsb", "lpmscu2000573");
+    auto [obtainError, sensor] = client.obtainSensorByName("SiUsb", "lpmscu2000573");
     if (obtainError)
     {
         std::cout << "Cannot connect to sensor" << std::endl;
@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
     }
 
     // check that the sensor has an IMU component
-    auto& pImu = sensor.getAnyComponentOfType(g_zenSensorType_Imu);
+    auto pImu = sensor.getAnyComponentOfType(g_zenSensorType_Imu);
 
     if (!pImu)
     {
