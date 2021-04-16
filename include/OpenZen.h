@@ -740,8 +740,8 @@ namespace zen
                 return std::make_pair(false, std::move(event));
             }
         }
-    };
 #endif
+    };
 
     /**
     Use this function to create a ZenClient object. This instance of
