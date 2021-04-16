@@ -73,3 +73,14 @@ target_compile_features(OpenZenExampleCpp
     PRIVATE
         cxx_std_11
 )
+
+add_executable(OpenZenExampleCpp17
+    ExampleCpp17.cpp)
+
+target_link_libraries(OpenZenExampleCpp17
+    OpenZen)
+
+target_compile_features(OpenZenExampleCpp17
+    PRIVATE
+        cxx_std_17
+)
