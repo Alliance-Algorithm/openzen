@@ -37,7 +37,7 @@ inline std::vector<std::byte> float_to_bytes(float f) {
 inline std::vector<std::byte> float_to_int16_to_bytes(float f, float multiplier) {
 
     std::vector<std::byte> v_out;
-    int16_t v_int = f * multiplier;
+    int16_t v_int = int16_t(f * multiplier);
     std::byte const * p = reinterpret_cast<std::byte const *>(&v_int);
     for (std::size_t i = 0; i != sizeof(int16_t); ++i)
     {
@@ -102,9 +102,9 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
 
     // acc Raw 3 vector
     {
-        auto vx = float_to_bytes(10.0);
-        auto vy = float_to_bytes(15.0);
-        auto vz = float_to_bytes(20.0);
+        auto vx = float_to_bytes(10.0f);
+        auto vy = float_to_bytes(15.0f);
+        auto vz = float_to_bytes(20.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -112,9 +112,9 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
 
     // acc Calibrated 3 vector
     {
-        auto vx = float_to_bytes(-10.0);
-        auto vy = float_to_bytes(-15.0);
-        auto vz = float_to_bytes(-20.0);
+        auto vx = float_to_bytes(-10.0f);
+        auto vy = float_to_bytes(-15.0f);
+        auto vz = float_to_bytes(-20.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -122,9 +122,9 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
 
     // Raw Gyro 1
     {
-        auto vx = float_to_bytes(-1.0);
-        auto vy = float_to_bytes(-1.5);
-        auto vz = float_to_bytes(-2.0);
+        auto vx = float_to_bytes(-1.0f);
+        auto vy = float_to_bytes(-1.5f);
+        auto vz = float_to_bytes(-2.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -132,9 +132,9 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
 
     // Raw Gyro 2
     {
-        auto vx = float_to_bytes(1.0);
-        auto vy = float_to_bytes(1.5);
-        auto vz = float_to_bytes(2.0);
+        auto vx = float_to_bytes(1.0f);
+        auto vy = float_to_bytes(1.5f);
+        auto vz = float_to_bytes(2.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -142,9 +142,9 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
 
     // Static-calib Gyro 1
     {
-        auto vx = float_to_bytes(-0.1);
-        auto vy = float_to_bytes(-0.15);
-        auto vz = float_to_bytes(-0.2);
+        auto vx = float_to_bytes(-0.1f);
+        auto vy = float_to_bytes(-0.15f);
+        auto vz = float_to_bytes(-0.2f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -152,9 +152,9 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
 
     // Static-calib Gyro 2
     {
-        auto vx = float_to_bytes(0.1);
-        auto vy = float_to_bytes(0.1);
-        auto vz = float_to_bytes(0.2);
+        auto vx = float_to_bytes(0.1f);
+        auto vy = float_to_bytes(0.1f);
+        auto vz = float_to_bytes(0.2f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -162,9 +162,9 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
 
     // alignemnt-calib Gyro 1, this is gonna go into the g output of Ig1
     {
-        auto vx = float_to_bytes(-2.1);
-        auto vy = float_to_bytes(-2.15);
-        auto vz = float_to_bytes(-2.2);
+        auto vx = float_to_bytes(-2.1f);
+        auto vy = float_to_bytes(-2.15f);
+        auto vz = float_to_bytes(-2.2f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -172,9 +172,9 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
 
     // alignment-calib Gyro 2
     {
-        auto vx = float_to_bytes(1.1);
-        auto vy = float_to_bytes(1.15);
-        auto vz = float_to_bytes(1.2);
+        auto vx = float_to_bytes(1.1f);
+        auto vy = float_to_bytes(1.15f);
+        auto vz = float_to_bytes(1.2f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -182,9 +182,9 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
 
     // Raw Magnetometer
     {
-        auto vx = float_to_bytes(-5.1);
-        auto vy = float_to_bytes(-5.15);
-        auto vz = float_to_bytes(-5.2);
+        auto vx = float_to_bytes(-5.1f);
+        auto vy = float_to_bytes(-5.15f);
+        auto vz = float_to_bytes(-5.2f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -192,9 +192,9 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
 
     // Calib Magnetometer
     {
-        auto vx = float_to_bytes(5.1);
-        auto vy = float_to_bytes(5.15);
-        auto vz = float_to_bytes(5.2);
+        auto vx = float_to_bytes(5.1f);
+        auto vy = float_to_bytes(5.15f);
+        auto vz = float_to_bytes(5.2f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -202,9 +202,9 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
 
     // Angular Velocity
     {
-        auto vx = float_to_bytes(-3.1);
-        auto vy = float_to_bytes(-3.15);
-        auto vz = float_to_bytes(-3.2);
+        auto vx = float_to_bytes(-3.1f);
+        auto vy = float_to_bytes(-3.15f);
+        auto vz = float_to_bytes(-3.2f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -212,10 +212,10 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
 
     // Quaternion
     {
-        auto vq = float_to_bytes(0.5);
-        auto vx = float_to_bytes(0.5);
-        auto vy = float_to_bytes(-0.5);
-        auto vz = float_to_bytes(-0.5);
+        auto vq = float_to_bytes(0.5f);
+        auto vx = float_to_bytes(0.5f);
+        auto vy = float_to_bytes(-0.5f);
+        auto vz = float_to_bytes(-0.5f);
         vecValidPacket.insert(vecValidPacket.end(), vq.begin(), vq.end());
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
@@ -224,9 +224,9 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
 
     // Euler Angles
     {
-        auto vx = float_to_bytes(-0.5);
-        auto vy = float_to_bytes(-0.6);
-        auto vz = float_to_bytes(-0.7);
+        auto vx = float_to_bytes(-0.5f);
+        auto vy = float_to_bytes(-0.6f);
+        auto vz = float_to_bytes(-0.7f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -234,9 +234,9 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
 
     // Linear Acceleration
     {
-        auto vx = float_to_bytes(0.6);
-        auto vy = float_to_bytes(0.7);
-        auto vz = float_to_bytes(0.8);
+        auto vx = float_to_bytes(0.6f);
+        auto vy = float_to_bytes(0.7f);
+        auto vz = float_to_bytes(0.8f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -244,7 +244,7 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
 
     // Temperature
     {
-        auto vx = float_to_bytes(-23.1);
+        auto vx = float_to_bytes(-23.1f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
     }
 
@@ -252,50 +252,50 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
 
     const auto parsed = imuComp.processEventData(ZenEventType_ImuData, imuRaw);
     ASSERT_EQ(123, parsed->imuData.frameCount);
-    ASSERT_NEAR(123 * 0.002, parsed->imuData.timestamp, 0.0001);
+    ASSERT_NEAR(123.0 * 0.002, parsed->imuData.timestamp, 0.0001);
 
-    ASSERT_NEAR(10.0, parsed->imuData.aRaw[0], 0.0001);
-    ASSERT_NEAR(15.0, parsed->imuData.aRaw[1], 0.0001);
-    ASSERT_NEAR(20.0, parsed->imuData.aRaw[2], 0.0001);
+    ASSERT_NEAR(10.0f, parsed->imuData.aRaw[0], 0.0001f);
+    ASSERT_NEAR(15.0f, parsed->imuData.aRaw[1], 0.0001f);
+    ASSERT_NEAR(20.0f, parsed->imuData.aRaw[2], 0.0001f);
 
-    ASSERT_NEAR(-10.0, parsed->imuData.a[0], 0.0001);
-    ASSERT_NEAR(-15.0, parsed->imuData.a[1], 0.0001);
-    ASSERT_NEAR(-20.0, parsed->imuData.a[2], 0.0001);
+    ASSERT_NEAR(-10.0f, parsed->imuData.a[0], 0.0001f);
+    ASSERT_NEAR(-15.0f, parsed->imuData.a[1], 0.0001f);
+    ASSERT_NEAR(-20.0f, parsed->imuData.a[2], 0.0001f);
 
-    ASSERT_NEAR(-1.0, parsed->imuData.gRaw[0], 0.0001);
-    ASSERT_NEAR(-1.5, parsed->imuData.gRaw[1], 0.0001);
-    ASSERT_NEAR(-2.0, parsed->imuData.gRaw[2], 0.0001);
+    ASSERT_NEAR(-1.0f, parsed->imuData.gRaw[0], 0.0001f);
+    ASSERT_NEAR(-1.5f, parsed->imuData.gRaw[1], 0.0001f);
+    ASSERT_NEAR(-2.0f, parsed->imuData.gRaw[2], 0.0001f);
 
-    ASSERT_NEAR(-2.1, parsed->imuData.g[0], 0.0001);
-    ASSERT_NEAR(-2.15, parsed->imuData.g[1], 0.0001);
-    ASSERT_NEAR(-2.2, parsed->imuData.g[2], 0.0001);
+    ASSERT_NEAR(-2.1f, parsed->imuData.g[0], 0.0001f);
+    ASSERT_NEAR(-2.15f, parsed->imuData.g[1], 0.0001f);
+    ASSERT_NEAR(-2.2f, parsed->imuData.g[2], 0.0001f);
 
-    ASSERT_NEAR(-5.1, parsed->imuData.bRaw[0] , 0.0001);
-    ASSERT_NEAR(-5.15, parsed->imuData.bRaw[1], 0.0001);
-    ASSERT_NEAR(-5.2, parsed->imuData.bRaw[2], 0.0001);
+    ASSERT_NEAR(-5.1f, parsed->imuData.bRaw[0] , 0.0001f);
+    ASSERT_NEAR(-5.15f, parsed->imuData.bRaw[1], 0.0001f);
+    ASSERT_NEAR(-5.2f, parsed->imuData.bRaw[2], 0.0001f);
 
-    ASSERT_NEAR(5.1, parsed->imuData.b[0] , 0.0001);
-    ASSERT_NEAR(5.15, parsed->imuData.b[1], 0.0001);
-    ASSERT_NEAR(5.2, parsed->imuData.b[2], 0.0001);
+    ASSERT_NEAR(5.1f, parsed->imuData.b[0] , 0.0001f);
+    ASSERT_NEAR(5.15f, parsed->imuData.b[1], 0.0001f);
+    ASSERT_NEAR(5.2f, parsed->imuData.b[2], 0.0001f);
 
-    ASSERT_NEAR(-3.1, parsed->imuData.w[0] , 0.0001);
-    ASSERT_NEAR(-3.15, parsed->imuData.w[1], 0.0001);
-    ASSERT_NEAR(-3.2, parsed->imuData.w[2], 0.0001);
+    ASSERT_NEAR(-3.1f, parsed->imuData.w[0] , 0.0001f);
+    ASSERT_NEAR(-3.15f, parsed->imuData.w[1], 0.0001f);
+    ASSERT_NEAR(-3.2f, parsed->imuData.w[2], 0.0001f);
 
-    ASSERT_NEAR(0.5, parsed->imuData.q[0] , 0.0001);
-    ASSERT_NEAR(0.5, parsed->imuData.q[1], 0.0001);
-    ASSERT_NEAR(-0.5, parsed->imuData.q[2], 0.0001);
-    ASSERT_NEAR(-0.5, parsed->imuData.q[3], 0.0001);
+    ASSERT_NEAR(0.5f, parsed->imuData.q[0], 0.0001f);
+    ASSERT_NEAR(0.5f, parsed->imuData.q[1], 0.0001f);
+    ASSERT_NEAR(-0.5f, parsed->imuData.q[2], 0.0001f);
+    ASSERT_NEAR(-0.5f, parsed->imuData.q[3], 0.0001f);
 
-    ASSERT_NEAR(-0.5, parsed->imuData.r[0] , 0.0001);
-    ASSERT_NEAR(-0.6, parsed->imuData.r[1], 0.0001);
-    ASSERT_NEAR(-0.7, parsed->imuData.r[2], 0.0001);
+    ASSERT_NEAR(-0.5f, parsed->imuData.r[0], 0.0001f);
+    ASSERT_NEAR(-0.6f, parsed->imuData.r[1], 0.0001f);
+    ASSERT_NEAR(-0.7f, parsed->imuData.r[2], 0.0001f);
 
-    ASSERT_NEAR(0.6, parsed->imuData.linAcc[0] , 0.0001);
-    ASSERT_NEAR(0.7, parsed->imuData.linAcc[1], 0.0001);
-    ASSERT_NEAR(0.8, parsed->imuData.linAcc[2], 0.0001);
+    ASSERT_NEAR(0.6f, parsed->imuData.linAcc[0], 0.0001f);
+    ASSERT_NEAR(0.7f, parsed->imuData.linAcc[1], 0.0001f);
+    ASSERT_NEAR(0.8f, parsed->imuData.linAcc[2], 0.0001f);
 
-    ASSERT_NEAR(-23.1, parsed->imuData.temperature, 0.0001);
+    ASSERT_NEAR(-23.1f, parsed->imuData.temperature, 0.0001f);
 }
 
 TEST(ImuIg1Component, parseDataPackage_16bit) {
@@ -343,9 +343,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
 
     // acc Raw 3 vector
     {
-        auto vx = float_to_int16_to_bytes(10.0, 1000.0);
-        auto vy = float_to_int16_to_bytes(15.0, 1000.0);
-        auto vz = float_to_int16_to_bytes(20.0, 1000.0);
+        auto vx = float_to_int16_to_bytes(10.0f, 1000.0f);
+        auto vy = float_to_int16_to_bytes(15.0f, 1000.0f);
+        auto vz = float_to_int16_to_bytes(20.0f, 1000.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -353,9 +353,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
 
     // acc Calibrated 3 vector
     {
-        auto vx = float_to_int16_to_bytes(-10.0, 1000.0);
-        auto vy = float_to_int16_to_bytes(-15.0, 1000.0);
-        auto vz = float_to_int16_to_bytes(-20.0, 1000.0);
+        auto vx = float_to_int16_to_bytes(-10.0f, 1000.0f);
+        auto vy = float_to_int16_to_bytes(-15.0f, 1000.0f);
+        auto vz = float_to_int16_to_bytes(-20.0f, 1000.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -363,9 +363,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
 
     // Raw Gyro 1
     {
-        auto vx = float_to_int16_to_bytes(-10.0, 10.0);
-        auto vy = float_to_int16_to_bytes(-10.5, 10.0);
-        auto vz = float_to_int16_to_bytes(-20.0, 10.0);
+        auto vx = float_to_int16_to_bytes(-10.0f, 10.0f);
+        auto vy = float_to_int16_to_bytes(-10.5f, 10.0f);
+        auto vz = float_to_int16_to_bytes(-20.0f, 10.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -373,9 +373,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
 
     // Raw Gyro 2
     {
-        auto vx = float_to_int16_to_bytes(10.0, 10.0);
-        auto vy = float_to_int16_to_bytes(10.5, 10.0);
-        auto vz = float_to_int16_to_bytes(20.0, 10.0);
+        auto vx = float_to_int16_to_bytes(10.0f, 10.0f);
+        auto vy = float_to_int16_to_bytes(10.5f, 10.0f);
+        auto vz = float_to_int16_to_bytes(20.0f, 10.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -383,9 +383,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
 
     // Static-calib Gyro 1
     {
-        auto vx = float_to_int16_to_bytes(-10.0, 10.0);
-        auto vy = float_to_int16_to_bytes(-15.0, 10.0);
-        auto vz = float_to_int16_to_bytes(-20.0, 10.0);
+        auto vx = float_to_int16_to_bytes(-10.0f, 10.0f);
+        auto vy = float_to_int16_to_bytes(-15.0f, 10.0f);
+        auto vz = float_to_int16_to_bytes(-20.0f, 10.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -393,9 +393,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
 
     // Static-calib Gyro 2
     {
-        auto vx = float_to_int16_to_bytes(60.0, 10.0);
-        auto vy = float_to_int16_to_bytes(70.0, 10.0);
-        auto vz = float_to_int16_to_bytes(80.0, 10.0);
+        auto vx = float_to_int16_to_bytes(60.0f, 10.0f);
+        auto vy = float_to_int16_to_bytes(70.0f, 10.0f);
+        auto vz = float_to_int16_to_bytes(80.0f, 10.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -403,9 +403,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
 
     // alignemnt-calib Gyro 1, this is gonna go into the g output of Ig1
     {
-        auto vx = float_to_int16_to_bytes(-20.0, 10.0);
-        auto vy = float_to_int16_to_bytes(-21.5, 10.0);
-        auto vz = float_to_int16_to_bytes(-22.0, 10.0);
+        auto vx = float_to_int16_to_bytes(-20.0f, 10.0f);
+        auto vy = float_to_int16_to_bytes(-21.5f, 10.0f);
+        auto vz = float_to_int16_to_bytes(-22.0f, 10.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -413,9 +413,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
 
     // alignment-calib Gyro 2
     {
-        auto vx = float_to_int16_to_bytes(11.0, 10.0);
-        auto vy = float_to_int16_to_bytes(11.5, 10.0);
-        auto vz = float_to_int16_to_bytes(12.0, 10.0);
+        auto vx = float_to_int16_to_bytes(11.0f, 10.0f);
+        auto vy = float_to_int16_to_bytes(11.5f, 10.0f);
+        auto vz = float_to_int16_to_bytes(12.0f, 10.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -423,9 +423,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
 
     // Raw Magnetometer
     {
-        auto vx = float_to_int16_to_bytes(-5.1, 100.0);
-        auto vy = float_to_int16_to_bytes(-5.15, 100.0);
-        auto vz = float_to_int16_to_bytes(-5.2, 100.0);
+        auto vx = float_to_int16_to_bytes(-5.1f, 100.0f);
+        auto vy = float_to_int16_to_bytes(-5.15f, 100.0f);
+        auto vz = float_to_int16_to_bytes(-5.2f, 100.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -433,9 +433,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
 
     // Calib Magnetometer
     {
-        auto vx = float_to_int16_to_bytes(5.1, 100.0);
-        auto vy = float_to_int16_to_bytes(5.15, 100.0);
-        auto vz = float_to_int16_to_bytes(5.2, 100.0);
+        auto vx = float_to_int16_to_bytes(5.1f, 100.0f);
+        auto vy = float_to_int16_to_bytes(5.15f, 100.0f);
+        auto vz = float_to_int16_to_bytes(5.2f, 100.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -443,9 +443,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
 
     // Angular Velocity
     {
-        auto vx = float_to_int16_to_bytes(-3.1, 100.0);
-        auto vy = float_to_int16_to_bytes(-3.15, 100.0);
-        auto vz = float_to_int16_to_bytes(-3.2, 100.0);
+        auto vx = float_to_int16_to_bytes(-3.1f, 100.0f);
+        auto vy = float_to_int16_to_bytes(-3.15f, 100.0f);
+        auto vz = float_to_int16_to_bytes(-3.2f, 100.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -453,10 +453,10 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
 
     // Quaternion
     {
-        auto vq = float_to_int16_to_bytes(0.5, 10000.0);
-        auto vx = float_to_int16_to_bytes(0.5, 10000.0);
-        auto vy = float_to_int16_to_bytes(-0.5, 10000.0);
-        auto vz = float_to_int16_to_bytes(-0.5, 10000.0);
+        auto vq = float_to_int16_to_bytes(0.5f, 10000.0f);
+        auto vx = float_to_int16_to_bytes(0.5f, 10000.0f);
+        auto vy = float_to_int16_to_bytes(-0.5f, 10000.0f);
+        auto vz = float_to_int16_to_bytes(-0.5f, 10000.0f);
         vecValidPacket.insert(vecValidPacket.end(), vq.begin(), vq.end());
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
@@ -465,9 +465,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
 
     // Euler Angles
     {
-        auto vx = float_to_int16_to_bytes(-0.5, 100.0);
-        auto vy = float_to_int16_to_bytes(-0.6, 100.0);
-        auto vz = float_to_int16_to_bytes(-0.7, 100.0);
+        auto vx = float_to_int16_to_bytes(-0.5f, 100.0f);
+        auto vy = float_to_int16_to_bytes(-0.6f, 100.0f);
+        auto vz = float_to_int16_to_bytes(-0.7f, 100.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -475,9 +475,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
 
     // Linear Acceleration
     {
-        auto vx = float_to_int16_to_bytes(0.6, 1000.0);
-        auto vy = float_to_int16_to_bytes(0.7, 1000.0);
-        auto vz = float_to_int16_to_bytes(0.8, 1000.0);
+        auto vx = float_to_int16_to_bytes(0.6f, 1000.0f);
+        auto vy = float_to_int16_to_bytes(0.7f, 1000.0f);
+        auto vz = float_to_int16_to_bytes(0.8f, 1000.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -485,7 +485,7 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
 
     // Temperature
     {
-        auto vx = float_to_int16_to_bytes(-23.1, 100.0);
+        auto vx = float_to_int16_to_bytes(-23.1f, 100.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
     }
 
@@ -493,50 +493,50 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
 
     const auto parsed = imuComp.processEventData(ZenEventType_ImuData, imuRaw);
     ASSERT_EQ(123, parsed->imuData.frameCount);
-    ASSERT_NEAR(123 * 0.002, parsed->imuData.timestamp, 0.0001);
+    ASSERT_NEAR(123.0 * 0.002, parsed->imuData.timestamp, 0.0001);
 
-    ASSERT_NEAR(10.0, parsed->imuData.aRaw[0], 0.01);
-    ASSERT_NEAR(15.0, parsed->imuData.aRaw[1], 0.01);
-    ASSERT_NEAR(20.0, parsed->imuData.aRaw[2], 0.01);
+    ASSERT_NEAR(10.0f, parsed->imuData.aRaw[0], 0.01f);
+    ASSERT_NEAR(15.0f, parsed->imuData.aRaw[1], 0.01f);
+    ASSERT_NEAR(20.0f, parsed->imuData.aRaw[2], 0.01f);
 
-    ASSERT_NEAR(-10.0, parsed->imuData.a[0], 0.01);
-    ASSERT_NEAR(-15.0, parsed->imuData.a[1], 0.01);
-    ASSERT_NEAR(-20.0, parsed->imuData.a[2], 0.01);
+    ASSERT_NEAR(-10.0f, parsed->imuData.a[0], 0.01f);
+    ASSERT_NEAR(-15.0f, parsed->imuData.a[1], 0.01f);
+    ASSERT_NEAR(-20.0f, parsed->imuData.a[2], 0.01f);
 
-    ASSERT_NEAR(-10.0, parsed->imuData.gRaw[0], 0.01);
-    ASSERT_NEAR(-10.5, parsed->imuData.gRaw[1], 0.01);
-    ASSERT_NEAR(-20.0, parsed->imuData.gRaw[2], 0.01);
+    ASSERT_NEAR(-10.0f, parsed->imuData.gRaw[0], 0.01f);
+    ASSERT_NEAR(-10.5f, parsed->imuData.gRaw[1], 0.01f);
+    ASSERT_NEAR(-20.0f, parsed->imuData.gRaw[2], 0.01f);
 
-    ASSERT_NEAR(-20.0, parsed->imuData.g[0], 0.01);
-    ASSERT_NEAR(-21.5, parsed->imuData.g[1], 0.01);
-    ASSERT_NEAR(-22.0, parsed->imuData.g[2], 0.01);
+    ASSERT_NEAR(-20.0f, parsed->imuData.g[0], 0.01f);
+    ASSERT_NEAR(-21.5f, parsed->imuData.g[1], 0.01f);
+    ASSERT_NEAR(-22.0f, parsed->imuData.g[2], 0.01f);
 
-    ASSERT_NEAR(-5.1, parsed->imuData.bRaw[0] , 0.01);
-    ASSERT_NEAR(-5.15, parsed->imuData.bRaw[1], 0.01);
-    ASSERT_NEAR(-5.2, parsed->imuData.bRaw[2], 0.01);
+    ASSERT_NEAR(-5.1f, parsed->imuData.bRaw[0] , 0.01f);
+    ASSERT_NEAR(-5.15f, parsed->imuData.bRaw[1], 0.01f);
+    ASSERT_NEAR(-5.2f, parsed->imuData.bRaw[2], 0.01f);
 
-    ASSERT_NEAR(5.1, parsed->imuData.b[0] , 0.01);
-    ASSERT_NEAR(5.15, parsed->imuData.b[1], 0.01);
-    ASSERT_NEAR(5.2, parsed->imuData.b[2], 0.01);
+    ASSERT_NEAR(5.1f, parsed->imuData.b[0] , 0.01f);
+    ASSERT_NEAR(5.15f, parsed->imuData.b[1], 0.01f);
+    ASSERT_NEAR(5.2f, parsed->imuData.b[2], 0.01f);
 
-    ASSERT_NEAR(-3.1, parsed->imuData.w[0] , 0.01);
-    ASSERT_NEAR(-3.15, parsed->imuData.w[1], 0.01);
-    ASSERT_NEAR(-3.2, parsed->imuData.w[2], 0.01);
+    ASSERT_NEAR(-3.1f, parsed->imuData.w[0] , 0.01f);
+    ASSERT_NEAR(-3.15f, parsed->imuData.w[1], 0.01f);
+    ASSERT_NEAR(-3.2f, parsed->imuData.w[2], 0.01f);
 
-    ASSERT_NEAR(0.5, parsed->imuData.q[0] , 0.01);
-    ASSERT_NEAR(0.5, parsed->imuData.q[1], 0.01);
-    ASSERT_NEAR(-0.5, parsed->imuData.q[2], 0.01);
-    ASSERT_NEAR(-0.5, parsed->imuData.q[3], 0.01);
+    ASSERT_NEAR(0.5f, parsed->imuData.q[0] , 0.01f);
+    ASSERT_NEAR(0.5f, parsed->imuData.q[1], 0.01f);
+    ASSERT_NEAR(-0.5f, parsed->imuData.q[2], 0.01f);
+    ASSERT_NEAR(-0.5f, parsed->imuData.q[3], 0.01f);
 
-    ASSERT_NEAR(-0.5, parsed->imuData.r[0] , 0.01);
-    ASSERT_NEAR(-0.6, parsed->imuData.r[1], 0.01);
-    ASSERT_NEAR(-0.7, parsed->imuData.r[2], 0.01);
+    ASSERT_NEAR(-0.5f, parsed->imuData.r[0] , 0.01f);
+    ASSERT_NEAR(-0.6f, parsed->imuData.r[1], 0.01f);
+    ASSERT_NEAR(-0.7f, parsed->imuData.r[2], 0.01f);
 
-    ASSERT_NEAR(0.6, parsed->imuData.linAcc[0] , 0.01);
-    ASSERT_NEAR(0.7, parsed->imuData.linAcc[1], 0.01);
-    ASSERT_NEAR(0.8, parsed->imuData.linAcc[2], 0.01);
+    ASSERT_NEAR(0.6f, parsed->imuData.linAcc[0] , 0.01f);
+    ASSERT_NEAR(0.7f, parsed->imuData.linAcc[1], 0.01f);
+    ASSERT_NEAR(0.8f, parsed->imuData.linAcc[2], 0.01f);
 
-    ASSERT_NEAR(-23.1, parsed->imuData.temperature, 0.01);
+    ASSERT_NEAR(-23.1f, parsed->imuData.temperature, 0.01f);
 }
 
 TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
@@ -584,9 +584,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
 
     // acc Raw 3 vector
     {
-        auto vx = float_to_int16_to_bytes(10.0, 1000.0);
-        auto vy = float_to_int16_to_bytes(15.0, 1000.0);
-        auto vz = float_to_int16_to_bytes(20.0, 1000.0);
+        auto vx = float_to_int16_to_bytes(10.0f, 1000.0f);
+        auto vy = float_to_int16_to_bytes(15.0f, 1000.0f);
+        auto vz = float_to_int16_to_bytes(20.0f, 1000.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -594,9 +594,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
 
     // acc Calibrated 3 vector
     {
-        auto vx = float_to_int16_to_bytes(-10.0, 1000.0);
-        auto vy = float_to_int16_to_bytes(-15.0, 1000.0);
-        auto vz = float_to_int16_to_bytes(-20.0, 1000.0);
+        auto vx = float_to_int16_to_bytes(-10.0f, 1000.0f);
+        auto vy = float_to_int16_to_bytes(-15.0f, 1000.0f);
+        auto vz = float_to_int16_to_bytes(-20.0f, 1000.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -604,9 +604,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
 
     // Raw Gyro 1
     {
-        auto vx = float_to_int16_to_bytes(degToRad(-10.0), 1000.0);
-        auto vy = float_to_int16_to_bytes(degToRad(-10.5), 1000.0);
-        auto vz = float_to_int16_to_bytes(degToRad(-20.0), 1000.0);
+        auto vx = float_to_int16_to_bytes(degToRad(-10.0f), 1000.0f);
+        auto vy = float_to_int16_to_bytes(degToRad(-10.5f), 1000.0f);
+        auto vz = float_to_int16_to_bytes(degToRad(-20.0f), 1000.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -614,9 +614,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
 
     // Raw Gyro 2
     {
-        auto vx = float_to_int16_to_bytes(degToRad(10.0), 100.0);
-        auto vy = float_to_int16_to_bytes(degToRad(10.5), 100.0);
-        auto vz = float_to_int16_to_bytes(degToRad(20.0), 100.0);
+        auto vx = float_to_int16_to_bytes(degToRad(10.0f), 100.0f);
+        auto vy = float_to_int16_to_bytes(degToRad(10.5f), 100.0f);
+        auto vz = float_to_int16_to_bytes(degToRad(20.0f), 100.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -624,9 +624,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
 
     // Static-calib Gyro 1
     {
-        auto vx = float_to_int16_to_bytes(degToRad(-10.0), 1000.0);
-        auto vy = float_to_int16_to_bytes(degToRad(-15.0), 1000.0);
-        auto vz = float_to_int16_to_bytes(degToRad(-20.0), 1000.0);
+        auto vx = float_to_int16_to_bytes(degToRad(-10.0), 1000.0f);
+        auto vy = float_to_int16_to_bytes(degToRad(-15.0), 1000.0f);
+        auto vz = float_to_int16_to_bytes(degToRad(-20.0), 1000.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -634,9 +634,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
 
     // Static-calib Gyro 2
     {
-        auto vx = float_to_int16_to_bytes(degToRad(60.0), 100.0);
-        auto vy = float_to_int16_to_bytes(degToRad(70.0), 100.0);
-        auto vz = float_to_int16_to_bytes(degToRad(80.0), 100.0);
+        auto vx = float_to_int16_to_bytes(degToRad(60.0), 100.0f);
+        auto vy = float_to_int16_to_bytes(degToRad(70.0), 100.0f);
+        auto vz = float_to_int16_to_bytes(degToRad(80.0), 100.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -644,9 +644,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
 
     // alignemnt-calib Gyro 1, this is gonna go into the g output of Ig1
     {
-        auto vx = float_to_int16_to_bytes(degToRad(-20.0), 1000.0);
-        auto vy = float_to_int16_to_bytes(degToRad(-21.5), 1000.0);
-        auto vz = float_to_int16_to_bytes(degToRad(-22.0), 1000.0);
+        auto vx = float_to_int16_to_bytes(degToRad(-20.0f), 1000.0f);
+        auto vy = float_to_int16_to_bytes(degToRad(-21.5f), 1000.0f);
+        auto vz = float_to_int16_to_bytes(degToRad(-22.0f), 1000.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -654,9 +654,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
 
     // alignment-calib Gyro 2
     {
-        auto vx = float_to_int16_to_bytes(degToRad(11.0), 100.0);
-        auto vy = float_to_int16_to_bytes(degToRad(11.5), 100.0);
-        auto vz = float_to_int16_to_bytes(degToRad(12.0), 100.0);
+        auto vx = float_to_int16_to_bytes(degToRad(11.0f), 100.0f);
+        auto vy = float_to_int16_to_bytes(degToRad(11.5f), 100.0f);
+        auto vz = float_to_int16_to_bytes(degToRad(12.0f), 100.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -664,9 +664,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
 
     // Raw Magnetometer
     {
-        auto vx = float_to_int16_to_bytes(-5.1, 100.0);
-        auto vy = float_to_int16_to_bytes(-5.15, 100.0);
-        auto vz = float_to_int16_to_bytes(-5.2, 100.0);
+        auto vx = float_to_int16_to_bytes(-5.1f, 100.0f);
+        auto vy = float_to_int16_to_bytes(-5.15f, 100.0f);
+        auto vz = float_to_int16_to_bytes(-5.2f, 100.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -674,9 +674,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
 
     // Calib Magnetometer
     {
-        auto vx = float_to_int16_to_bytes(5.1, 100.0);
-        auto vy = float_to_int16_to_bytes(5.15, 100.0);
-        auto vz = float_to_int16_to_bytes(5.2, 100.0);
+        auto vx = float_to_int16_to_bytes(5.1f, 100.0f);
+        auto vy = float_to_int16_to_bytes(5.15f, 100.0f);
+        auto vz = float_to_int16_to_bytes(5.2f, 100.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -684,9 +684,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
 
     // Angular Velocity
     {
-        auto vx = float_to_int16_to_bytes(degToRad(-3.1), 100.0);
-        auto vy = float_to_int16_to_bytes(degToRad(-3.15), 100.0);
-        auto vz = float_to_int16_to_bytes(degToRad(-3.2), 100.0);
+        auto vx = float_to_int16_to_bytes(degToRad(-3.1f), 100.0f);
+        auto vy = float_to_int16_to_bytes(degToRad(-3.15f), 100.0f);
+        auto vz = float_to_int16_to_bytes(degToRad(-3.2f), 100.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -694,10 +694,10 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
 
     // Quaternion
     {
-        auto vq = float_to_int16_to_bytes(0.5, 10000.0);
-        auto vx = float_to_int16_to_bytes(0.5, 10000.0);
-        auto vy = float_to_int16_to_bytes(-0.5, 10000.0);
-        auto vz = float_to_int16_to_bytes(-0.5, 10000.0);
+        auto vq = float_to_int16_to_bytes(0.5f, 10000.0f);
+        auto vx = float_to_int16_to_bytes(0.5f, 10000.0f);
+        auto vy = float_to_int16_to_bytes(-0.5f, 10000.0f);
+        auto vz = float_to_int16_to_bytes(-0.5f, 10000.0f);
         vecValidPacket.insert(vecValidPacket.end(), vq.begin(), vq.end());
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
@@ -706,9 +706,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
 
     // Euler Angles
     {
-        auto vx = float_to_int16_to_bytes(degToRad(-0.5), 10000.0);
-        auto vy = float_to_int16_to_bytes(degToRad(-0.6), 10000.0);
-        auto vz = float_to_int16_to_bytes(degToRad(-0.7), 10000.0);
+        auto vx = float_to_int16_to_bytes(degToRad(-0.5f), 10000.0f);
+        auto vy = float_to_int16_to_bytes(degToRad(-0.6f), 10000.0f);
+        auto vz = float_to_int16_to_bytes(degToRad(-0.7f), 10000.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -716,9 +716,9 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
 
     // Linear Acceleration
     {
-        auto vx = float_to_int16_to_bytes(0.6, 1000.0);
-        auto vy = float_to_int16_to_bytes(0.7, 1000.0);
-        auto vz = float_to_int16_to_bytes(0.8, 1000.0);
+        auto vx = float_to_int16_to_bytes(0.6f, 1000.0f);
+        auto vy = float_to_int16_to_bytes(0.7f, 1000.0f);
+        auto vz = float_to_int16_to_bytes(0.8f, 1000.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
         vecValidPacket.insert(vecValidPacket.end(), vy.begin(), vy.end());
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
@@ -726,7 +726,7 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
 
     // Temperature
     {
-        auto vx = float_to_int16_to_bytes(-23.1, 100.0);
+        auto vx = float_to_int16_to_bytes(-23.1f, 100.0f);
         vecValidPacket.insert(vecValidPacket.end(), vx.begin(), vx.end());
     }
 
@@ -734,48 +734,48 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
 
     const auto parsed = imuComp.processEventData(ZenEventType_ImuData, imuRaw);
     ASSERT_EQ(123, parsed->imuData.frameCount);
-    ASSERT_NEAR(123 * 0.002, parsed->imuData.timestamp, 0.0001);
+    ASSERT_NEAR(123.0 * 0.002, parsed->imuData.timestamp, 0.0001);
 
-    ASSERT_NEAR(10.0, parsed->imuData.aRaw[0], 0.01);
-    ASSERT_NEAR(15.0, parsed->imuData.aRaw[1], 0.01);
-    ASSERT_NEAR(20.0, parsed->imuData.aRaw[2], 0.01);
+    ASSERT_NEAR(10.0f, parsed->imuData.aRaw[0], 0.01f);
+    ASSERT_NEAR(15.0f, parsed->imuData.aRaw[1], 0.01f);
+    ASSERT_NEAR(20.0f, parsed->imuData.aRaw[2], 0.01f);
 
-    ASSERT_NEAR(-10.0, parsed->imuData.a[0], 0.01);
-    ASSERT_NEAR(-15.0, parsed->imuData.a[1], 0.01);
-    ASSERT_NEAR(-20.0, parsed->imuData.a[2], 0.01);
+    ASSERT_NEAR(-10.0f, parsed->imuData.a[0], 0.01f);
+    ASSERT_NEAR(-15.0f, parsed->imuData.a[1], 0.01f);
+    ASSERT_NEAR(-20.0f, parsed->imuData.a[2], 0.01f);
 
-    ASSERT_NEAR(-10.0, parsed->imuData.gRaw[0], 0.1);
-    ASSERT_NEAR(-10.5, parsed->imuData.gRaw[1], 0.1);
-    ASSERT_NEAR(-20.0, parsed->imuData.gRaw[2], 0.1);
+    ASSERT_NEAR(-10.0f, parsed->imuData.gRaw[0], 0.1f);
+    ASSERT_NEAR(-10.5f, parsed->imuData.gRaw[1], 0.1f);
+    ASSERT_NEAR(-20.0f, parsed->imuData.gRaw[2], 0.1f);
 
-    ASSERT_NEAR(-20.0, parsed->imuData.g[0], 0.1);
-    ASSERT_NEAR(-21.5, parsed->imuData.g[1], 0.1);
-    ASSERT_NEAR(-22.0, parsed->imuData.g[2], 0.1);
+    ASSERT_NEAR(-20.0f, parsed->imuData.g[0], 0.1f);
+    ASSERT_NEAR(-21.5f, parsed->imuData.g[1], 0.1f);
+    ASSERT_NEAR(-22.0f, parsed->imuData.g[2], 0.1f);
 
-    ASSERT_NEAR(-5.1, parsed->imuData.bRaw[0] , 0.01);
-    ASSERT_NEAR(-5.15, parsed->imuData.bRaw[1], 0.01);
-    ASSERT_NEAR(-5.2, parsed->imuData.bRaw[2], 0.01);
+    ASSERT_NEAR(-5.1f, parsed->imuData.bRaw[0] , 0.01f);
+    ASSERT_NEAR(-5.15f, parsed->imuData.bRaw[1], 0.01f);
+    ASSERT_NEAR(-5.2f, parsed->imuData.bRaw[2], 0.01f);
 
-    ASSERT_NEAR(5.1, parsed->imuData.b[0] , 0.01);
-    ASSERT_NEAR(5.15, parsed->imuData.b[1], 0.01);
-    ASSERT_NEAR(5.2, parsed->imuData.b[2], 0.01);
+    ASSERT_NEAR(5.1f, parsed->imuData.b[0] , 0.01f);
+    ASSERT_NEAR(5.15f, parsed->imuData.b[1], 0.01f);
+    ASSERT_NEAR(5.2f, parsed->imuData.b[2], 0.01f);
 
-    ASSERT_NEAR(-3.1, parsed->imuData.w[0] , 0.4);
-    ASSERT_NEAR(-3.15, parsed->imuData.w[1], 0.4);
-    ASSERT_NEAR(-3.2, parsed->imuData.w[2], 0.4);
+    ASSERT_NEAR(-3.1f, parsed->imuData.w[0] , 0.4f);
+    ASSERT_NEAR(-3.15f, parsed->imuData.w[1], 0.4f);
+    ASSERT_NEAR(-3.2f, parsed->imuData.w[2], 0.4f);
 
-    ASSERT_NEAR(0.5, parsed->imuData.q[0] , 0.01);
-    ASSERT_NEAR(0.5, parsed->imuData.q[1], 0.01);
-    ASSERT_NEAR(-0.5, parsed->imuData.q[2], 0.01);
-    ASSERT_NEAR(-0.5, parsed->imuData.q[3], 0.01);
+    ASSERT_NEAR(0.5f, parsed->imuData.q[0] , 0.01f);
+    ASSERT_NEAR(0.5f, parsed->imuData.q[1], 0.01f);
+    ASSERT_NEAR(-0.5f, parsed->imuData.q[2], 0.01f);
+    ASSERT_NEAR(-0.5f, parsed->imuData.q[3], 0.01f);
 
-    ASSERT_NEAR(-0.5, parsed->imuData.r[0] , 0.01);
-    ASSERT_NEAR(-0.6, parsed->imuData.r[1], 0.01);
-    ASSERT_NEAR(-0.7, parsed->imuData.r[2], 0.01);
+    ASSERT_NEAR(-0.5f, parsed->imuData.r[0] , 0.01f);
+    ASSERT_NEAR(-0.6f, parsed->imuData.r[1], 0.01f);
+    ASSERT_NEAR(-0.7f, parsed->imuData.r[2], 0.01f);
 
-    ASSERT_NEAR(0.6, parsed->imuData.linAcc[0] , 0.01);
-    ASSERT_NEAR(0.7, parsed->imuData.linAcc[1], 0.01);
-    ASSERT_NEAR(0.8, parsed->imuData.linAcc[2], 0.01);
+    ASSERT_NEAR(0.6f, parsed->imuData.linAcc[0] , 0.01f);
+    ASSERT_NEAR(0.7f, parsed->imuData.linAcc[1], 0.01f);
+    ASSERT_NEAR(0.8f, parsed->imuData.linAcc[2], 0.01f);
 
-    ASSERT_NEAR(-23.1, parsed->imuData.temperature, 0.01);
+    ASSERT_NEAR(-23.1f, parsed->imuData.temperature, 0.01f);
 }
