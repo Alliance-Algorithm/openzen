@@ -17,6 +17,10 @@
 
 using namespace zen;
 
+/**
+ * This example demonstrates the C++ interface of the OpenZen library. This interface
+ * does also work for C++ compilers which do not support the C++17 standard yet.
+ */
 int main(int argc, char* argv[])
 {
     // enable resonable log output for OpenZen

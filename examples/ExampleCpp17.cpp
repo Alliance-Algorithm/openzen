@@ -8,12 +8,17 @@
 //
 //===========================================================================//
 
+// explicitly request the C++17 version of the interface
+#define OPENZEN_CXX17
 #include "OpenZen.h"
 
 #include <iostream>
 
 using namespace zen;
 
+/**
+ * This example demonstrates the C++17 interface of the OpenZen library.
+ */
 int main(int argc, char* argv[])
 {
     // enable resonable log output for OpenZen
