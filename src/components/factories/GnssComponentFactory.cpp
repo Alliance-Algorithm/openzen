@@ -38,11 +38,11 @@ namespace zen
                 return nonstd::make_unexpected(ZenSensorInitError_RetrieveFailed);
             }
 
-            uint32_t gpsBitset[2];
+            std::array<uint32_t, 2> gpsBitset;
             auto sendResult = communicator.sendAndWaitForArray(0u,
                 static_cast<DeviceProperty_t>(EDevicePropertyV1::GetGpsTransmitData),
                 static_cast<ZenProperty_t>(EDevicePropertyInternal::ConfigGpsOutputDataBitset), {},
-                gsl::make_span(gpsBitset, sizeof(uint32_t) * 2));
+                gsl::make_span(gpsBitset));
             if (sendResult.first == ZenError_None)
             {
                 const uint64_t gpsBitsetOut = (uint64_t(gpsBitset[1]) << 32) | uint64_t(gpsBitset[0]);

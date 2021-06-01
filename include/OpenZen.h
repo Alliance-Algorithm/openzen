@@ -121,7 +121,7 @@ namespace zen
         ZenSensorHandle_t m_sensorHandle;
         ZenComponentHandle_t m_componentHandle;
 
-        static constexpr size_t m_getArrayBufferSize = 9;
+        static constexpr size_t c_getArrayBufferSize = 9;
 
     protected:
         ZenSensorComponent(ZenClientHandle_t clientHandle, ZenSensorHandle_t sensorHandle, ZenComponentHandle_t componentHandle) noexcept
@@ -183,14 +183,14 @@ namespace zen
         template <class TDataType>
         std::pair<ZenError, std::vector<TDataType>> getArrayProperty(ZenProperty_t property) noexcept
         {
-            std::vector<TDataType> outputArray(m_getArrayBufferSize);
+            std::vector<TDataType> outputArray(c_getArrayBufferSize);
 
-            size_t outputSize = outputArray.size() * sizeof(TDataType);
+            size_t outputSizeBytes = outputArray.size() * sizeof(TDataType);
             auto error = ZenSensorComponentGetArrayProperty(m_clientHandle, m_sensorHandle, m_componentHandle,
                 property,
                 details::PropertyType<TDataType>::type::value,
-                outputArray.data(), &outputSize);
-            outputSize /= sizeof(TDataType);
+                outputArray.data(), &outputSizeBytes);
+            auto outputSize = outputSizeBytes / sizeof(TDataType);
             // resize output size
             outputArray.resize(outputSize);
             return {error, outputArray};
@@ -312,7 +312,7 @@ namespace zen
         ZenClientHandle_t m_clientHandle;
         ZenSensorHandle_t m_sensorHandle;
 
-        static constexpr size_t m_getArrayBufferSize = 9;
+        static constexpr size_t c_getArrayBufferSize = 9;
 
     protected:
         ZenSensor(ZenClientHandle_t clientHandle, ZenSensorHandle_t sensorHandle)
@@ -417,14 +417,14 @@ namespace zen
         template <class TDataType>
         std::pair<ZenError, std::vector<TDataType>> getArrayProperty(ZenProperty_t property) noexcept
         {
-            std::vector<TDataType> outputArray(m_getArrayBufferSize);
+            std::vector<TDataType> outputArray(c_getArrayBufferSize);
 
-            size_t outputSize = outputArray.size() * sizeof(TDataType);
+            size_t outputSizeBytes = outputArray.size() * sizeof(TDataType);
             auto error = ZenSensorGetArrayProperty(m_clientHandle, m_sensorHandle,
                 property,
                 details::PropertyType<TDataType>::type::value,
-                outputArray.data(), &outputSize);
-            outputSize /= sizeof(TDataType);
+                outputArray.data(), &outputSizeBytes);
+            size_t outputSize = outputSizeBytes / sizeof(TDataType);
             // resize output size
             outputArray.resize(outputSize);
             return {error, outputArray};
