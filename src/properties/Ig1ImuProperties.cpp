@@ -188,58 +188,65 @@ namespace zen
 
     std::pair<ZenError, size_t> Ig1ImuProperties::getArray(ZenProperty_t property, ZenPropertyType propertyType, gsl::span<std::byte> buffer) noexcept
     {
-        if (isArray(property))
-        {
-            if (propertyType != type(property))
-                return std::make_pair(ZenError_WrongDataType, buffer.size());
+        if (!isArray(property))
+            return std::make_pair(ZenError_UnknownProperty, buffer.size());
 
-            // the size of the buffer needs to multiplied by the data type size
-            // to arrive at the byte count in the returned buffer
-            if (property == ZenImuProperty_SupportedSamplingRates) {
-                auto [err, item_count] = imu::v1::supportedSamplingRates(gsl::make_span(reinterpret_cast<int32_t*>(buffer.data()), buffer.size()));
-                return {err, item_count * sizeof(int32_t)};
-            } else if (property == ZenImuProperty_SupportedFilterModes) {
-                auto [err, item_count] = imu::v1::supportedFilterModes(buffer);
-                return {err, item_count};
-            } else if (property == ZenImuProperty_AccSupportedRanges) {
-                auto [err, item_count] = imu::v1::supportedAccRanges(gsl::make_span(reinterpret_cast<int32_t*>(buffer.data()), buffer.size()));
-                return {err, item_count * sizeof(int32_t)};
-            } else if (property == ZenImuProperty_GyrSupportedRanges) {
-                auto [err, item_count] = imu::v1::supportedGyrRanges(gsl::make_span(reinterpret_cast<int32_t*>(buffer.data()), buffer.size()));
-                return {err, item_count * sizeof(int32_t)};
-            } else if (property == ZenImuProperty_MagSupportedRanges) {
-                auto [err, item_count] = imu::v1::supportedMagRanges(gsl::make_span(reinterpret_cast<int32_t*>(buffer.data()), buffer.size()));
-                return {err, item_count * sizeof(int32_t)};
-            } else {
-                if (auto streaming = getBool(ZenImuProperty_StreamData))
-                {
+        if (propertyType != type(property))
+            return std::make_pair(ZenError_WrongDataType, buffer.size());
+
+        // Internal interface is typesafe, but external interface uses bytes, so we
+        // have to account for that.  This does the necessary translations for int32_t
+        // properties.
+        auto getArrayInt32 = [](auto func, auto& buffer) -> std::pair<ZenError, size_t> {
+            auto bufferAsInt32 = gsl::make_span(
+                reinterpret_cast<int32_t*>(buffer.data()), buffer.size() / sizeof(int32_t));
+            auto [err, item_count] = func(bufferAsInt32);
+            return { err, item_count * sizeof(int32_t) };
+        };
+
+        if (property == ZenImuProperty_SupportedSamplingRates) {
+            return getArrayInt32(imu::v1::supportedSamplingRates, buffer);
+        }
+        else if (property == ZenImuProperty_SupportedFilterModes) {
+            return imu::v1::supportedFilterModes(buffer);
+        }
+        else if (property == ZenImuProperty_AccSupportedRanges) {
+            return getArrayInt32(imu::v1::supportedAccRanges, buffer);
+        }
+        else if (property == ZenImuProperty_GyrSupportedRanges) {
+            return getArrayInt32(imu::v1::supportedGyrRanges, buffer);
+        }
+        else if (property == ZenImuProperty_MagSupportedRanges) {
+            return getArrayInt32(imu::v1::supportedMagRanges, buffer);
+        }
+        else {
+            if (auto streaming = getBool(ZenImuProperty_StreamData))
+            {
+                if (*streaming)
+                    if (auto error = setBool(ZenImuProperty_StreamData, false))
+                        return std::make_pair(error, buffer.size());
+
+                auto guard = finally([&]() {
                     if (*streaming)
-                        if (auto error = setBool(ZenImuProperty_StreamData, false))
-                            return std::make_pair(error, buffer.size());
-
-                    auto guard = finally([&]() {
-                        if (*streaming)
-                            setBool(ZenImuProperty_StreamData, true);
+                        setBool(ZenImuProperty_StreamData, true);
                     });
 
-                    const auto function = static_cast<DeviceProperty_t>(imu::v1::map(property, true));
-                    switch (propertyType)
-                    {
-                    case ZenPropertyType_Float:
-                        return m_communicator.sendAndWaitForArray(0, function, function, {}, gsl::make_span(reinterpret_cast<float*>(buffer.data()), buffer.size()));
-
-                    default:
-                        return std::make_pair(ZenError_WrongDataType, buffer.size());
-                    }
-                }
-                else
+                const auto function = static_cast<DeviceProperty_t>(imu::v1::map(property, true));
+                switch (propertyType)
                 {
-                    return std::make_pair(streaming.error(), buffer.size());
+                case ZenPropertyType_Float:
+                    return m_communicator.sendAndWaitForArray(0, function, function, {},
+                        gsl::make_span(reinterpret_cast<float*>(buffer.data()), buffer.size() / sizeof(float)));
+
+                default:
+                    return std::make_pair(ZenError_WrongDataType, buffer.size());
                 }
             }
+            else
+            {
+                return std::make_pair(streaming.error(), buffer.size());
+            }
         }
-
-        return std::make_pair(ZenError_UnknownProperty, buffer.size());
     }
 
     nonstd::expected<bool, ZenError> Ig1ImuProperties::getBool(ZenProperty_t property) noexcept
@@ -448,7 +455,7 @@ namespace zen
         else if (property == ZenImuProperty_OutputPressure)
             return setOutputDataFlag<ZenImuProperty_OutputPressure>(*this, m_communicator, m_cache.outputDataBitset, [=](ZenProperty_t property, SensorPropertyValue value) { notifyPropertyChange(property, value); }, m_streaming, value);
 
-        // Gyros 
+        // Gyros
         else if (property == ZenImuProperty_OutputRawGyr0)
             return setOutputDataFlag<ZenImuProperty_OutputRawGyr0>(*this, m_communicator, m_cache.outputDataBitset, [=](ZenProperty_t property, SensorPropertyValue value) { notifyPropertyChange(property, value); }, m_streaming, value);
         else if (property == ZenImuProperty_OutputGyr0AlignCalib)
