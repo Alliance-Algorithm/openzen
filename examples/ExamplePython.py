@@ -16,7 +16,7 @@ openzen.set_log_level(openzen.ZenLogLevel.Warning)
 
 error, client = openzen.make_client()
 if not error == openzen.ZenError.NoError:
-    print ("Error while initializinng OpenZen library")
+    print ("Error while initializing OpenZen library")
     sys.exit(1)
 
 error = client.list_sensors_async()
@@ -104,6 +104,7 @@ while True:
         imu_data = zenEvent.data.imu_data
         print ("A: {} m/s^2".format(imu_data.a))
         print ("G: {} degree/s".format(imu_data.g))
+        print ("M: {} microT".format(imu_data.m))
 
     runSome = runSome + 1
     if runSome > 50:
