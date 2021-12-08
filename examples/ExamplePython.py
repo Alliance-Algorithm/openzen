@@ -104,7 +104,7 @@ while True:
         imu_data = zenEvent.data.imu_data
         print ("A: {} m/s^2".format(imu_data.a))
         print ("G: {} degree/s".format(imu_data.g))
-        print ("M: {} microT".format(imu_data.m))
+        print ("B: {} microT".format(imu_data.b))
 
     runSome = runSome + 1
     if runSome > 50:
