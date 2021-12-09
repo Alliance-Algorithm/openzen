@@ -518,7 +518,7 @@ namespace zen
                 uint32_t uiValue;
                 if (property == ZenImuProperty_SamplingRate)
                     uiValue = imu::v1::roundSamplingRate(value);
-                if (property == ZenImuProperty_AccRange)
+                else if (property == ZenImuProperty_AccRange)
                     uiValue = imu::v1::mapAccRange(value);
                 else if (property == ZenImuProperty_GyrRange)
                     uiValue = imu::v1::mapGyrRange(value);
