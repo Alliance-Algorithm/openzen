@@ -507,7 +507,8 @@ typedef enum EZenSensorProperty
 typedef enum EZenImuProperty
 {
     ZenImuProperty_Invalid = 0,
-
+    ZenImuProperty_Id,
+    
     ZenImuProperty_StreamData = 1000,           // bool
     ZenImuProperty_SamplingRate,                // int
     ZenImuProperty_SupportedSamplingRates,      // int[]

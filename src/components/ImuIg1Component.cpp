@@ -43,6 +43,7 @@ namespace zen
         const auto property = static_cast<EDevicePropertyV1>(function);
         switch (property)
         {
+        case EDevicePropertyV1::GetImuId:
         case EDevicePropertyV1::GetFilterMode:
         case EDevicePropertyV1::GetAccRange:
         case EDevicePropertyV1::GetGyrRange:

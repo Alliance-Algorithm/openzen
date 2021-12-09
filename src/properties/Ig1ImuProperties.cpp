@@ -637,6 +637,7 @@ namespace zen
         case ZenImuProperty_MagSoftIronMatrix:
             return ZenPropertyType_Float;
 
+        case ZenImuProperty_Id:
         case ZenImuProperty_SamplingRate:
         case ZenImuProperty_SupportedSamplingRates:
         case ZenImuProperty_FilterMode:
