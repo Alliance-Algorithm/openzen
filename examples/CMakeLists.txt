@@ -46,6 +46,15 @@ if(ZEN_BLUETOOTH_BLE)
     )
 endif()
 
+if (ZEN_PYTHON)
+    add_custom_command(TARGET OpenZenExample POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/ExamplePython.py $<TARGET_FILE_DIR:OpenZenExample>
+    )
+    add_custom_command(TARGET OpenZenExample POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE_DIR:OpenZen>/openzen.pyd $<TARGET_FILE_DIR:OpenZenExample>
+    )
+endif()
+
 if (MSVC)
     target_compile_options(OpenZenExample
         PRIVATE

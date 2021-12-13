@@ -89,6 +89,12 @@ namespace zen
             case ZenImuProperty_CanBaudrate:
                 return get_set(EDevicePropertyV1::GetCanBaudRate, EDevicePropertyV1::SetCanBaudRate);
 
+            case ZenImuProperty_CanPointMode:
+                return get_set(EDevicePropertyV1::GetCanDataPrecision, EDevicePropertyV1::SetCanDataPrecision);
+
+            case ZenImuProperty_CanChannelMode:
+                return get_set(EDevicePropertyV1::GetCanMode, EDevicePropertyV1::SetCanMode);
+
             case ZenImuProperty_CanMapping:
                 return get_set(EDevicePropertyV1::GetCanMapping, EDevicePropertyV1::SetCanMapping);
 
