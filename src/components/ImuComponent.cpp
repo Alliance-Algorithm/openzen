@@ -162,7 +162,7 @@ namespace zen
         case EDevicePropertyV0::GetCanMapping:
             if (data.size() != sizeof(uint32_t) * 16)
                 return ZenError_Io_MsgCorrupt;
-            return m_communicator.publishArray(function, ZenError_None, gsl::make_span(reinterpret_cast<const float*>(data.data()), 16));
+            return m_communicator.publishArray(function, ZenError_None, gsl::make_span(reinterpret_cast<const int32_t*>(data.data()), 16));
 
         default:
             spdlog::error("Unsuporretd function {0} received in legacy IMU component", int(function));

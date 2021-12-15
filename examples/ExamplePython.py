@@ -89,7 +89,6 @@ print("Sampling rat is now: {}".format(freq))
 # test CAN settings
 # "CanChannelMode"
 error = imu.set_int32_property(openzen.ZenImuProperty.CanChannelMode, 1)
-print("CAN error", error)
 error, channelMode = imu.get_int32_property(openzen.ZenImuProperty.CanChannelMode)
 print("CanChannelMode is now: {}".format(channelMode))
 #"CanPointMode"
@@ -97,7 +96,7 @@ error = imu.set_int32_property(openzen.ZenImuProperty.CanPointMode, 1)
 error, CanPointMode = imu.get_int32_property(openzen.ZenImuProperty.CanPointMode)
 print("CanPointMode is now: {}".format(CanPointMode))
 #"CanStartId"
-#error = imu.set_int32_property(openzen.ZenImuProperty.CanStartId, 0)
+error = imu.set_int32_property(openzen.ZenImuProperty.CanStartId, 0)
 error, CanStartId = imu.get_int32_property(openzen.ZenImuProperty.CanStartId)
 print("CanStartId is now: {}".format(CanStartId))
 #"CanBaudrate"
@@ -106,8 +105,9 @@ error, CanBaudrate = imu.get_int32_property(openzen.ZenImuProperty.CanBaudrate)
 print("CanBaudrate is now: {}".format(CanBaudrate))
 #"CanMapping"
 #error = imu.set_int32_property(openzen.ZenImuProperty.CanChannelMode, 0)
-#error, channelMode = imu.get_int32_property(openzen.ZenImuProperty.CanChannelMode)
-#print("CanChannelMode is now: {}".format(channelMode))
+error, CanMapping = imu.get_array_property_int32(openzen.ZenImuProperty.CanMapping)
+print("CanMAPPING Error: ", error)
+print("CanChannelMode is now: {}".format(CanMapping))
 #"CanHeartbeat"
 error = imu.set_int32_property(openzen.ZenImuProperty.CanHeartbeat, 0)
 error, CanHeartbeat = imu.get_int32_property(openzen.ZenImuProperty.CanHeartbeat)

@@ -121,7 +121,7 @@ namespace zen
         ZenSensorHandle_t m_sensorHandle;
         ZenComponentHandle_t m_componentHandle;
 
-        static constexpr size_t m_getArrayBufferSize = 9;
+        static constexpr size_t m_getArrayBufferSize = 16;
 
     protected:
         ZenSensorComponent(ZenClientHandle_t clientHandle, ZenSensorHandle_t sensorHandle, ZenComponentHandle_t componentHandle) noexcept
@@ -312,7 +312,7 @@ namespace zen
         ZenClientHandle_t m_clientHandle;
         ZenSensorHandle_t m_sensorHandle;
 
-        static constexpr size_t m_getArrayBufferSize = 9;
+        static constexpr size_t m_getArrayBufferSize = 16;
 
     protected:
         ZenSensor(ZenClientHandle_t clientHandle, ZenSensorHandle_t sensorHandle)

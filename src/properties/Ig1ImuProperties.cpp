@@ -228,6 +228,9 @@ namespace zen
                     case ZenPropertyType_Float:
                         return m_communicator.sendAndWaitForArray(0, function, function, {}, gsl::make_span(reinterpret_cast<float*>(buffer.data()), buffer.size()));
 
+                    case ZenPropertyType_Int32:
+                        return m_communicator.sendAndWaitForArray(0, function, function, {}, gsl::make_span(reinterpret_cast<int32_t*>(buffer.data()), buffer.size()));
+
                     default:
                         return std::make_pair(ZenError_WrongDataType, buffer.size());
                     }
@@ -654,6 +657,7 @@ namespace zen
         case ZenImuProperty_CanBaudrate:
         case ZenImuProperty_CanPointMode:
         case ZenImuProperty_CanChannelMode:
+        case ZenImuProperty_CanMapping:
         case ZenImuProperty_CanHeartbeat:
             return ZenPropertyType_Int32;
 
