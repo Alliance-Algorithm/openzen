@@ -64,7 +64,6 @@ namespace zen
         case EDevicePropertyV1::GetCanMapping:
             if (data.size() != sizeof(uint32_t) * 16)
                 return ZenError_Io_MsgCorrupt;
-            spdlog::debug("test3 component: getCanMapping");
             return m_communicator.publishArray(function, ZenError_None, gsl::make_span(reinterpret_cast<const int32_t*>(data.data()), 16));
         default:
             return ZenError_Io_UnsupportedFunction;

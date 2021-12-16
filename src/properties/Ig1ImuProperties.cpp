@@ -378,7 +378,7 @@ namespace zen
                 });
 
                 const auto function = static_cast<DeviceProperty_t>(imu::v1::map(property, false));
-                if (auto error = m_communicator.sendAndWaitForAck(0, function, function, gsl::make_span(buffer.data(), sizeOfPropertyType(propertyType) * buffer.size())))
+                if (auto error = m_communicator.sendAndWaitForAck(0, function, function, gsl::make_span(buffer.data(), buffer.size())))
                     return error;
 
                 notifyPropertyChange(property, buffer);
