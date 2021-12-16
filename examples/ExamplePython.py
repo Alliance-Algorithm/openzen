@@ -47,7 +47,10 @@ if sensor_desc_connect is None:
 error, sensor = client.obtain_sensor(sensor_desc_connect)
 
 # or connect to a sensor by name
-#error, sensor = client.obtain_sensor_by_name("LinuxDevice", "LPMSCU2000003")
+error, sensor = client.obtain_sensor_by_name("SiUsb", "ig1pcan000028")
+
+# or connect to a sensor by COM
+# error, sensor = client.obtain_sensor_by_name("WindowsDevice", "//./COM25", 921600)
 
 if not error == openzen.ZenSensorInitError.NoError:
     print ("Error connecting to sensor")
