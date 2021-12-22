@@ -60,6 +60,11 @@ namespace zen
             if (data.size() != sizeof(uint32_t))
                 return ZenError_Io_MsgCorrupt;
             return m_communicator.publishResult(function, ZenError_None, *reinterpret_cast<const uint32_t*>(data.data()));
+
+        case EDevicePropertyV1::GetCanMapping:
+            if (data.size() != sizeof(uint32_t) * 16)
+                return ZenError_Io_MsgCorrupt;
+            return m_communicator.publishArray(function, ZenError_None, gsl::make_span(reinterpret_cast<const int32_t*>(data.data()), 16));
         default:
             return ZenError_Io_UnsupportedFunction;
         }

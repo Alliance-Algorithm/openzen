@@ -225,8 +225,15 @@ namespace zen
                     const auto function = static_cast<DeviceProperty_t>(imu::v1::map(property, true));
                     switch (propertyType)
                     {
-                    case ZenPropertyType_Float:
-                        return m_communicator.sendAndWaitForArray(0, function, function, {}, gsl::make_span(reinterpret_cast<float*>(buffer.data()), buffer.size()));
+                    case ZenPropertyType_Float: {
+                        auto num_entries = buffer.size() / sizeof(float);
+                        return m_communicator.sendAndWaitForArray(0, function, function, {}, gsl::make_span(reinterpret_cast<float*>(buffer.data()), num_entries));
+                    }
+
+                    case ZenPropertyType_Int32: {
+                        auto num_entries = buffer.size() / sizeof(int32_t);
+                        return m_communicator.sendAndWaitForArray(0, function, function, {}, gsl::make_span(reinterpret_cast<int32_t*>(buffer.data()), num_entries));
+                    }
 
                     default:
                         return std::make_pair(ZenError_WrongDataType, buffer.size());
@@ -375,7 +382,7 @@ namespace zen
                 });
 
                 const auto function = static_cast<DeviceProperty_t>(imu::v1::map(property, false));
-                if (auto error = m_communicator.sendAndWaitForAck(0, function, function, gsl::make_span(buffer.data(), sizeOfPropertyType(propertyType) * buffer.size())))
+                if (auto error = m_communicator.sendAndWaitForAck(0, function, function, gsl::make_span(buffer.data(), buffer.size())))
                     return error;
 
                 notifyPropertyChange(property, buffer);
@@ -654,6 +661,7 @@ namespace zen
         case ZenImuProperty_CanBaudrate:
         case ZenImuProperty_CanPointMode:
         case ZenImuProperty_CanChannelMode:
+        case ZenImuProperty_CanMapping:
         case ZenImuProperty_CanHeartbeat:
             return ZenPropertyType_Int32;
 
