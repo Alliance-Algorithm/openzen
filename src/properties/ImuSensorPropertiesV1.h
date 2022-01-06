@@ -116,7 +116,7 @@ namespace zen
         inline std::pair<ZenError, size_t> supportedSamplingRates(gsl::span<int32_t> buffer)
         {
             // this list is directly from the IG1 documentation
-            constexpr std::array<int32_t, 5> supported{ 5, 10, 50, 100, 500 };
+            constexpr std::array<int32_t, 6> supported{ 5, 10, 50, 100, 250, 500 };
 
             if (static_cast<size_t>(buffer.size()) < supported.size())
                 return std::make_pair(ZenError_BufferTooSmall, supported.size());
@@ -138,6 +138,8 @@ namespace zen
                 return 50;
             else if (value <= 100)
                 return 100;
+            else if (value <= 250)
+                return 250;
             else
                 return 500;
         }
