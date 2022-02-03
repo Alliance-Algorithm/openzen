@@ -234,9 +234,9 @@ namespace zen
                 const auto function = static_cast<DeviceProperty_t>(imu::v1::map(property, true));
                 switch (propertyType)
                 {
-                case ZenPropertyType_Float:
-                    return m_communicator.sendAndWaitForArray(0, function, function, {},
-                        gsl::make_span(reinterpret_cast<float*>(buffer.data()), buffer.size() / sizeof(float)));
+                case ZenPropertyType_Float: 
+                case ZenPropertyType_Int32: 
+                    return m_communicator.sendAndWaitForArray(0, function, function, {}, buffer);
 
                 default:
                     return std::make_pair(ZenError_WrongDataType, buffer.size());
@@ -382,7 +382,7 @@ namespace zen
                 });
 
                 const auto function = static_cast<DeviceProperty_t>(imu::v1::map(property, false));
-                if (auto error = m_communicator.sendAndWaitForAck(0, function, function, gsl::make_span(buffer.data(), buffer.size())))
+                if (auto error = m_communicator.sendAndWaitForAck(0, function, function, buffer))
                     return error;
 
                 notifyPropertyChange(property, buffer);

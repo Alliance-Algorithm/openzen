@@ -70,7 +70,7 @@ namespace zen
         if (auto error = terminateWaitOnPublishOrTimeout())
             return std::make_pair(error, outArray.size());
 
-        return std::make_pair(ZenError_None, m_resultSize / sizeof(T));
+        return std::make_pair(ZenError_None, m_resultSize);
     }
 
     template <typename T>
