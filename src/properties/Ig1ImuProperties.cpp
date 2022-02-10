@@ -194,31 +194,21 @@ namespace zen
         if (propertyType != type(property))
             return std::make_pair(ZenError_WrongDataType, buffer.size());
 
-        // Internal interface is typesafe, but external interface uses bytes, so we
-        // have to account for that.  This does the necessary translations for int32_t
-        // properties.
-        auto getArrayInt32 = [](auto func, auto& buffer) -> std::pair<ZenError, size_t> {
+        if (property == ZenImuProperty_SupportedSamplingRates ||
+            property == ZenImuProperty_SupportedFilterModes ||
+            property == ZenImuProperty_AccSupportedRanges ||
+            property == ZenImuProperty_GyrSupportedRanges ||
+            property == ZenImuProperty_MagSupportedRanges 
+        ) {
+            // Internal interface is typesafe, but external interface uses bytes, so we
+            // have to account for that.  This does the necessary translations for int32_t
+            // properties.
             auto bufferAsInt32 = gsl::make_span(
                 reinterpret_cast<int32_t*>(buffer.data()), buffer.size() / sizeof(int32_t));
-            auto [err, item_count] = func(bufferAsInt32);
+            auto [err, item_count] = imu::v1::getSupportedOptions(property, bufferAsInt32);
             return { err, item_count * sizeof(int32_t) };
-        };
+        }
 
-        if (property == ZenImuProperty_SupportedSamplingRates) {
-            return getArrayInt32(imu::v1::supportedSamplingRates, buffer);
-        }
-        else if (property == ZenImuProperty_SupportedFilterModes) {
-            return imu::v1::supportedFilterModes(buffer);
-        }
-        else if (property == ZenImuProperty_AccSupportedRanges) {
-            return getArrayInt32(imu::v1::supportedAccRanges, buffer);
-        }
-        else if (property == ZenImuProperty_GyrSupportedRanges) {
-            return getArrayInt32(imu::v1::supportedGyrRanges, buffer);
-        }
-        else if (property == ZenImuProperty_MagSupportedRanges) {
-            return getArrayInt32(imu::v1::supportedMagRanges, buffer);
-        }
         else {
             if (auto streaming = getBool(ZenImuProperty_StreamData))
             {
@@ -523,14 +513,13 @@ namespace zen
 
                 // Communication protocol only supports uint32_t
                 uint32_t uiValue;
-                if (property == ZenImuProperty_SamplingRate)
-                    uiValue = imu::v1::roundSamplingRate(value);
-                if (property == ZenImuProperty_AccRange)
-                    uiValue = imu::v1::mapAccRange(value);
-                else if (property == ZenImuProperty_GyrRange)
-                    uiValue = imu::v1::mapGyrRange(value);
-                else if (property == ZenImuProperty_MagRange)
-                    uiValue = imu::v1::mapMagRange(value);
+                if (property == ZenImuProperty_SamplingRate ||
+                    property == ZenImuProperty_FilterMode ||
+                    property == ZenImuProperty_AccRange ||
+                    property == ZenImuProperty_GyrRange ||
+                    property == ZenImuProperty_MagRange
+                ) 
+                    uiValue = static_cast<uint32_t>(imu::v1::mapToSupportedOption(property, value));
                 else
                     uiValue = static_cast<uint32_t>(value);
 
@@ -609,9 +598,6 @@ namespace zen
     {
         switch (property)
         {
-        case ZenImuProperty_SupportedFilterModes:
-            return ZenPropertyType_Byte;
-
         case ZenImuProperty_StreamData:
         case ZenImuProperty_GyrUseAutoCalibration:
         case ZenImuProperty_GyrUseThreshold:
@@ -647,6 +633,7 @@ namespace zen
         case ZenImuProperty_SamplingRate:
         case ZenImuProperty_SupportedSamplingRates:
         case ZenImuProperty_FilterMode:
+        case ZenImuProperty_SupportedFilterModes:
         case ZenImuProperty_FilterPreset:
         case ZenImuProperty_OrientationOffsetMode:
         case ZenImuProperty_AccRange:

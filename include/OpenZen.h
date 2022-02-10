@@ -184,7 +184,6 @@ namespace zen
         std::pair<ZenError, std::vector<TDataType>> getArrayProperty(ZenProperty_t property) noexcept
         {
             std::vector<TDataType> outputArray;
-            SPDLOG_DEBUG("the output buffer is {}\n", outputArray.size());
 
             size_t outputSizeBytes = outputArray.size() * sizeof(TDataType);
             auto error = ZenSensorComponentGetArrayProperty(m_clientHandle, m_sensorHandle, m_componentHandle,
@@ -194,7 +193,6 @@ namespace zen
             
             // resize output size
             auto outputSize = outputSizeBytes / sizeof(TDataType);
-            SPDLOG_DEBUG("the output buffer is RESIZED TO {}\n", outputSize);
             outputArray.resize(outputSize);
 
             if (error == ZenError_BufferTooSmall) {
