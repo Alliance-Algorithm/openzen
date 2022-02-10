@@ -86,8 +86,8 @@ namespace zen
 
                         // Some properties need to be reversed
                         const bool reverse = property == ZenSensorProperty_FirmwareVersion;
-                        if (reverse) {
-                            auto intBuffer = gsl::make_span(reinterpret_cast<int32_t*>(buffer.data()), buffer.size() / sizeof(int32_t));
+                        if (reverse && result.second == 3 * sizeof(int32_t)) {
+                            auto intBuffer = gsl::make_span(reinterpret_cast<int32_t*>(buffer.data()), 3);
                             std::reverse(std::begin(intBuffer), std::end(intBuffer));
                         }
 
