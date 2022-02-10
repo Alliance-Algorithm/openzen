@@ -65,10 +65,10 @@ namespace zen
         });
 
         if (auto error = m_communicator->send(address, function, data))
-            return std::make_pair(error, outArray.size());
+            return std::make_pair(error, m_resultSize);
 
         if (auto error = terminateWaitOnPublishOrTimeout())
-            return std::make_pair(error, outArray.size());
+            return std::make_pair(error, m_resultSize);
 
         return std::make_pair(ZenError_None, m_resultSize);
     }

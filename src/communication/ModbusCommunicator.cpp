@@ -74,7 +74,7 @@ namespace zen
                 SPDLOG_DEBUG("Received and parsed message with address {} function {} and data size {}",
                     std::to_string(frame.address), std::to_string(frame.function), frame.data.size());
 
-                if (m_subscriber->processReceivedData(frame.address, frame.function, frame.data))
+                if (auto error = m_subscriber->processReceivedData(frame.address, frame.function, frame.data); error && error != ZenError_BufferTooSmall)
                 {
                     spdlog::error("Failed to process message with address {} function {} data {}",
                         std::to_string(frame.address), std::to_string(frame.function), util::spanToString(frame.data));
