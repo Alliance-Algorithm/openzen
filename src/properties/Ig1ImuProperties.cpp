@@ -194,11 +194,11 @@ namespace zen
         if (propertyType != type(property))
             return std::make_pair(ZenError_WrongDataType, buffer.size());
 
-        if (property == ZenImuProperty_SupportedSamplingRates ||
-            property == ZenImuProperty_SupportedFilterModes ||
-            property == ZenImuProperty_AccSupportedRanges ||
-            property == ZenImuProperty_GyrSupportedRanges ||
-            property == ZenImuProperty_MagSupportedRanges 
+        if (property == ZenImuProperty_SupportedSamplingRates
+            || property == ZenImuProperty_SupportedFilterModes
+            || property == ZenImuProperty_AccSupportedRanges
+            || property == ZenImuProperty_GyrSupportedRanges
+            || property == ZenImuProperty_MagSupportedRanges 
         ) {
             // Internal interface is typesafe, but external interface uses bytes, so we
             // have to account for that.  This does the necessary translations for int32_t
@@ -513,11 +513,11 @@ namespace zen
 
                 // Communication protocol only supports uint32_t
                 uint32_t uiValue;
-                if (property == ZenImuProperty_SamplingRate ||
-                    property == ZenImuProperty_FilterMode ||
-                    property == ZenImuProperty_AccRange ||
-                    property == ZenImuProperty_GyrRange ||
-                    property == ZenImuProperty_MagRange
+                if (property == ZenImuProperty_SamplingRate
+                    || property == ZenImuProperty_FilterMode
+                    || property == ZenImuProperty_AccRange
+                    || property == ZenImuProperty_GyrRange
+                    || property == ZenImuProperty_MagRange
                 ) 
                     uiValue = static_cast<uint32_t>(imu::v1::mapToSupportedOption(property, value));
                 else
