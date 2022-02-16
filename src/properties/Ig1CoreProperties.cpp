@@ -91,7 +91,7 @@ namespace zen
                             std::reverse(std::begin(intBuffer), std::end(intBuffer));
                         }
 
-                        return std::make_pair(ZenError_None, result.second);
+                        return std::make_pair(ZenError_None, result.second * sizeof(int32_t));
                     }
                     case ZenPropertyType_Byte:
                     {
