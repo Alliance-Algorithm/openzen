@@ -302,7 +302,6 @@ namespace zen
         {
         case ZenSensorProperty_DeviceName:
         case ZenSensorProperty_FirmwareInfo:
-        case ZenSensorProperty_FirmwareVersion:
         case ZenSensorProperty_SerialNumber:
         case ZenSensorProperty_SensorModel:
             return ZenPropertyType_Byte;
@@ -314,6 +313,7 @@ namespace zen
         case ZenSensorProperty_BatteryVoltage:
             return ZenPropertyType_Float;
 
+        case ZenSensorProperty_FirmwareVersion:
         case ZenSensorProperty_BaudRate:
         case ZenSensorProperty_SupportedBaudRates:
         case ZenSensorProperty_DataMode:
