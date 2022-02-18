@@ -79,17 +79,17 @@ namespace zen
                     {
                     case ZenPropertyType_Int32:
                     {
-                        auto intBuffer = gsl::make_span(reinterpret_cast<int32_t*>(buffer.data()),
-                            buffer.size() / sizeof(int32_t));
                         const auto result = m_communicator.sendAndWaitForArray(0, function, function, {},
-                            intBuffer);
+                            buffer);
                         if (result.first)
-                            return { result.first, result.second * sizeof(int32_t) };
+                            return result;
 
                         // Some properties need to be reversed
                         const bool reverse = property == ZenSensorProperty_FirmwareVersion;
-                        if (reverse)
+                        if (reverse && result.second == 3 * sizeof(int32_t)) {
+                            auto intBuffer = gsl::make_span(reinterpret_cast<int32_t*>(buffer.data()), 3);
                             std::reverse(std::begin(intBuffer), std::end(intBuffer));
+                        }
 
                         return std::make_pair(ZenError_None, result.second * sizeof(int32_t));
                     }
@@ -329,14 +329,16 @@ namespace zen
     {
         if (auto baudRates = m_communicator.supportedBaudRates())
         {
+            auto baudRatesByteSize = baudRates->size() * sizeof(int32_t);
+
             if (static_cast<size_t>(buffer.size()) < baudRates->size())
-                return std::make_pair(ZenError_BufferTooSmall, baudRates->size());
+                return std::make_pair(ZenError_BufferTooSmall, baudRatesByteSize);
 
             if (buffer.data() == nullptr)
-                return std::make_pair(ZenError_IsNull, baudRates->size());
+                return std::make_pair(ZenError_IsNull, baudRatesByteSize);
 
-            std::memcpy(buffer.data(), baudRates->data(), baudRates->size() * sizeof(int32_t));
-            return std::make_pair(ZenError_None, baudRates->size());
+            std::memcpy(buffer.data(), baudRates->data(), baudRatesByteSize);
+            return std::make_pair(ZenError_None, baudRatesByteSize);
         }
         else
         {

@@ -521,7 +521,7 @@ typedef enum EZenImuProperty
 
     ZenImuProperty_FieldRadius,                  // float
     ZenImuProperty_FilterMode,                   // int
-    ZenImuProperty_SupportedFilterModes,         // byte[]
+    ZenImuProperty_SupportedFilterModes,         // int[]
     ZenImuProperty_FilterPreset,                 // int (future: float acc_covar, mag_covar)
 
     ZenImuProperty_OrientationOffsetMode,        // int

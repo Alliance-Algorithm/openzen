@@ -16,7 +16,7 @@ openzen.set_log_level(openzen.ZenLogLevel.Warning)
 
 error, client = openzen.make_client()
 if not error == openzen.ZenError.NoError:
-    print ("Error while initializinng OpenZen library")
+    print ("Error while initializing OpenZen library")
     sys.exit(1)
 
 error = client.list_sensors_async()
@@ -47,7 +47,10 @@ if sensor_desc_connect is None:
 error, sensor = client.obtain_sensor(sensor_desc_connect)
 
 # or connect to a sensor by name
-#error, sensor = client.obtain_sensor_by_name("LinuxDevice", "LPMSCU2000003")
+error, sensor = client.obtain_sensor_by_name("SiUsb", "ig1pcan000028")
+
+# or connect to a sensor by COM
+# error, sensor = client.obtain_sensor_by_name("WindowsDevice", "//./COM25", 921600)
 
 if not error == openzen.ZenSensorInitError.NoError:
     print ("Error connecting to sensor")
@@ -102,8 +105,9 @@ while True:
         zenEvent.component.handle == imu.component.handle:
 
         imu_data = zenEvent.data.imu_data
-        print ("A: {} m/s^2".format(imu_data.a))
+        print ("A: {} g".format(imu_data.a))
         print ("G: {} degree/s".format(imu_data.g))
+        print ("B: {} microT".format(imu_data.b))
 
     runSome = runSome + 1
     if runSome > 50:
