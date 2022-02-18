@@ -158,15 +158,26 @@ namespace zen
 
         inline int32_t mapToSupportedOption(ZenProperty_t property, int32_t value)
         {
-            auto supported = getPropertyOptions(property);
-
-            for (const auto &option : supported)
-            {
-                if (value > option)
-                    continue;
-                return option;
+            switch (property) {
+                case ZenImuProperty_SamplingRate:
+                case ZenImuProperty_FilterMode:
+                case ZenImuProperty_AccRange:
+                case ZenImuProperty_GyrRange:
+                case ZenImuProperty_MagRange:
+                {
+                    auto supported = getPropertyOptions(property);
+                    for (const auto &option : supported)
+                    {
+                        if (value > option)
+                            continue;
+                        return option;
+                    }
+                    return supported[supported.size() - 1];
+                }
+                
+                default:
+                    return value;
             }
-            return supported[supported.size() - 1];
         }
     }
 }

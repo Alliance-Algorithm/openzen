@@ -45,6 +45,7 @@ ZenEvents about sensor discovery results and incoming measurement data.
 #include <chrono>
 #include <cstddef>
 #include <cstring>
+#include <cassert>
 #include <string>
 #include <thread>
 #include <utility>
@@ -181,7 +182,8 @@ namespace zen
         template <class TDataType>
         std::pair<ZenError, std::vector<TDataType>> getArrayProperty(ZenProperty_t property) noexcept
         {
-            std::vector<TDataType> outputArray(16);
+            constexpr size_t c_arrayPropertyBufferSize = 16;
+            std::vector<TDataType> outputArray(c_arrayPropertyBufferSize);
 
             size_t outputSizeBytes = outputArray.size() * sizeof(TDataType);
             auto error = ZenSensorComponentGetArrayProperty(m_clientHandle, m_sensorHandle, m_componentHandle,
@@ -192,12 +194,14 @@ namespace zen
             // resize output size
             auto outputSize = outputSizeBytes / sizeof(TDataType);
             outputArray.resize(outputSize);
-            // retry getArray
+
+            // if the array was too small to hold the results, try again to get the values with the resized array
             if (error == ZenError_BufferTooSmall) {
                 error = ZenSensorComponentGetArrayProperty(m_clientHandle, m_sensorHandle, m_componentHandle,
                     property,
                     details::PropertyType<TDataType>::type::value,
                     outputArray.data(), &outputSizeBytes);
+                assert(error != ZenError_BufferTooSmall);
             }
 
             return {error, outputArray};
@@ -422,7 +426,8 @@ namespace zen
         template <class TDataType>
         std::pair<ZenError, std::vector<TDataType>> getArrayProperty(ZenProperty_t property) noexcept
         {
-            std::vector<TDataType> outputArray(22);
+            constexpr size_t c_arrayPropertyBufferSize = 22;
+            std::vector<TDataType> outputArray(c_arrayPropertyBufferSize);
 
             size_t outputSizeBytes = outputArray.size() * sizeof(TDataType);
             auto error = ZenSensorGetArrayProperty(m_clientHandle, m_sensorHandle,
@@ -433,12 +438,14 @@ namespace zen
             // resize output size
             size_t outputSize = outputSizeBytes / sizeof(TDataType);
             outputArray.resize(outputSize);
-            // retry getArray
+            
+            // if the array was too small to hold the results, try again to get the values with the resized array
             if (error == ZenError_BufferTooSmall) {
                 error = ZenSensorGetArrayProperty(m_clientHandle, m_sensorHandle,
                     property,
                     details::PropertyType<TDataType>::type::value,
                     outputArray.data(), &outputSizeBytes);
+                assert(error != ZenError_BufferTooSmall);
             }
 
             return {error, outputArray};
