@@ -79,34 +79,27 @@ namespace zen
                     {
                     case ZenPropertyType_Int32:
                     {
-                        // As the communication protocol only supports uint32_t for getting arrays, we need to cast all values to guarantee the correct sign
-                        // This only applies to Sensor, as IMUComponent has no integer array properties
-                        uint32_t* uiBuffer = reinterpret_cast<uint32_t*>(buffer.data());
-                        const auto result = m_communicator.sendAndWaitForArray(0, function, function, {}, gsl::make_span(uiBuffer, buffer.size()));
+                        const auto result = m_communicator.sendAndWaitForArray(0, function, function, {},
+                            buffer);
                         if (result.first)
                             return result;
-
-                        int32_t * iBuffer = reinterpret_cast<int32_t*>(buffer.data());
-                        for (size_t idx = 0; idx < result.second; ++idx)
-                            iBuffer[idx] = static_cast<int32_t>(uiBuffer[idx]);
 
                         // Some properties need to be reversed
                         const bool reverse = property == ZenSensorProperty_FirmwareVersion;
-                        if (reverse)
-                            std::reverse(iBuffer, iBuffer + result.second);
+                        if (reverse && result.second == 3 * sizeof(int32_t)) {
+                            auto intBuffer = gsl::make_span(reinterpret_cast<int32_t*>(buffer.data()), 3);
+                            std::reverse(std::begin(intBuffer), std::end(intBuffer));
+                        }
 
-                        return std::make_pair(ZenError_None, result.second);
+                        return std::make_pair(ZenError_None, result.second * sizeof(int32_t));
                     }
                     case ZenPropertyType_Byte:
                     {
-                        std::byte* uiBuffer = reinterpret_cast<std::byte*>(buffer.data());
-                        const auto result = m_communicator.sendAndWaitForArray(0, function, function, {}, gsl::make_span(uiBuffer, buffer.size()));
+                        const auto result = m_communicator.sendAndWaitForArray(0, function, function, {}, buffer);
                         if (result.first)
                             return result;
 
                         return std::make_pair(ZenError_None, result.second);
-
-                        // return std::make_pair(ZenError_WrongDataType, buffer.size());
                     }
                     default:
                         return std::make_pair(ZenError_WrongDataType, buffer.size());
@@ -336,14 +329,16 @@ namespace zen
     {
         if (auto baudRates = m_communicator.supportedBaudRates())
         {
+            auto baudRatesByteSize = baudRates->size() * sizeof(int32_t);
+
             if (static_cast<size_t>(buffer.size()) < baudRates->size())
-                return std::make_pair(ZenError_BufferTooSmall, baudRates->size());
+                return std::make_pair(ZenError_BufferTooSmall, baudRatesByteSize);
 
             if (buffer.data() == nullptr)
-                return std::make_pair(ZenError_IsNull, baudRates->size());
+                return std::make_pair(ZenError_IsNull, baudRatesByteSize);
 
-            std::memcpy(buffer.data(), baudRates->data(), baudRates->size() * sizeof(int32_t));
-            return std::make_pair(ZenError_None, baudRates->size());
+            std::memcpy(buffer.data(), baudRates->data(), baudRatesByteSize);
+            return std::make_pair(ZenError_None, baudRatesByteSize);
         }
         else
         {

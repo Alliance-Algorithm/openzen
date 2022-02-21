@@ -53,7 +53,7 @@ namespace zen
         ZenError sendAndDontWait(uint8_t address, uint8_t function, ZenProperty_t property,
             gsl::span<const std::byte> data) noexcept;
 
-        /** Sends data to the IO interface, and waits for a result array */
+        /** Sends data to the IO interface, and waits for a result array.  Returns the number of bytes.  */
         template <typename T>
         std::pair<ZenError, size_t> sendAndWaitForArray(uint8_t address, uint8_t function, ZenProperty_t property, gsl::span<const std::byte> data, gsl::span<T> outArray) noexcept;
 

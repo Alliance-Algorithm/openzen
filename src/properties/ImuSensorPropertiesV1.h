@@ -63,6 +63,9 @@ namespace zen
             case ZenImuProperty_OrientationOffsetMode:
                 return set_or(EDevicePropertyV1::SetOrientationOffsetMode);
 
+            case ZenImuProperty_AccRange:
+                return get_set(EDevicePropertyV1::GetAccRange, EDevicePropertyV1::SetAccRange);
+
             case ZenImuProperty_GyrRange:
                 return get_set(EDevicePropertyV1::GetGyrRange, EDevicePropertyV1::SetGyrRange);
 
@@ -113,12 +116,46 @@ namespace zen
             }
         }
 
-        inline std::pair<ZenError, size_t> supportedSamplingRates(gsl::span<int32_t> buffer)
-        {
-            // this list is directly from the IG1 documentation
-            constexpr std::array<int32_t, 6> supported{ 5, 10, 50, 100, 250, 500 };
+        // this list is directly from the IG1 documentation 20220106
+        // https://lp-research.atlassian.net/wiki/spaces/LKB/pages/1255145474/LPMS-IG1+User+Manual
+        constexpr std::array<int32_t, 6> supportedSamplingRates{5, 10, 50, 100, 250, 500};
+        constexpr std::array<int32_t, 5> supportedFilterModes{0, 1, 2, 3, 4};
+        constexpr std::array<int32_t, 4> supportedAccRanges{2, 4, 8, 16};
+        constexpr std::array<int32_t, 3> supportedGyrRanges{400, 1000, 2000};
+        constexpr std::array<int32_t, 2> supportedMagRanges{2, 8};
 
-            if (static_cast<size_t>(buffer.size()) < supported.size())
+        inline gsl::span<const int32_t> getPropertyOptions(ZenProperty_t property)
+        {
+            switch (property)
+            {
+            case ZenImuProperty_SupportedSamplingRates:
+            case ZenImuProperty_SamplingRate:
+                return gsl::make_span(supportedSamplingRates.data(), supportedSamplingRates.size());
+                
+            case ZenImuProperty_SupportedFilterModes:
+            case ZenImuProperty_FilterMode:
+                return gsl::make_span(supportedFilterModes.data(), supportedFilterModes.size());
+                
+            case ZenImuProperty_AccSupportedRanges:
+            case ZenImuProperty_AccRange:
+                return gsl::make_span(supportedAccRanges.data(), supportedAccRanges.size());
+                
+            case ZenImuProperty_GyrSupportedRanges:
+            case ZenImuProperty_GyrRange:
+                return gsl::make_span(supportedGyrRanges.data(), supportedGyrRanges.size());
+                
+            case ZenImuProperty_MagSupportedRanges:
+            case ZenImuProperty_MagRange:
+                return gsl::make_span(supportedMagRanges.data(), supportedMagRanges.size());
+                
+            }
+        }
+
+        inline std::pair<ZenError, size_t> getSupportedOptions(ZenProperty_t property, gsl::span<int32_t> buffer)
+        {
+            auto supported = getPropertyOptions(property);
+
+            if (buffer.size() < supported.size())
                 return std::make_pair(ZenError_BufferTooSmall, supported.size());
 
             if (buffer.data() == nullptr)
@@ -128,130 +165,28 @@ namespace zen
             return std::make_pair(ZenError_None, supported.size());
         }
 
-        constexpr uint32_t roundSamplingRate(int32_t value)
+        inline int32_t mapToSupportedOption(ZenProperty_t property, int32_t value)
         {
-            if (value <= 5)
-                return 5;
-            else if (value <= 10)
-                return 10;
-            else if (value <= 50)
-                return 50;
-            else if (value <= 100)
-                return 100;
-            else if (value <= 250)
-                return 250;
-            else
-                return 500;
-        }
-
-        constexpr uint32_t mapAccRange(int32_t value)
-        {
-            if (value <= 2)
-                return 2;
-            else if (value <= 4)
-                return 4;
-            else if (value <= 8)
-                return 8;
-            else
-                return 16;
-        }
-
-        inline std::pair<ZenError, size_t> supportedAccRanges(gsl::span<int32_t> buffer)
-        {
-            constexpr std::array<int32_t, 4> supported{ 2, 4, 8, 16 };
-
-            if (static_cast<size_t>(buffer.size()) < supported.size())
-                return std::make_pair(ZenError_BufferTooSmall, supported.size());
-
-            if (buffer.data() == nullptr)
-                return std::make_pair(ZenError_IsNull, supported.size());
-
-            std::copy(supported.cbegin(), supported.cend(), buffer.begin());
-            return std::make_pair(ZenError_None, supported.size());
-        }
-
-        constexpr uint32_t mapGyrRange(int32_t value)
-        {
-            if (value <= 400)
-                return 400;
-            else if (value <= 1000)
-                return 1000;
-            else
-                return 2000;
-        }
-
-        inline std::pair<ZenError, size_t> supportedGyrRanges(gsl::span<int32_t> buffer)
-        {
-            constexpr std::array<int32_t, 3> supported{ 400, 1000, 2000 };
-
-            if (static_cast<size_t>(buffer.size()) < supported.size())
-                return std::make_pair(ZenError_BufferTooSmall, supported.size());
-
-            if (buffer.data() == nullptr)
-                return std::make_pair(ZenError_IsNull, supported.size());
-
-            std::copy(supported.cbegin(), supported.cend(), buffer.begin());
-            return std::make_pair(ZenError_None, supported.size());
-        }
-
-        constexpr uint32_t mapMagRange(int32_t value)
-        {
-            if (value <= 2)
-                return 2;
-            else
-                return 8;
-        }
-
-        inline std::pair<ZenError, size_t> supportedMagRanges(gsl::span<int32_t> buffer)
-        {
-            constexpr std::array<int32_t, 2> supported{ 2, 8 };
-
-            if (static_cast<size_t>(buffer.size()) < supported.size())
-                return std::make_pair(ZenError_BufferTooSmall, supported.size());
-
-            if (buffer.data() == nullptr)
-                return std::make_pair(ZenError_IsNull, supported.size());
-
-            std::copy(supported.cbegin(), supported.cend(), buffer.begin());
-            return std::make_pair(ZenError_None, supported.size());
-        }
-
-        constexpr std::pair<ZenError, size_t> supportedFilterModes(gsl::span<std::byte> buffer)
-        {
-            const char json[]{
-                "{\n"
-                "    \"config\": [\n"
-                "        {\n"
-                "            \"key\": \"Gyroscope filter\","
-                "                \"value\" : 0"
-                "        },"
-                "        {"
-                "            \"key\": \"Gyroscope & accelerometer filter\","
-                "            \"value\" : 1"
-                "        },"
-                "        {"
-                "            \"key\": \"Gyroscope, accelerometer & magnetometer filter\","
-                "            \"value\" : 2"
-                "        },"
-                "        {"
-                "            \"key\": \"Madgwick gyroscope & accelerometer filter\","
-                "            \"value\" : 3"
-                "        },"
-                "        {"
-                "            \"key\": \"Madgwick gyroscope, accelerometer & magnetometer filter\","
-                "            \"value\" : 4"
-                "        }"
-                "    ]\n"
-                "}" };
-
-            if (static_cast<size_t>(buffer.size()) < sizeof(json))
-                return std::make_pair(ZenError_BufferTooSmall, sizeof(json));
-
-            if (buffer.data() == nullptr)
-                return std::make_pair(ZenError_IsNull, sizeof(json));
-
-            std::memcpy(buffer.data(), json, sizeof(json));
-            return std::make_pair(ZenError_None, sizeof(json));
+            switch (property) {
+                case ZenImuProperty_SamplingRate:
+                case ZenImuProperty_FilterMode:
+                case ZenImuProperty_AccRange:
+                case ZenImuProperty_GyrRange:
+                case ZenImuProperty_MagRange:
+                {
+                    auto supported = getPropertyOptions(property);
+                    for (const auto &option : supported)
+                    {
+                        if (value > option)
+                            continue;
+                        return option;
+                    }
+                    return supported[supported.size() - 1];
+                }
+                
+                default:
+                    return value;
+            }
         }
     }
 }
