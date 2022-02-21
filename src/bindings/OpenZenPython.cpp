@@ -342,6 +342,7 @@ PYBIND11_MODULE(openzen, m) {
 
     py::enum_<EZenImuProperty>(m, "ZenImuProperty")
         .value("Invalid", ZenImuProperty_Invalid)
+        .value("Id", ZenImuProperty_Id)
 
         .value("StreamData", ZenImuProperty_StreamData)
         .value("SamplingRate", ZenImuProperty_SamplingRate)
