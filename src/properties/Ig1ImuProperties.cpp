@@ -548,6 +548,7 @@ namespace zen
         case ZenImuProperty_MagReference:
         case ZenImuProperty_MagHardIronOffset:
         case ZenImuProperty_MagSoftIronMatrix:
+        case ZenImuProperty_CanMapping:
             return true;
 
         default:
@@ -634,6 +635,12 @@ namespace zen
         case ZenImuProperty_GyrSupportedRanges:
         case ZenImuProperty_MagRange:
         case ZenImuProperty_MagSupportedRanges:
+        case ZenImuProperty_CanStartId:
+        case ZenImuProperty_CanBaudrate:
+        case ZenImuProperty_CanPointMode:
+        case ZenImuProperty_CanChannelMode:
+        case ZenImuProperty_CanMapping:
+        case ZenImuProperty_CanHeartbeat:
             return ZenPropertyType_Int32;
 
         default:

@@ -211,6 +211,7 @@ enum class EDevicePropertyV1 : DeviceProperty_t
     GetCanBaudRate = 113,               // uint32
     SetCanDataPrecision = 114,          // uint32
     GetCanDataPrecision = 115,          // uint32
+    SetCanMode = 116,                   // uint32
     GetCanMode = 117,                   // uint32
     SetCanMapping = 118,                // uint32
     GetCanMapping = 119,                // uint32

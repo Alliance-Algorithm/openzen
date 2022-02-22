@@ -44,7 +44,7 @@ if sensor_desc_connect is None:
     sys.exit(1)
 
 # connect to the first sensor found
-error, sensor = client.obtain_sensor(sensor_desc_connect)
+# error, sensor = client.obtain_sensor(sensor_desc_connect)
 
 # or connect to a sensor by name
 error, sensor = client.obtain_sensor_by_name("SiUsb", "ig1pcan000028")
@@ -70,6 +70,48 @@ if not error == openzen.ZenError.NoError:
     sys.exit(1)
 
 print ("Sensor is streaming data: {}".format(is_streaming))
+
+print("\n>> Set and get IMU settings")
+# test to print imu ID
+error = imu.set_int32_property(openzen.ZenImuProperty.Id, 66)
+error, imu_id = imu.get_int32_property(openzen.ZenImuProperty.Id)
+print("IMU ID: {}".format(imu_id))
+
+# test to set freq
+error = imu.set_int32_property(openzen.ZenImuProperty.SamplingRate, 99)
+error, freq = imu.get_int32_property(openzen.ZenImuProperty.SamplingRate)
+print("Sampling rate: {}".format(freq))
+
+# test CAN settings
+print("\n>> Set and get CAN settings")
+# "CanChannelMode"
+error = imu.set_int32_property(openzen.ZenImuProperty.CanChannelMode, 1)
+error, channelMode = imu.get_int32_property(openzen.ZenImuProperty.CanChannelMode)
+print("CanChannelMode: {}".format(channelMode))
+#"CanPointMode"
+error = imu.set_int32_property(openzen.ZenImuProperty.CanPointMode, 1)
+error, CanPointMode = imu.get_int32_property(openzen.ZenImuProperty.CanPointMode)
+print("CanPointMode: {}".format(CanPointMode))
+#"CanStartId"
+error = imu.set_int32_property(openzen.ZenImuProperty.CanStartId, 0)
+error, CanStartId = imu.get_int32_property(openzen.ZenImuProperty.CanStartId)
+print("CanStartId: {}".format(CanStartId))
+#"CanBaudrate"
+error = imu.set_int32_property(openzen.ZenImuProperty.CanBaudrate, 125)
+error, CanBaudrate = imu.get_int32_property(openzen.ZenImuProperty.CanBaudrate)
+print("CanBaudrate: {}".format(CanBaudrate))
+#"CanMapping"
+error = imu.set_array_property_int32(openzen.ZenImuProperty.CanMapping, [3, 5, 6, 19, 20, 21, 28, 29, 30, 38, 39, 40, 34, 35, 36, 37])
+error, CanMapping = imu.get_array_property_int32(openzen.ZenImuProperty.CanMapping)
+print("CanMapping: {}".format(CanMapping))
+#"CanHeartbeat"
+error = imu.set_int32_property(openzen.ZenImuProperty.CanHeartbeat, 5)
+error, CanHeartbeat = imu.get_int32_property(openzen.ZenImuProperty.CanHeartbeat)
+print("CanHeartbeat: {}".format(CanHeartbeat))
+
+print()
+
+
 
 ## load the alignment matrix from the sensor
 ## some sensors don't support this (for example IG1, BE1)
@@ -110,7 +152,7 @@ while True:
         print ("B: {} microT".format(imu_data.b))
 
     runSome = runSome + 1
-    if runSome > 50:
+    if runSome > 0:
         break
 
 print ("Streaming of sensor data complete")
