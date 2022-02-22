@@ -507,7 +507,6 @@ typedef enum EZenSensorProperty
 typedef enum EZenImuProperty
 {
     ZenImuProperty_Invalid = 0,
-    ZenImuProperty_Id,
     
     ZenImuProperty_StreamData = 1000,           // bool
     ZenImuProperty_SamplingRate,                // int
@@ -522,7 +521,7 @@ typedef enum EZenImuProperty
 
     ZenImuProperty_FieldRadius,                  // float
     ZenImuProperty_FilterMode,                   // int
-    ZenImuProperty_SupportedFilterModes,         // byte[]
+    ZenImuProperty_SupportedFilterModes,         // int[]
     ZenImuProperty_FilterPreset,                 // int (future: float acc_covar, mag_covar)
 
     ZenImuProperty_OrientationOffsetMode,        // int
@@ -593,6 +592,9 @@ typedef enum EZenImuProperty
     /* Sensor sync commands */
     ZenImuProperty_StartSensorSync,              // void - send start sensor sync command
     ZenImuProperty_StopSensorSync,               // void - send stop sensor sync command
+
+    /* Component properties */
+    ZenImuProperty_Id,
 
     ZenImuProperty_Max
 } EZenImuProperty;

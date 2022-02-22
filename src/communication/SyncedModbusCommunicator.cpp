@@ -57,9 +57,7 @@ namespace zen
             return std::make_pair(error, outArray.size());
 
         m_resultPtr = outArray.data();
-        // size() returns the number of elements in the span
-        // and not the buffer size in bytes;
-        m_resultSize = outArray.size() * sizeof(T);
+        m_resultSize = outArray.size_bytes();
 
         auto guard = finally([this]() {
             m_resultPtr = nullptr;
@@ -67,10 +65,10 @@ namespace zen
         });
 
         if (auto error = m_communicator->send(address, function, data))
-            return std::make_pair(error, outArray.size());
+            return std::make_pair(error, m_resultSize);
 
         if (auto error = terminateWaitOnPublishOrTimeout())
-            return std::make_pair(error, outArray.size());
+            return std::make_pair(error, m_resultSize);
 
         return std::make_pair(ZenError_None, m_resultSize);
     }
@@ -240,14 +238,14 @@ namespace zen
     template ZenError SyncedModbusCommunicator::publishArray(ZenProperty_t, ZenError, gsl::span<const float>) noexcept;
     template ZenError SyncedModbusCommunicator::publishArray(ZenProperty_t, ZenError, gsl::span<const int32_t>) noexcept;
     template ZenError SyncedModbusCommunicator::publishArray(ZenProperty_t, ZenError, gsl::span<const uint64_t>) noexcept;
-    // [TODO] Remove after we have removed backwards compatability with version 0
+    // [TODO] Remove after we have removed backwards compatibility with version 0
     template ZenError SyncedModbusCommunicator::publishArray(ZenProperty_t, ZenError, gsl::span<const uint32_t>) noexcept;
 
     template ZenError SyncedModbusCommunicator::publishResult(ZenProperty_t, ZenError, bool) noexcept;
     template ZenError SyncedModbusCommunicator::publishResult(ZenProperty_t, ZenError, float) noexcept;
     template ZenError SyncedModbusCommunicator::publishResult(ZenProperty_t, ZenError, int32_t) noexcept;
     template ZenError SyncedModbusCommunicator::publishResult(ZenProperty_t, ZenError, uint64_t) noexcept;
-    // [TODO] Remove after we have removed backwards compatability with version 0
+    // [TODO] Remove after we have removed backwards compatibility with version 0
     template ZenError SyncedModbusCommunicator::publishResult(ZenProperty_t, ZenError, uint32_t) noexcept;
 
     template std::pair<ZenError, size_t> SyncedModbusCommunicator::sendAndWaitForArray(uint8_t, uint8_t, ZenProperty_t, gsl::span<const std::byte>, gsl::span<std::byte>) noexcept;
@@ -255,13 +253,13 @@ namespace zen
     template std::pair<ZenError, size_t> SyncedModbusCommunicator::sendAndWaitForArray(uint8_t, uint8_t, ZenProperty_t, gsl::span<const std::byte>, gsl::span<float>) noexcept;
     template std::pair<ZenError, size_t> SyncedModbusCommunicator::sendAndWaitForArray(uint8_t, uint8_t, ZenProperty_t, gsl::span<const std::byte>, gsl::span<int32_t>) noexcept;
     template std::pair<ZenError, size_t> SyncedModbusCommunicator::sendAndWaitForArray(uint8_t, uint8_t, ZenProperty_t, gsl::span<const std::byte>, gsl::span<uint64_t>) noexcept;
-    // [TODO] Remove after we have removed backwards compatability with version 0
+    // [TODO] Remove after we have removed backwards compatibility with version 0
     template std::pair<ZenError, size_t> SyncedModbusCommunicator::sendAndWaitForArray(uint8_t, uint8_t, ZenProperty_t, gsl::span<const std::byte>, gsl::span<uint32_t>) noexcept;
 
     template nonstd::expected<bool, ZenError> SyncedModbusCommunicator::sendAndWaitForResult(uint8_t, uint8_t, ZenProperty_t, gsl::span<const std::byte>) noexcept;
     template nonstd::expected<float, ZenError> SyncedModbusCommunicator::sendAndWaitForResult(uint8_t, uint8_t, ZenProperty_t, gsl::span<const std::byte>) noexcept;
     template nonstd::expected<int32_t, ZenError> SyncedModbusCommunicator::sendAndWaitForResult(uint8_t, uint8_t, ZenProperty_t, gsl::span<const std::byte>) noexcept;
     template nonstd::expected<uint64_t, ZenError> SyncedModbusCommunicator::sendAndWaitForResult(uint8_t, uint8_t, ZenProperty_t, gsl::span<const std::byte>) noexcept;
-    // [TODO] Remove after we have removed backwards compatability with version 0
+    // [TODO] Remove after we have removed backwards compatibility with version 0
     template nonstd::expected<uint32_t, ZenError> SyncedModbusCommunicator::sendAndWaitForResult(uint8_t, uint8_t, ZenProperty_t, gsl::span<const std::byte>) noexcept;
 }
