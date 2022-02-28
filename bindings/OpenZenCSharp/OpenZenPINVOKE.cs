@@ -264,11 +264,29 @@ class OpenZenPINVOKE {
   [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_a_get")]
   public static extern global::System.IntPtr ZenImuData_a_get(global::System.Runtime.InteropServices.HandleRef jarg1);
 
-  [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_g_set")]
-  public static extern void ZenImuData_g_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+  [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_g1_set")]
+  public static extern void ZenImuData_g1_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
 
-  [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_g_get")]
-  public static extern global::System.IntPtr ZenImuData_g_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+  [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_g1_get")]
+  public static extern global::System.IntPtr ZenImuData_g1_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_g2_set")]
+  public static extern void ZenImuData_g2_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_g2_get")]
+  public static extern global::System.IntPtr ZenImuData_g2_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_g1BiasCalib_set")]
+  public static extern void ZenImuData_g1BiasCalib_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_g1BiasCalib_get")]
+  public static extern global::System.IntPtr ZenImuData_g1BiasCalib_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_g2BiasCalib_set")]
+  public static extern void ZenImuData_g2BiasCalib_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_g2BiasCalib_get")]
+  public static extern global::System.IntPtr ZenImuData_g2BiasCalib_get(global::System.Runtime.InteropServices.HandleRef jarg1);
 
   [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_b_set")]
   public static extern void ZenImuData_b_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
@@ -282,11 +300,17 @@ class OpenZenPINVOKE {
   [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_aRaw_get")]
   public static extern global::System.IntPtr ZenImuData_aRaw_get(global::System.Runtime.InteropServices.HandleRef jarg1);
 
-  [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_gRaw_set")]
-  public static extern void ZenImuData_gRaw_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+  [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_g1Raw_set")]
+  public static extern void ZenImuData_g1Raw_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
 
-  [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_gRaw_get")]
-  public static extern global::System.IntPtr ZenImuData_gRaw_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+  [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_g1Raw_get")]
+  public static extern global::System.IntPtr ZenImuData_g1Raw_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_g2Raw_set")]
+  public static extern void ZenImuData_g2Raw_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_g2Raw_get")]
+  public static extern global::System.IntPtr ZenImuData_g2Raw_get(global::System.Runtime.InteropServices.HandleRef jarg1);
 
   [global::System.Runtime.InteropServices.DllImport("OpenZen", EntryPoint="CSharp_ZenImuData_bRaw_set")]
   public static extern void ZenImuData_bRaw_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
