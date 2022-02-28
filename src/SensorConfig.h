@@ -23,7 +23,8 @@ enum SpecialOptions {
     // The second Gyro value (in new IG1 protocol version) is the primary one
     // which should be reported to the user.
     // This is the case for LPMS-BE1 sensor
-    SpecialOptions_SecondGyroIsPrimary = 1ul << 0
+    SpecialOptions_OnlyFirstGyro = 1ul << 0,
+    SpecialOptions_OnlySecondGyro = 2ul << 0
 };
 
 struct ComponentConfig

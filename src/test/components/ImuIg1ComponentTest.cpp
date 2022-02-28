@@ -90,7 +90,7 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
     properties->setRadOutput(false);
     properties->setLowPrecisionMode(false);
 
-    ImuIg1Component imuComp(std::move(properties), *syncMockPtr.get(), 0, false);
+    ImuIg1Component imuComp(std::move(properties), *syncMockPtr.get(), 0, true, true);
 
     std::vector<std::byte> vecValidPacket;
     
@@ -160,7 +160,7 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
     }
 
-    // alignemnt-calib Gyro 1, this is gonna go into the g output of Ig1
+    // alignemnt-calib Gyro 1, this is gonna go into the g1 output of Ig1
     {
         auto vx = float_to_bytes(-2.1f);
         auto vy = float_to_bytes(-2.15f);
@@ -170,7 +170,7 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
     }
 
-    // alignment-calib Gyro 2
+    // alignment-calib Gyro 2, this is gonna go into the g2 output of Ig1
     {
         auto vx = float_to_bytes(1.1f);
         auto vy = float_to_bytes(1.15f);
@@ -262,13 +262,29 @@ TEST(ImuIg1Component, parseDataPackage_32bit) {
     ASSERT_NEAR(-15.0f, parsed->imuData.a[1], 0.0001f);
     ASSERT_NEAR(-20.0f, parsed->imuData.a[2], 0.0001f);
 
-    ASSERT_NEAR(-1.0f, parsed->imuData.gRaw[0], 0.0001f);
-    ASSERT_NEAR(-1.5f, parsed->imuData.gRaw[1], 0.0001f);
-    ASSERT_NEAR(-2.0f, parsed->imuData.gRaw[2], 0.0001f);
+    ASSERT_NEAR(-1.0f, parsed->imuData.g1Raw[0], 0.0001f);
+    ASSERT_NEAR(-1.5f, parsed->imuData.g1Raw[1], 0.0001f);
+    ASSERT_NEAR(-2.0f, parsed->imuData.g1Raw[2], 0.0001f);
 
-    ASSERT_NEAR(-2.1f, parsed->imuData.g[0], 0.0001f);
-    ASSERT_NEAR(-2.15f, parsed->imuData.g[1], 0.0001f);
-    ASSERT_NEAR(-2.2f, parsed->imuData.g[2], 0.0001f);
+    ASSERT_NEAR(1.0f, parsed->imuData.g2Raw[0], 0.0001f);
+    ASSERT_NEAR(1.5f, parsed->imuData.g2Raw[1], 0.0001f);
+    ASSERT_NEAR(2.0f, parsed->imuData.g2Raw[2], 0.0001f);
+
+    ASSERT_NEAR(-0.1f, parsed->imuData.g1BiasCalib[0], 0.0001f);
+    ASSERT_NEAR(-0.15f, parsed->imuData.g1BiasCalib[1], 0.0001f);
+    ASSERT_NEAR(-0.2f, parsed->imuData.g1BiasCalib[2], 0.0001f);
+
+    ASSERT_NEAR(0.1f, parsed->imuData.g2BiasCalib[0], 0.0001f);
+    ASSERT_NEAR(0.1f, parsed->imuData.g2BiasCalib[1], 0.0001f);
+    ASSERT_NEAR(0.2f, parsed->imuData.g2BiasCalib[2], 0.0001f);
+
+    ASSERT_NEAR(-2.1f, parsed->imuData.g1[0], 0.0001f);
+    ASSERT_NEAR(-2.15f, parsed->imuData.g1[1], 0.0001f);
+    ASSERT_NEAR(-2.2f, parsed->imuData.g1[2], 0.0001f);
+
+    ASSERT_NEAR(1.1f, parsed->imuData.g2[0], 0.0001f);
+    ASSERT_NEAR(1.15f, parsed->imuData.g2[1], 0.0001f);
+    ASSERT_NEAR(1.2f, parsed->imuData.g2[2], 0.0001f);
 
     ASSERT_NEAR(-5.1f, parsed->imuData.bRaw[0] , 0.0001f);
     ASSERT_NEAR(-5.15f, parsed->imuData.bRaw[1], 0.0001f);
@@ -331,7 +347,7 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
     properties->setRadOutput(false);
     properties->setLowPrecisionMode(true);
 
-    ImuIg1Component imuComp(std::move(properties), *syncMockPtr.get(), 0, false);
+    ImuIg1Component imuComp(std::move(properties), *syncMockPtr.get(), 0, true, true);
 
     std::vector<std::byte> vecValidPacket;
     
@@ -401,7 +417,7 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
     }
 
-    // alignemnt-calib Gyro 1, this is gonna go into the g output of Ig1
+    // alignemnt-calib Gyro 1, this is gonna go into the g1 output of Ig1
     {
         auto vx = float_to_int16_to_bytes(-20.0f, 10.0f);
         auto vy = float_to_int16_to_bytes(-21.5f, 10.0f);
@@ -411,7 +427,7 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
     }
 
-    // alignment-calib Gyro 2
+    // alignment-calib Gyro 2, this is gonna go into the g2 output of Ig1
     {
         auto vx = float_to_int16_to_bytes(11.0f, 10.0f);
         auto vy = float_to_int16_to_bytes(11.5f, 10.0f);
@@ -503,13 +519,29 @@ TEST(ImuIg1Component, parseDataPackage_16bit) {
     ASSERT_NEAR(-15.0f, parsed->imuData.a[1], 0.01f);
     ASSERT_NEAR(-20.0f, parsed->imuData.a[2], 0.01f);
 
-    ASSERT_NEAR(-10.0f, parsed->imuData.gRaw[0], 0.01f);
-    ASSERT_NEAR(-10.5f, parsed->imuData.gRaw[1], 0.01f);
-    ASSERT_NEAR(-20.0f, parsed->imuData.gRaw[2], 0.01f);
+    ASSERT_NEAR(-10.0f, parsed->imuData.g1Raw[0], 0.01f);
+    ASSERT_NEAR(-10.5f, parsed->imuData.g1Raw[1], 0.01f);
+    ASSERT_NEAR(-20.0f, parsed->imuData.g1Raw[2], 0.01f);
 
-    ASSERT_NEAR(-20.0f, parsed->imuData.g[0], 0.01f);
-    ASSERT_NEAR(-21.5f, parsed->imuData.g[1], 0.01f);
-    ASSERT_NEAR(-22.0f, parsed->imuData.g[2], 0.01f);
+    ASSERT_NEAR(10.0f, parsed->imuData.g2Raw[0], 0.01f);
+    ASSERT_NEAR(10.5f, parsed->imuData.g2Raw[1], 0.01f);
+    ASSERT_NEAR(20.0f, parsed->imuData.g2Raw[2], 0.01f);
+    
+    ASSERT_NEAR(-10.0f, parsed->imuData.g1BiasCalib[0], 0.01f);
+    ASSERT_NEAR(-15.0f, parsed->imuData.g1BiasCalib[1], 0.01f);
+    ASSERT_NEAR(-20.0f, parsed->imuData.g1BiasCalib[2], 0.01f);
+
+    ASSERT_NEAR(60.0f, parsed->imuData.g2BiasCalib[0], 0.01f);
+    ASSERT_NEAR(70.0f, parsed->imuData.g2BiasCalib[1], 0.01f);
+    ASSERT_NEAR(80.0f, parsed->imuData.g2BiasCalib[2], 0.01f);
+
+    ASSERT_NEAR(-20.0f, parsed->imuData.g1[0], 0.01f);
+    ASSERT_NEAR(-21.5f, parsed->imuData.g1[1], 0.01f);
+    ASSERT_NEAR(-22.0f, parsed->imuData.g1[2], 0.01f);
+
+    ASSERT_NEAR(11.0f, parsed->imuData.g2[0], 0.01f);
+    ASSERT_NEAR(11.5f, parsed->imuData.g2[1], 0.01f);
+    ASSERT_NEAR(12.0f, parsed->imuData.g2[2], 0.01f);
 
     ASSERT_NEAR(-5.1f, parsed->imuData.bRaw[0] , 0.01f);
     ASSERT_NEAR(-5.15f, parsed->imuData.bRaw[1], 0.01f);
@@ -572,7 +604,7 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
     properties->setRadOutput(true);
     properties->setLowPrecisionMode(true);
 
-    ImuIg1Component imuComp(std::move(properties), *syncMockPtr.get(), 0, false);
+    ImuIg1Component imuComp(std::move(properties), *syncMockPtr.get(), 0, true, true);
 
     std::vector<std::byte> vecValidPacket;
 
@@ -642,7 +674,7 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
     }
 
-    // alignemnt-calib Gyro 1, this is gonna go into the g output of Ig1
+    // alignemnt-calib Gyro 1, this is gonna go into the g1 output of Ig1
     {
         auto vx = float_to_int16_to_bytes(degToRad(-20.0f), 1000.0f);
         auto vy = float_to_int16_to_bytes(degToRad(-21.5f), 1000.0f);
@@ -652,7 +684,7 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
         vecValidPacket.insert(vecValidPacket.end(), vz.begin(), vz.end());
     }
 
-    // alignment-calib Gyro 2
+    // alignment-calib Gyro 2, this is gonna go into the g2 output of Ig1
     {
         auto vx = float_to_int16_to_bytes(degToRad(11.0f), 100.0f);
         auto vy = float_to_int16_to_bytes(degToRad(11.5f), 100.0f);
@@ -744,13 +776,32 @@ TEST(ImuIg1Component, parseDataPackage_16bit_rad_output) {
     ASSERT_NEAR(-15.0f, parsed->imuData.a[1], 0.01f);
     ASSERT_NEAR(-20.0f, parsed->imuData.a[2], 0.01f);
 
-    ASSERT_NEAR(-10.0f, parsed->imuData.gRaw[0], 0.1f);
-    ASSERT_NEAR(-10.5f, parsed->imuData.gRaw[1], 0.1f);
-    ASSERT_NEAR(-20.0f, parsed->imuData.gRaw[2], 0.1f);
+    ASSERT_NEAR(-10.0f, parsed->imuData.g1Raw[0], 0.1f);
+    ASSERT_NEAR(-10.5f, parsed->imuData.g1Raw[1], 0.1f);
+    ASSERT_NEAR(-20.0f, parsed->imuData.g1Raw[2], 0.1f);
 
-    ASSERT_NEAR(-20.0f, parsed->imuData.g[0], 0.1f);
-    ASSERT_NEAR(-21.5f, parsed->imuData.g[1], 0.1f);
-    ASSERT_NEAR(-22.0f, parsed->imuData.g[2], 0.1f);
+    // given a scale factor of 100 on gyro2, radian value that is after 0.01 th place will be ignored
+    // so the maximum error when scaled-up and scaled-down during sensor-PC communication would be 0.01 rad
+    // approximately 0.57 degree
+    ASSERT_NEAR(10.0f, parsed->imuData.g2Raw[0], 0.6f);
+    ASSERT_NEAR(10.5f, parsed->imuData.g2Raw[1], 0.6f);
+    ASSERT_NEAR(20.0f, parsed->imuData.g2Raw[2], 0.6f);
+
+    ASSERT_NEAR(-10.0f, parsed->imuData.g1BiasCalib[0], 0.1f);
+    ASSERT_NEAR(-15.0f, parsed->imuData.g1BiasCalib[1], 0.1f);
+    ASSERT_NEAR(-20.0f, parsed->imuData.g1BiasCalib[2], 0.1f);
+
+    ASSERT_NEAR(60.0f, parsed->imuData.g2BiasCalib[0], 0.6f);
+    ASSERT_NEAR(70.5f, parsed->imuData.g2BiasCalib[1], 0.6f);
+    ASSERT_NEAR(80.0f, parsed->imuData.g2BiasCalib[2], 0.6f);
+
+    ASSERT_NEAR(-20.0f, parsed->imuData.g1[0], 0.1f);
+    ASSERT_NEAR(-21.5f, parsed->imuData.g1[1], 0.1f);
+    ASSERT_NEAR(-22.0f, parsed->imuData.g1[2], 0.1f);
+
+    ASSERT_NEAR(11.0f, parsed->imuData.g2[0], 0.6f);
+    ASSERT_NEAR(11.5f, parsed->imuData.g2[1], 0.6f);
+    ASSERT_NEAR(12.0f, parsed->imuData.g2[2], 0.6f);
 
     ASSERT_NEAR(-5.1f, parsed->imuData.bRaw[0] , 0.01f);
     ASSERT_NEAR(-5.15f, parsed->imuData.bRaw[1], 0.01f);

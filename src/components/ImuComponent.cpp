@@ -225,15 +225,15 @@ namespace zen
                     }
 
                     for (unsigned idx = 0; idx < 3; ++idx)
-                        imuData.gRaw[idx] = (180.f / float(M_PI)) * (*lowPrec ? parseFloat16(data, 1000.f) : parseFloat32(data));
+                        imuData.g1Raw[idx] = (180.f / float(M_PI)) * (*lowPrec ? parseFloat16(data, 1000.f) : parseFloat32(data));
 
                     auto cache = m_cache.borrow();
 
                     LpVector3f g;
-                    convertArrayToLpVector3f(imuData.gRaw, &g);
+                    convertArrayToLpVector3f(imuData.g1Raw, &g);
                     matVectMult3(&cache->gyrAlignMatrix, &g, &g);
                     vectAdd3x1(&cache->gyrBias, &g, &g);
-                    convertLpVector3fToArray(&g, imuData.g);
+                    convertLpVector3fToArray(&g, imuData.g1);
                 }
             }
             else

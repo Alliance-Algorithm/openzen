@@ -34,9 +34,12 @@ TEST(Serialization, serializeAndDeserializeImu) {
     imuData.a[1] = 24.0f;
     imuData.a[2] = 25.0f;
 
-    imuData.g[0] = 0.004f;
-    imuData.g[1] = 0.005f;
-    imuData.g[2] = 0.006f;
+    imuData.g1[0] = 0.004f;
+    imuData.g1[1] = 0.005f;
+    imuData.g1[2] = 0.006f;
+    imuData.g2[0] = 0.004f;
+    imuData.g2[1] = 0.005f;
+    imuData.g2[2] = 0.006f;
 
     imuData.altitude = 55.44f;
 
@@ -59,7 +62,8 @@ TEST(Serialization, serializeAndDeserializeImu) {
 
     checkArray3(imuData.a, imuDataLoaded.a);
     ASSERT_EQ(imuData.altitude, imuDataLoaded.altitude);
-    checkArray3(imuData.g, imuDataLoaded.g);
+    checkArray3(imuData.g1, imuDataLoaded.g1);
+    checkArray3(imuData.g2, imuDataLoaded.g2);
     checkArray3(imuData.w, imuDataLoaded.w);
     ASSERT_EQ(imuData.heaveMotion, imuDataLoaded.heaveMotion);
 }
