@@ -113,9 +113,17 @@ namespace zen
                 return nonstd::make_unexpected(ZenSensorInitError_RetrieveFailed);
             }
 
-            bool useSecondGyroAsPrimary = specialOptions & SpecialOptions_SecondGyroIsPrimary;
+            bool hasFirstGyro = true, hasSecondGyro = true;
+            switch (specialOptions) {
+                case SpecialOptions_OnlyFirstGyro:
+                    hasSecondGyro = false;
+                    break;
+                case SpecialOptions_OnlySecondGyro:
+                    hasFirstGyro = false;
+                    break;
+            }
 
-            return std::make_unique<ImuIg1Component>(std::move(properties), communicator, version, useSecondGyroAsPrimary);
+            return std::make_unique<ImuIg1Component>(std::move(properties), communicator, version, hasFirstGyro, hasSecondGyro);
 
         }
 

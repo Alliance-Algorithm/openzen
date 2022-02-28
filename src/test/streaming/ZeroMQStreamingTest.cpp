@@ -94,9 +94,12 @@ TEST(ZeroMQStreaming, sendAndReceive) {
     // We know what the TestSensor sends, check it
     ASSERT_EQ(sensorData->component.handle, 1);
     ASSERT_EQ(sensorData->eventType, ZenEventType_ImuData);
-    ASSERT_EQ(sensorData->data.imuData.g[0], 23.0f );
-    ASSERT_EQ(sensorData->data.imuData.g[1], 24.0f);
-    ASSERT_EQ(sensorData->data.imuData.g[2], 25.0f);
+    ASSERT_EQ(sensorData->data.imuData.g1[0], 23.0f );
+    ASSERT_EQ(sensorData->data.imuData.g1[1], 24.0f);
+    ASSERT_EQ(sensorData->data.imuData.g1[2], 25.0f);
+    ASSERT_EQ(sensorData->data.imuData.g2[0], 23.0f );
+    ASSERT_EQ(sensorData->data.imuData.g2[1], 24.0f);
+    ASSERT_EQ(sensorData->data.imuData.g2[2], 25.0f);
 }
 
 TEST(ZeroMQStreaming, parseImuMessage) {

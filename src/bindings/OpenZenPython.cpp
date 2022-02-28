@@ -152,18 +152,30 @@ PYBIND11_MODULE(openzen, m) {
         .def_property_readonly("a", [](const ZenImuData & data) {
             return OpenZenPythonHelper::toStlArray<float, 3>(data.a);
         }, "Calibrated accelerometer sensor data, Unit: g")
-        .def_property_readonly("g", [](const ZenImuData & data) {
-            return OpenZenPythonHelper::toStlArray<float, 3>(data.g);
-        }, "Calibrated gyroscope sensor data, Unit: degree/s")
+        .def_property_readonly("g1", [](const ZenImuData & data) {
+            return OpenZenPythonHelper::toStlArray<float, 3>(data.g1);
+        }, "Calibrated gyroscope I sensor data, Unit: degree/s")
+        .def_property_readonly("g2", [](const ZenImuData & data) {
+            return OpenZenPythonHelper::toStlArray<float, 3>(data.g2);
+        }, "Calibrated gyroscope II sensor data, Unit: degree/s")
         .def_property_readonly("b", [](const ZenImuData & data) {
             return OpenZenPythonHelper::toStlArray<float, 3>(data.b);
         }, "Calibrated magnetometer sensor data, Unit: micro Tesla")
         .def_property_readonly("a_raw", [](const ZenImuData & data) {
             return OpenZenPythonHelper::toStlArray<float, 3>(data.aRaw);
         }, "Raw accelerometer sensor data, Unit: g")
-        .def_property_readonly("g_raw", [](const ZenImuData & data) {
-            return OpenZenPythonHelper::toStlArray<float, 3>(data.gRaw);
-        }, "Raw gyroscope sensor data, Unit: degree/s")
+        .def_property_readonly("g1_raw", [](const ZenImuData & data) {
+            return OpenZenPythonHelper::toStlArray<float, 3>(data.g1Raw);
+        }, "Raw gyroscope I sensor data, Unit: degree/s")
+        .def_property_readonly("g2_raw", [](const ZenImuData & data) {
+            return OpenZenPythonHelper::toStlArray<float, 3>(data.g2Raw);
+        }, "Raw gyroscope II sensor data, Unit: degree/s")
+        .def_property_readonly("g1_bias_calib", [](const ZenImuData & data) {
+            return OpenZenPythonHelper::toStlArray<float, 3>(data.g1BiasCalib);
+        }, "Bias calibrated gyroscope I sensor data, Unit: degree/s")
+        .def_property_readonly("g2_bias_calib", [](const ZenImuData & data) {
+            return OpenZenPythonHelper::toStlArray<float, 3>(data.g2BiasCalib);
+        }, "Bias calibrated gyroscope II sensor data, Unit: degree/s")
         .def_property_readonly("b_raw", [](const ZenImuData & data) {
             return OpenZenPythonHelper::toStlArray<float, 3>(data.bRaw);
         }, "Raw magnetometer sensor data, Unit: micro Tesla")
