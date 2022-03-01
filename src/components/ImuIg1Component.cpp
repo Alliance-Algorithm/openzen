@@ -23,10 +23,11 @@
 namespace zen
 {
     ImuIg1Component::ImuIg1Component(std::unique_ptr<ISensorProperties> properties, SyncedModbusCommunicator& communicator, unsigned int,
-        bool secondGyroIsPrimary) noexcept
+        bool hasFirstGyro, bool hasSecondGyro) noexcept
         : SensorComponent(std::move(properties))
         , m_communicator(communicator)
-        , m_secondGyroIsPrimary(secondGyroIsPrimary)
+        , m_hasFirstGyro(hasFirstGyro)
+        , m_hasSecondGyro(hasSecondGyro)
     {}
 
     ZenSensorInitError ImuIg1Component::init() noexcept
@@ -106,15 +107,13 @@ namespace zen
         const auto isRadOutput = *m_properties->getBool(ZenImuProperty_DegRadOutput);
         const auto isLowPrecisionOutput = *m_properties->getBool(ZenImuProperty_OutputLowPrecision);
 
+        // The sensor data arrives in an order documented on https://lp-research.atlassian.net/wiki/spaces/LKB/pages/1255145474/LPMS-IG1+User+Manual#Sensor-Measurement-Data (2022/2/25)
         // Timestamp needs to be multiplied by 0.002 to convert to seconds
-        // according to the IG1 User Manual
         // also output the raw framecount as provided by the sensor
         // This will always be 32-bit, independent if low precission mode is selected
         sensor_parsing_util::parseAndStoreScalar(data, &imuData.frameCount);
         imuData.timestamp = imuData.frameCount * 0.002;
 
-        // to store sensor values which are not forwaded to the ImuData class for Ig1
-        float unusedValue[3];
         if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputRawAcc,
             m_properties, isLowPrecisionOutput, 1000.0f, data, &imuData.aRaw[0])) {}
         else {
@@ -127,58 +126,66 @@ namespace zen
             return nonstd::make_unexpected(enabled.error());
         }
 
-        if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputRawGyr0,
-            m_properties, isLowPrecisionOutput, isRadOutput ? 1000.0f: 10.0f, data, &imuData.gRaw[0])) {
-            sensor_parsing_util::radToDegreesIfNeededVector3(m_properties, &imuData.gRaw[0]);
-        } else {
-            return nonstd::make_unexpected(enabled.error());
-        }
-
-        // LPMS-BE1 writes its only gyro values in the gyr1 field
-        float * secondGyroTargetRaw = &unusedValue[0];
-        if (m_secondGyroIsPrimary) {
-            secondGyroTargetRaw = &imuData.gRaw[0];
-        }
-        if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputRawGyr1,
-            m_properties, isLowPrecisionOutput, isRadOutput ? 100.0f: 10.0f, data, secondGyroTargetRaw)) {
-            sensor_parsing_util::radToDegreesIfNeededVector3(m_properties, secondGyroTargetRaw);
+        // gyro raw value
+        if (m_hasFirstGyro) {
+            if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputRawGyr0,
+                m_properties, isLowPrecisionOutput, isRadOutput ? 1000.0f: 10.0f, data, &imuData.g1Raw[0])) {
+                sensor_parsing_util::radToDegreesIfNeededVector3(m_properties, &imuData.g1Raw[0]);
+            } else {
+                return nonstd::make_unexpected(enabled.error());
             }
-        else {
-            return nonstd::make_unexpected(enabled.error());
         }
 
-        if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputGyr0BiasCalib,
-            m_properties, isLowPrecisionOutput, isRadOutput ? 1000.0f: 10.0f, data, &unusedValue[0])) {}
-        else {
-            return nonstd::make_unexpected(enabled.error());
+        if (m_hasSecondGyro) {
+            if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputRawGyr1,
+                m_properties, isLowPrecisionOutput, isRadOutput ? 100.0f: 10.0f, data, &imuData.g2Raw[0])) {
+                sensor_parsing_util::radToDegreesIfNeededVector3(m_properties, &imuData.g2Raw[0]);
+            } else {
+                return nonstd::make_unexpected(enabled.error());
+            }
         }
 
-        if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputGyr1BiasCalib,
-            m_properties, isLowPrecisionOutput, isRadOutput ? 100.0f: 10.0f, data, &unusedValue[0])) {}
-        else {
-            return nonstd::make_unexpected(enabled.error());
+        // gyro bias calibrated value
+        if (m_hasFirstGyro) {
+            if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputGyr0BiasCalib,
+                m_properties, isLowPrecisionOutput, isRadOutput ? 1000.0f: 10.0f, data, &imuData.g1BiasCalib[0])) {
+                    sensor_parsing_util::radToDegreesIfNeededVector3(m_properties, &imuData.g1BiasCalib[0]);
+                }
+            else {
+                return nonstd::make_unexpected(enabled.error());
+            }
         }
 
+        if (m_hasSecondGyro) {
+            if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputGyr1BiasCalib,
+                m_properties, isLowPrecisionOutput, isRadOutput ? 100.0f: 10.0f, data, &imuData.g2BiasCalib[0])) {
+                    sensor_parsing_util::radToDegreesIfNeededVector3(m_properties, &imuData.g2BiasCalib[0]);
+                }
+            else {
+                return nonstd::make_unexpected(enabled.error());
+            }
+        }
+
+        // gyro aliment calibrated value
         // alignment calibration also contains the static calibration correction
-        if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputGyr0AlignCalib,
-            m_properties, isLowPrecisionOutput, isRadOutput ? 1000.0f: 10.0f, data, &imuData.g[0])) {
-                sensor_parsing_util::radToDegreesIfNeededVector3(m_properties, &imuData.g[0]);
+        if (m_hasFirstGyro) {
+            if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputGyr0AlignCalib,
+                m_properties, isLowPrecisionOutput, isRadOutput ? 1000.0f: 10.0f, data, &imuData.g1[0])) {
+                    sensor_parsing_util::radToDegreesIfNeededVector3(m_properties, &imuData.g1[0]);
+                }
+            else {
+                return nonstd::make_unexpected(enabled.error());
             }
-        else {
-            return nonstd::make_unexpected(enabled.error());
         }
 
-        // LPMS-BE1 writes its only gyro values in the gyr1 field
-        float * secondGyroTarget = &unusedValue[0];
-        if (m_secondGyroIsPrimary) {
-            secondGyroTarget = &imuData.g[0];
-        }
-        if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputGyr1AlignCalib,
-            m_properties, isLowPrecisionOutput, isRadOutput ? 100.0f: 10.0f, data, secondGyroTarget)) {
-                sensor_parsing_util::radToDegreesIfNeededVector3(m_properties, secondGyroTarget);
+        if (m_hasSecondGyro) {
+            if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputGyr1AlignCalib,
+                m_properties, isLowPrecisionOutput, isRadOutput ? 100.0f: 10.0f, data, &imuData.g2[0])) {
+                    sensor_parsing_util::radToDegreesIfNeededVector3(m_properties, &imuData.g2[0]);
+                }
+            else {
+                return nonstd::make_unexpected(enabled.error());
             }
-        else {
-            return nonstd::make_unexpected(enabled.error());
         }
 
         if (auto enabled = sensor_parsing_util::readVector3IfAvailable(ZenImuProperty_OutputRawMag,

@@ -177,9 +177,13 @@ typedef struct ZenImuData
     /// Unit: g
     float a[3];
 
-    /// Calibrated gyroscope sensor data.
+    /// Alignment+Bias Calibrated gyroscope sensor data.
     /// Unit: degree/s
-    float g[3];
+    float g1[3], g2[3];
+
+    /// Bias Calibrated gyroscope sensor data.
+    /// Unit: degree/s
+    float g1BiasCalib[3], g2BiasCalib[3];
 
     /// Calibrated magnetometer sensor data.
     /// Unit: micro Tesla
@@ -191,7 +195,7 @@ typedef struct ZenImuData
 
     /// Raw gyroscope sensor data.
     /// Unit: degree/s
-    float gRaw[3];
+    float g1Raw[3], g2Raw[3];
 
     /// Raw magnetometer sensor data.
     /// Unit: micro Tesla

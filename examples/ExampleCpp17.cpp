@@ -58,9 +58,9 @@ int main(int argc, char* argv[])
             std::cout << "> Acceleration: \t x = " << event->data.imuData.a[0]
                 << "\t y = " << event->data.imuData.a[1]
                 << "\t z = " << event->data.imuData.a[2] << std::endl;
-            std::cout << "> Gyro: \t\t x = " << event->data.imuData.g[0]
-                << "\t y = " << event->data.imuData.g[1]
-                << "\t z = " << event->data.imuData.g[2] << std::endl;
+            std::cout << "> Gyro: \t\t x = " << event->data.imuData.g1[0]
+                << "\t y = " << event->data.imuData.g1[1]
+                << "\t z = " << event->data.imuData.g1[2] << std::endl;
         }
     }
 

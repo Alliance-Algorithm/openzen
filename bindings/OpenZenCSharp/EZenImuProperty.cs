@@ -30,6 +30,7 @@ public enum EZenImuProperty {
   ZenImuProperty_AccSupportedRanges,
   ZenImuProperty_GyrAlignment,
   ZenImuProperty_GyrBias,
+  ZenImuProperty_GyrStaticBias,
   ZenImuProperty_GyrRange,
   ZenImuProperty_GyrSupportedRanges,
   ZenImuProperty_GyrUseAutoCalibration,
@@ -72,5 +73,6 @@ public enum EZenImuProperty {
   ZenImuProperty_UartFormat,
   ZenImuProperty_StartSensorSync,
   ZenImuProperty_StopSensorSync,
+  ZenImuProperty_Id,
   ZenImuProperty_Max
 }
