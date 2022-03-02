@@ -327,6 +327,10 @@ SWIGINTERN OpenZenFloatArray *OpenZenFloatArray_frompointer(float *t){
 #ifndef LONG_MAX
 #include <limits.h>
 #endif
+#if (__WORDSIZE == 32) || (LONG_MAX == INT_MAX)
+# error "SWIG wrapped code invalid in 32 bit architecture, regenerate code using -DSWIGWORDSIZE32"
+#endif
+
 
 #include "../include/ZenTypes.h"
 #include "../include/OpenZenCAPI.h"
@@ -397,11 +401,28 @@ SWIGEXPORT void SWIGSTDCALL CSharp_ZenImuData_a_set(void * jarg1, void * jarg2) 
     for (ii = 0; ii < (size_t)3; ii++) b[ii] = *((float *) arg2 + ii); }  }
 SWIGEXPORT void * SWIGSTDCALL CSharp_ZenImuData_a_get(void * jarg1) { void * jresult ; ZenImuData *arg1 = (ZenImuData *) 0 ;
   float *result = 0 ; arg1 = (ZenImuData *)jarg1;  result = (float *)(float *) ((arg1)->a); jresult = result;  return jresult; }
-SWIGEXPORT void SWIGSTDCALL CSharp_ZenImuData_g_set(void * jarg1, void * jarg2) { ZenImuData *arg1 = (ZenImuData *) 0 ;
-  float *arg2 ; arg1 = (ZenImuData *)jarg1;  arg2 = (float *)jarg2;  { size_t ii; float *b = (float *) arg1->g;
+SWIGEXPORT void SWIGSTDCALL CSharp_ZenImuData_g1_set(void * jarg1, void * jarg2) { ZenImuData *arg1 = (ZenImuData *) 0 ;
+  float *arg2 ; arg1 = (ZenImuData *)jarg1;  arg2 = (float *)jarg2;  { size_t ii; float *b = (float *) arg1->g1;
     for (ii = 0; ii < (size_t)3; ii++) b[ii] = *((float *) arg2 + ii); }  }
-SWIGEXPORT void * SWIGSTDCALL CSharp_ZenImuData_g_get(void * jarg1) { void * jresult ; ZenImuData *arg1 = (ZenImuData *) 0 ;
-  float *result = 0 ; arg1 = (ZenImuData *)jarg1;  result = (float *)(float *) ((arg1)->g); jresult = result;  return jresult; }
+SWIGEXPORT void * SWIGSTDCALL CSharp_ZenImuData_g1_get(void * jarg1) { void * jresult ; ZenImuData *arg1 = (ZenImuData *) 0 ;
+  float *result = 0 ; arg1 = (ZenImuData *)jarg1;  result = (float *)(float *) ((arg1)->g1); jresult = result;  return jresult; }
+SWIGEXPORT void SWIGSTDCALL CSharp_ZenImuData_g2_set(void * jarg1, void * jarg2) { ZenImuData *arg1 = (ZenImuData *) 0 ;
+  float *arg2 ; arg1 = (ZenImuData *)jarg1;  arg2 = (float *)jarg2;  { size_t ii; float *b = (float *) arg1->g2;
+    for (ii = 0; ii < (size_t)3; ii++) b[ii] = *((float *) arg2 + ii); }  }
+SWIGEXPORT void * SWIGSTDCALL CSharp_ZenImuData_g2_get(void * jarg1) { void * jresult ; ZenImuData *arg1 = (ZenImuData *) 0 ;
+  float *result = 0 ; arg1 = (ZenImuData *)jarg1;  result = (float *)(float *) ((arg1)->g2); jresult = result;  return jresult; }
+SWIGEXPORT void SWIGSTDCALL CSharp_ZenImuData_g1BiasCalib_set(void * jarg1, void * jarg2) {
+  ZenImuData *arg1 = (ZenImuData *) 0 ; float *arg2 ; arg1 = (ZenImuData *)jarg1;  arg2 = (float *)jarg2;  { size_t ii;
+    float *b = (float *) arg1->g1BiasCalib; for (ii = 0; ii < (size_t)3; ii++) b[ii] = *((float *) arg2 + ii); }  }
+SWIGEXPORT void * SWIGSTDCALL CSharp_ZenImuData_g1BiasCalib_get(void * jarg1) { void * jresult ;
+  ZenImuData *arg1 = (ZenImuData *) 0 ; float *result = 0 ; arg1 = (ZenImuData *)jarg1; 
+  result = (float *)(float *) ((arg1)->g1BiasCalib); jresult = result;  return jresult; }
+SWIGEXPORT void SWIGSTDCALL CSharp_ZenImuData_g2BiasCalib_set(void * jarg1, void * jarg2) {
+  ZenImuData *arg1 = (ZenImuData *) 0 ; float *arg2 ; arg1 = (ZenImuData *)jarg1;  arg2 = (float *)jarg2;  { size_t ii;
+    float *b = (float *) arg1->g2BiasCalib; for (ii = 0; ii < (size_t)3; ii++) b[ii] = *((float *) arg2 + ii); }  }
+SWIGEXPORT void * SWIGSTDCALL CSharp_ZenImuData_g2BiasCalib_get(void * jarg1) { void * jresult ;
+  ZenImuData *arg1 = (ZenImuData *) 0 ; float *result = 0 ; arg1 = (ZenImuData *)jarg1; 
+  result = (float *)(float *) ((arg1)->g2BiasCalib); jresult = result;  return jresult; }
 SWIGEXPORT void SWIGSTDCALL CSharp_ZenImuData_b_set(void * jarg1, void * jarg2) { ZenImuData *arg1 = (ZenImuData *) 0 ;
   float *arg2 ; arg1 = (ZenImuData *)jarg1;  arg2 = (float *)jarg2;  { size_t ii; float *b = (float *) arg1->b;
     for (ii = 0; ii < (size_t)3; ii++) b[ii] = *((float *) arg2 + ii); }  }
@@ -413,11 +434,17 @@ SWIGEXPORT void SWIGSTDCALL CSharp_ZenImuData_aRaw_set(void * jarg1, void * jarg
 SWIGEXPORT void * SWIGSTDCALL CSharp_ZenImuData_aRaw_get(void * jarg1) { void * jresult ; ZenImuData *arg1 = (ZenImuData *) 0 ;
   float *result = 0 ; arg1 = (ZenImuData *)jarg1;  result = (float *)(float *) ((arg1)->aRaw); jresult = result; 
   return jresult; }
-SWIGEXPORT void SWIGSTDCALL CSharp_ZenImuData_gRaw_set(void * jarg1, void * jarg2) { ZenImuData *arg1 = (ZenImuData *) 0 ;
-  float *arg2 ; arg1 = (ZenImuData *)jarg1;  arg2 = (float *)jarg2;  { size_t ii; float *b = (float *) arg1->gRaw;
+SWIGEXPORT void SWIGSTDCALL CSharp_ZenImuData_g1Raw_set(void * jarg1, void * jarg2) { ZenImuData *arg1 = (ZenImuData *) 0 ;
+  float *arg2 ; arg1 = (ZenImuData *)jarg1;  arg2 = (float *)jarg2;  { size_t ii; float *b = (float *) arg1->g1Raw;
     for (ii = 0; ii < (size_t)3; ii++) b[ii] = *((float *) arg2 + ii); }  }
-SWIGEXPORT void * SWIGSTDCALL CSharp_ZenImuData_gRaw_get(void * jarg1) { void * jresult ; ZenImuData *arg1 = (ZenImuData *) 0 ;
-  float *result = 0 ; arg1 = (ZenImuData *)jarg1;  result = (float *)(float *) ((arg1)->gRaw); jresult = result; 
+SWIGEXPORT void * SWIGSTDCALL CSharp_ZenImuData_g1Raw_get(void * jarg1) { void * jresult ; ZenImuData *arg1 = (ZenImuData *) 0 ;
+  float *result = 0 ; arg1 = (ZenImuData *)jarg1;  result = (float *)(float *) ((arg1)->g1Raw); jresult = result; 
+  return jresult; }
+SWIGEXPORT void SWIGSTDCALL CSharp_ZenImuData_g2Raw_set(void * jarg1, void * jarg2) { ZenImuData *arg1 = (ZenImuData *) 0 ;
+  float *arg2 ; arg1 = (ZenImuData *)jarg1;  arg2 = (float *)jarg2;  { size_t ii; float *b = (float *) arg1->g2Raw;
+    for (ii = 0; ii < (size_t)3; ii++) b[ii] = *((float *) arg2 + ii); }  }
+SWIGEXPORT void * SWIGSTDCALL CSharp_ZenImuData_g2Raw_get(void * jarg1) { void * jresult ; ZenImuData *arg1 = (ZenImuData *) 0 ;
+  float *result = 0 ; arg1 = (ZenImuData *)jarg1;  result = (float *)(float *) ((arg1)->g2Raw); jresult = result; 
   return jresult; }
 SWIGEXPORT void SWIGSTDCALL CSharp_ZenImuData_bRaw_set(void * jarg1, void * jarg2) { ZenImuData *arg1 = (ZenImuData *) 0 ;
   float *arg2 ; arg1 = (ZenImuData *)jarg1;  arg2 = (float *)jarg2;  { size_t ii; float *b = (float *) arg1->bRaw;

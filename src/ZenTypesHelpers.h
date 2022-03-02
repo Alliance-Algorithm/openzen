@@ -53,10 +53,14 @@ namespace zen
         imuData.frameCount = 0;
         imuData.timestamp = 0.;
         vec3Zero(imuData.a);
-        vec3Zero(imuData.g);
+        vec3Zero(imuData.g1);
+        vec3Zero(imuData.g2);
         vec3Zero(imuData.b);
         vec3Zero(imuData.aRaw);
-        vec3Zero(imuData.gRaw);
+        vec3Zero(imuData.g1Raw);
+        vec3Zero(imuData.g2Raw);
+        vec3Zero(imuData.g1BiasCalib);
+        vec3Zero(imuData.g2BiasCalib);
         vec3Zero(imuData.bRaw);
         vec3Zero(imuData.w);
         vec3Zero(imuData.r);

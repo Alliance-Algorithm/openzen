@@ -64,9 +64,12 @@ namespace zen
             evt.data.imuData.a[1] = 0.0f;
             evt.data.imuData.a[2] = -1.0f;
 
-            evt.data.imuData.g[0] = 23.0f;
-            evt.data.imuData.g[1] = 24.0f;
-            evt.data.imuData.g[2] = 25.0f;
+            evt.data.imuData.g1[0] = 23.0f;
+            evt.data.imuData.g1[1] = 24.0f;
+            evt.data.imuData.g1[2] = 25.0f;
+            evt.data.imuData.g2[0] = 23.0f;
+            evt.data.imuData.g2[1] = 24.0f;
+            evt.data.imuData.g2[2] = 25.0f;
 
             ZenSensorHandle sensorHandle;
             sensorHandle.handle = 5;

@@ -25,7 +25,7 @@ namespace zen
     {
     public:
         ImuIg1Component(std::unique_ptr<ISensorProperties> properties, SyncedModbusCommunicator& communicator,
-            unsigned int version, bool secondGyroIsPrimary) noexcept;
+            unsigned int version, bool hasFirstGyro, bool hasSecondGyro) noexcept;
 
         /** Tries to initialize settings of the sensor's component that can fail.
          * After succesfully completing init, m_properties should be set.
@@ -43,7 +43,8 @@ namespace zen
 
         SyncedModbusCommunicator& m_communicator;
 
-        bool m_secondGyroIsPrimary;
+        bool m_hasFirstGyro = true;
+        bool m_hasSecondGyro = true;
     };
 }
 #endif

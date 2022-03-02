@@ -436,7 +436,7 @@ namespace zen
             return setOutputDataFlag<ZenImuProperty_OutputAngularVel>(*this, m_communicator, m_cache.outputDataBitset, [=](ZenProperty_t property, SensorPropertyValue value) { notifyPropertyChange(property, value); }, m_streaming, value);
         else if (property == ZenImuProperty_OutputTemperature)
             return setOutputDataFlag<ZenImuProperty_OutputTemperature>(*this, m_communicator, m_cache.outputDataBitset, [=](ZenProperty_t property, SensorPropertyValue value) { notifyPropertyChange(property, value); }, m_streaming, value);
-        else if (property == ZenImuProperty_OutputRawGyr)
+        else if (property == ZenImuProperty_OutputRawAcc)
             return setOutputDataFlag<ZenImuProperty_OutputRawAcc>(*this, m_communicator, m_cache.outputDataBitset, [=](ZenProperty_t property, SensorPropertyValue value) { notifyPropertyChange(property, value); }, m_streaming, value);
         else if (property == ZenImuProperty_OutputRawMag)
             return setOutputDataFlag<ZenImuProperty_OutputRawMag>(*this, m_communicator, m_cache.outputDataBitset, [=](ZenProperty_t property, SensorPropertyValue value) { notifyPropertyChange(property, value); }, m_streaming, value);

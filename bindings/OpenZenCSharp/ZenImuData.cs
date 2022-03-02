@@ -74,12 +74,45 @@ public class ZenImuData : global::System.IDisposable {
     } 
   }
 
-  public SWIGTYPE_p_float g {
+  public SWIGTYPE_p_float g1 {
     set {
-      OpenZenPINVOKE.ZenImuData_g_set(swigCPtr, SWIGTYPE_p_float.getCPtr(value));
+      OpenZenPINVOKE.ZenImuData_g1_set(swigCPtr, SWIGTYPE_p_float.getCPtr(value));
     } 
     get {
-      global::System.IntPtr cPtr = OpenZenPINVOKE.ZenImuData_g_get(swigCPtr);
+      global::System.IntPtr cPtr = OpenZenPINVOKE.ZenImuData_g1_get(swigCPtr);
+      SWIGTYPE_p_float ret = (cPtr == global::System.IntPtr.Zero) ? null : new SWIGTYPE_p_float(cPtr, false);
+      return ret;
+    } 
+  }
+
+  public SWIGTYPE_p_float g2 {
+    set {
+      OpenZenPINVOKE.ZenImuData_g2_set(swigCPtr, SWIGTYPE_p_float.getCPtr(value));
+    } 
+    get {
+      global::System.IntPtr cPtr = OpenZenPINVOKE.ZenImuData_g2_get(swigCPtr);
+      SWIGTYPE_p_float ret = (cPtr == global::System.IntPtr.Zero) ? null : new SWIGTYPE_p_float(cPtr, false);
+      return ret;
+    } 
+  }
+
+  public SWIGTYPE_p_float g1BiasCalib {
+    set {
+      OpenZenPINVOKE.ZenImuData_g1BiasCalib_set(swigCPtr, SWIGTYPE_p_float.getCPtr(value));
+    } 
+    get {
+      global::System.IntPtr cPtr = OpenZenPINVOKE.ZenImuData_g1BiasCalib_get(swigCPtr);
+      SWIGTYPE_p_float ret = (cPtr == global::System.IntPtr.Zero) ? null : new SWIGTYPE_p_float(cPtr, false);
+      return ret;
+    } 
+  }
+
+  public SWIGTYPE_p_float g2BiasCalib {
+    set {
+      OpenZenPINVOKE.ZenImuData_g2BiasCalib_set(swigCPtr, SWIGTYPE_p_float.getCPtr(value));
+    } 
+    get {
+      global::System.IntPtr cPtr = OpenZenPINVOKE.ZenImuData_g2BiasCalib_get(swigCPtr);
       SWIGTYPE_p_float ret = (cPtr == global::System.IntPtr.Zero) ? null : new SWIGTYPE_p_float(cPtr, false);
       return ret;
     } 
@@ -107,12 +140,23 @@ public class ZenImuData : global::System.IDisposable {
     } 
   }
 
-  public SWIGTYPE_p_float gRaw {
+  public SWIGTYPE_p_float g1Raw {
     set {
-      OpenZenPINVOKE.ZenImuData_gRaw_set(swigCPtr, SWIGTYPE_p_float.getCPtr(value));
+      OpenZenPINVOKE.ZenImuData_g1Raw_set(swigCPtr, SWIGTYPE_p_float.getCPtr(value));
     } 
     get {
-      global::System.IntPtr cPtr = OpenZenPINVOKE.ZenImuData_gRaw_get(swigCPtr);
+      global::System.IntPtr cPtr = OpenZenPINVOKE.ZenImuData_g1Raw_get(swigCPtr);
+      SWIGTYPE_p_float ret = (cPtr == global::System.IntPtr.Zero) ? null : new SWIGTYPE_p_float(cPtr, false);
+      return ret;
+    } 
+  }
+
+  public SWIGTYPE_p_float g2Raw {
+    set {
+      OpenZenPINVOKE.ZenImuData_g2Raw_set(swigCPtr, SWIGTYPE_p_float.getCPtr(value));
+    } 
+    get {
+      global::System.IntPtr cPtr = OpenZenPINVOKE.ZenImuData_g2Raw_get(swigCPtr);
       SWIGTYPE_p_float ret = (cPtr == global::System.IntPtr.Zero) ? null : new SWIGTYPE_p_float(cPtr, false);
       return ret;
     } 
