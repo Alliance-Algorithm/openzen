@@ -39,7 +39,7 @@ namespace zen
 
         {
             const auto result = m_properties->getArray(ZenImuProperty_AccAlignment, ZenPropertyType_Float,
-                gsl::make_span(reinterpret_cast<std::byte*>(local_cache.borrow()->accAlignMatrix.data), 9));
+                gsl::make_span(reinterpret_cast<std::byte*>(local_cache.borrow()->accAlignMatrix.data), 9*sizeof(float)));
             if (result.first)
                 return ZenSensorInitError_RetrieveFailed;
         }
@@ -50,7 +50,7 @@ namespace zen
         });
         {
             const auto result = m_properties->getArray(ZenImuProperty_GyrAlignment, ZenPropertyType_Float,
-                gsl::make_span(reinterpret_cast<std::byte*>(&local_cache.borrow()->gyrAlignMatrix.data), 9));
+                gsl::make_span(reinterpret_cast<std::byte*>(&local_cache.borrow()->gyrAlignMatrix.data), 9*sizeof(float)));
             if (result.first)
                 return ZenSensorInitError_RetrieveFailed;
         }
@@ -60,7 +60,7 @@ namespace zen
         });
         {
             const auto result = m_properties->getArray(ZenImuProperty_MagSoftIronMatrix, ZenPropertyType_Float,
-                gsl::make_span(reinterpret_cast<std::byte*>(&local_cache.borrow()->softIronMatrix.data), 9));
+                gsl::make_span(reinterpret_cast<std::byte*>(&local_cache.borrow()->softIronMatrix.data), 9*sizeof(float)));
             if (result.first)
                 return ZenSensorInitError_RetrieveFailed;
         }
@@ -71,7 +71,7 @@ namespace zen
         });
         {
             const auto result = m_properties->getArray(ZenImuProperty_AccBias, ZenPropertyType_Float,
-                gsl::make_span(reinterpret_cast<std::byte*>(&local_cache.borrow()->accBias.data), 3));
+                gsl::make_span(reinterpret_cast<std::byte*>(&local_cache.borrow()->accBias.data), 3*sizeof(float)));
             if (result.first)
                 return ZenSensorInitError_RetrieveFailed;
 
@@ -83,7 +83,7 @@ namespace zen
         }
         {
             const auto result = m_properties->getArray(ZenImuProperty_GyrBias, ZenPropertyType_Float,
-                gsl::make_span(reinterpret_cast<std::byte*>(&local_cache.borrow()->gyrBias.data), 3));
+                gsl::make_span(reinterpret_cast<std::byte*>(&local_cache.borrow()->gyrBias.data), 3*sizeof(float)));
             if (result.first)
                 return ZenSensorInitError_RetrieveFailed;
 
@@ -95,7 +95,7 @@ namespace zen
         }
         {
             const auto result = m_properties->getArray(ZenImuProperty_MagHardIronOffset, ZenPropertyType_Float,
-                gsl::make_span(reinterpret_cast<std::byte*>(&local_cache.borrow()->hardIronOffset.data), 3));
+                gsl::make_span(reinterpret_cast<std::byte*>(&local_cache.borrow()->hardIronOffset.data), 3*sizeof(float)));
             if (result.first)
                 return ZenSensorInitError_RetrieveFailed;
 

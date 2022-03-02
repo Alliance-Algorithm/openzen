@@ -254,14 +254,15 @@ namespace zen
             });
 
         const auto function = static_cast<DeviceProperty_t>(imu::v0::map(property, true));
-        if (propertyType == ZenPropertyType_Float)
-            return m_communicator.sendAndWaitForArray(0, function, function, {},
-                gsl::make_span(reinterpret_cast<float*>(buffer.data()), buffer.size() / sizeof(float)));
-        else if (propertyType == ZenPropertyType_Int32)
-            return m_communicator.sendAndWaitForArray(0, function, function, {},
-                gsl::make_span(reinterpret_cast<int32_t*>(buffer.data()), buffer.size() / sizeof(int32_t)));
+        switch (propertyType) {
+            case ZenPropertyType_Float:
+            case ZenPropertyType_Int32:
+                return m_communicator.sendAndWaitForArray(0, function, function, {}, buffer);
+                
+            default:
+                return std::make_pair(ZenError_WrongDataType, buffer.size());
+        }
 
-        return std::make_pair(ZenError_WrongDataType, buffer.size());
     }
 
     nonstd::expected<bool, ZenError> LegacyImuProperties::getBool(ZenProperty_t property) noexcept
