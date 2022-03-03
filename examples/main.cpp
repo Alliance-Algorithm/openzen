@@ -162,10 +162,20 @@ int main(int argc, char *argv[])
     do
     {
         std::cout << "Provide an index within the range 0-" << g_discoveredSensors.size() - 1 << ":" << std::endl;
+        std::cout << "Note that the default connection baud rate is 921600, which is not the case for LPMS-BE/ME sensors. More details in the comment of this program." << std::endl;
         std::cin >> idx;
     } while (idx >= g_discoveredSensors.size());
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
+    // the default baud rate is 921600, which is not the case for LPMS-BE and LPMS-ME sensors (115200).
+    // there are 2 ways of resolving this issue:
+    // 
+    // 1. uncomment the following line so to change the connection baud rate
+    // g_discoveredSensors[idx].baudRate = 115200;
+    //
+    // 2. connect to the sensor byName, with baud rate being the last parameter. In this way we don't need to call client.listSensorsAsync()
+    // auto sensorPair = client.obtainSensorByName("SiUsb", "lpmscu2000573", 921600);
+    // OR auto sensorPair = client.obtainSensorByName("WindowsDevice", "\\\\.\\COM7", 921600);
     auto sensorPair = client.obtainSensor(g_discoveredSensors[idx]);
     auto& obtainError = sensorPair.first;
     auto& sensor = sensorPair.second;

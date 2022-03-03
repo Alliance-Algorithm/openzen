@@ -161,7 +161,7 @@ with the name of the IO system and the name of the sensor:
 .. code-block:: cpp
 
     // connect the sensor with the name lpmscu2000573 via the SiLabs USB IO System
-    auto sensorPair = client.obtainSensorByName("SiUsb", "lpmscu2000573");
+    auto sensorPair = client.obtainSensorByName("SiUsb", "lpmscu2000573", 921600);
     auto& obtainError = sensorPair.first;
     auto& sensor = sensorPair.second;
     if (obtainError)
@@ -256,12 +256,35 @@ You can use the previously introduced methods ``ZenClient::pollNextEvent`` or
                 std::cout << "> Acceleration: \t x = " << event.data.imuData.a[0]
                     << "\t y = " << event.data.imuData.a[1]
                     << "\t z = " << event.data.imuData.a[2] << std::endl;
+                
+                // take note that in some sensors the gyro data is stored in g2
+                // check the table below for details
                 std::cout << "> Gyro: \t\t x = " << event.data.imuData.g[0]
-                    << "\t y = " << event.data.imuData.g[1]
-                    << "\t z = " << event.data.imuData.g[2] << std::endl;
+                    << "\t y = " << event.data.imuData.g1[1]
+                    << "\t z = " << event.data.imuData.g1[2] << std::endl;
             break;
         }
     }
+
+.. list-table:: Sensors and its gyro key name
+   :header-rows: 1
+
+   * - Field name
+     - IG1 / IG1P
+     - LPMS3
+     - NAV3
+     - BE / ME
+   * - g1
+     - o
+     - x
+     - o
+     - x
+   * - g2
+     - o
+     - o
+     - x
+     - o
+
 
 To process the GNSS data streamed from the sensor, you can filter for events coming from
 the GNSS component like this:

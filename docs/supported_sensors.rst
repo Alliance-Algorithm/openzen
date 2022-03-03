@@ -4,6 +4,10 @@
 Supported Sensors
 #################
 
+Currrently we are adding supports to 
+`LPMS3 sensors <https://lp-research.atlassian.net/wiki/spaces/LKB/pages/1941635073/LPMS3+Series+Documentation>`__
+.
+
 LP-Research LPMS-CU2
 ====================
 .. image:: images/lpms-cu2.jpg

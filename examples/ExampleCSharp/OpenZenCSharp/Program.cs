@@ -52,7 +52,7 @@ namespace OpenZenCSharpBindingTest
                                     // read acceleration
                                     OpenZenFloatArray fa = OpenZenFloatArray.frompointer(zenEvent.data.imuData.a);
                                     // read angular velocity
-                                    OpenZenFloatArray fg = OpenZenFloatArray.frompointer(zenEvent.data.imuData.g);
+                                    OpenZenFloatArray fg = OpenZenFloatArray.frompointer(zenEvent.data.imuData.g1);
                                     // read euler angles
                                     OpenZenFloatArray fr = OpenZenFloatArray.frompointer(zenEvent.data.imuData.r);
                                     // read quaternion

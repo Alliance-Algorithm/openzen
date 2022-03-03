@@ -14,9 +14,9 @@ Will all sensors models, the data which is transmitted can be selected individua
 latency of the data transfer. Therefore, you need to ensure the data item you want to read out is enabled for output.
 There are two ways to enable or disable the output of a data item.
 
-**1. Use the graphical user interface tools LPMS-Control and IG1-Control**
+**1. Use the graphical user interface tools LPMSControl2 and OpenMAT**
 
-You can download theses tools from our `support website <https://lp-research.com/support/>`_. Then connect to the sensor
+You can download theses tools from our `support website <https://lp-research.atlassian.net/wiki/spaces/LKB/pages/1138294814/LPMS+Data+Acquisition+Software>`_. Then connect to the sensor
 and enable the output of the data you require. After enabling the output please ensure the settings are persisent by writing
 them to the sensor flash.
 
@@ -40,6 +40,8 @@ Inertial Data: ZenImuData
 The ZenImuData structure contains the measurements of accelerometer and gyroscope sensors. Data items which are not
 enabled for output or not supported by the sensor are kept at their default values. This data structure will be output
 by all LP-Research sensors.
+**The latest data structure could be found in** 
+`ZenTypes.h <https://bitbucket.org/lpresearch/openzen/src/master/include/ZenTypes.h>`__.
 
 +------------+------------------+------------------------------------+
 | Field Name | Unit             | Description                        |
@@ -53,7 +55,7 @@ by all LP-Research sensors.
 |            |                  | measurements are guaranteed to have|
 |            |                  | the distance to each other in time.|
 +------------+------------------+------------------------------------+
-| a          | m/s^2            | Accleration measurment after all   |
+| a          | g                | Accleration measurment after all   |
 |            |                  | corrections have been applied      |
 +------------+------------------+------------------------------------+
 | g          | deg/s            | Gyroscope measurment after all     |
@@ -84,11 +86,13 @@ by all LP-Research sensors.
 |            |                  | See the sensor documenation how the|
 |            |                  | rotation axes are defined.         |
 +------------+------------------+------------------------------------+
-| rotationM  | no unit          | Orientation data as rotation matrix|
-|            |                  | without offset applied.            |
+| rotationM  | no unit          | (Not available) Orientation data as|
+|            |                  | rotation matrix without offset     |
+|            |                  | applied.                           |
 +------------+------------------+------------------------------------+
-| rotOffsetM | no unit          | Orientation data as rotation matrix|
-|            |                  | with offset applied.               |
+| rotOffsetM | no unit          | (Not available) Orientation data as|
+|            |                  | rotation matrix with offset applied|
+|            |                  | .                                  |
 +------------+------------------+------------------------------------+
 | pressure   | mPa              | Barometric pressure measurement.   |
 |            |                  | Not supported by all sensor models.|
