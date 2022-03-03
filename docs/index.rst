@@ -1,4 +1,4 @@
-`OpenZen <https://bitbucket.org/lpresearch/openzen>`_ is high performance sensor data streaming and processing.
+`OpenZen <https://bitbucket.org/lpresearch/openzen>`_ is high performance sensor data streaming and processing. 
 
 Contents
 --------

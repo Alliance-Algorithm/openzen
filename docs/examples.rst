@@ -12,10 +12,10 @@ to multiple sensors and store the sensor's handle:
 
 .. code-block:: cpp
 
-    auto sensorPairA = client.obtainSensorByName("SiUsb", "lpmscu2000574");
+    auto sensorPairA = client.obtainSensorByName("SiUsb", "lpmscu2000574", 921600);
     auto& sensorA = sensorPairA.second;
 
-    auto sensorPairB = client.obtainSensorByName("SiUsb", "lpmscu2000573");
+    auto sensorPairB = client.obtainSensorByName("SiUsb", "lpmscu2000573", 921600);
     auto& sensorB = sensorPairB.second;
 
 In your event loop, now check which sensor the last received event is orginating from:

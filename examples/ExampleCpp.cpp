@@ -37,7 +37,8 @@ int main(int argc, char* argv[])
     }
 
     // connect to sensor on IO System by the sensor name
-    auto sensorPair = client.obtainSensorByName("SiUsb", "lpmscu2000573");
+    // auto sensorPair = client.obtainSensorByName("WindowsDevice", "\\\\.\\COM7", 921600);
+    auto sensorPair = client.obtainSensorByName("SiUsb", "lpmscu2000573", 921600);
     auto& obtainError = sensorPair.first;
     auto& sensor = sensorPair.second;
     if (obtainError)
@@ -59,7 +60,33 @@ int main(int argc, char* argv[])
         return ZenError_WrongSensorType;
     }
 
+    // set and get current streaming frequency
+    auto error = imu.setInt32Property(ZenImuProperty_SamplingRate, 50);
+    if (error) {
+        std::cout << "Error setting streaming frequency" << std::endl;
+        client.close();
+        return error;
+    }
+
+    auto freqPair = imu.getInt32Property(ZenImuProperty_SamplingRate);
+    if (freqPair.first) {
+        std::cout << "Error fetching streaming frequency" << std::endl;
+        client.close();
+        return freqPair.first;
+    }
+    std::cout << "Streaming frequency: " << freqPair.second << std::endl;
+
+    // toggle on/off of a particular data output (linAcc is not ON by default)
+    error = imu.setBoolProperty(ZenImuProperty_OutputLinearAcc, true);
+    if (error) {
+        std::cout << "Error toggling ON linear acc data output" << std::endl;
+        client.close();
+        return error;
+    }
+
     // readout up to 200 samples from the IMU
+    // note that there are 2 gyro fields in the IMU data structure (ZenImuData struct in include/ZenTypes.h)
+    // please refer to your sensor's manual for correct retrieval of gyro data
     for (int i = 0; i < 200; i++) {
         auto event = client.waitForNextEvent();
         if (event.second.component.handle == imu.component().handle) {
