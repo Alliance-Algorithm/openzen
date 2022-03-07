@@ -15,12 +15,17 @@ In this case, you need to also provide the name of the IO system the sensor is c
 Furthermore, some IO systems don't support auto-discovery of sensors and they can only be used
 with the ``ZenClient::obtainSensorByName`` method.
 
+**Note that you need to connect to your sensor with a correct baudrate. Otherwise the connection would fail.**
+Baudrate for most LPMS sensors is 921600, except for LPMS-BE, LPMS-ME and LPMS-NAV sensors the baudrate would be 115200.
+
 SiLabs USB Express
 ==================
 LP-Research sensors which are configured to use the USB-mode can be connected via this IO system
-on Windows. The advantage is that the Baudrate does not need to be configured and the sensor can
+on Windows. The advantage is that the sensor can
 be configured via string name. This name is always the same, no matter on which USB port the sensor
 is connected or which other peripheral devices are connected.
+
+Sensor can be toggled between COM / USBXpress mode by clicking **"Convert" button** in LPMSControl2.
 
 =======================     ============
 Name in OpenZen             SiUsb
@@ -29,10 +34,11 @@ Supports auto-discovery     yes
 =======================     ============
 
 Example to obtain a USB connected sensor which has the name lpmscu2000573.
+You may find the name in LPMSControl2.
 
 .. code-block:: cpp
 
-    auto sensorPair = client.obtainSensorByName("SiUsb", "lpmscu2000573");
+    auto sensorPair = client.obtainSensorByName("SiUsb", "lpmscu2000573", 921600);
 
 Windows COM Port
 ================
@@ -40,6 +46,8 @@ LP-Research sensors which are configured to use the COM port mode can be connect
 on Windows. The baudrate needs to be provided with the call to ``obtainSensorByName`` and the sensor name
 is the COM-port named assigned to the sensor by Windows. This name can be different on different systems,
 depending how much other COM-Port devices are connected.
+
+Sensor can be toggled between COM / USBXpress mode by clicking **"Convert" button** in LPMSControl2.
 
 =======================     =============
 Name in OpenZen             WindowsDevice
@@ -119,7 +127,7 @@ Example to obtain an USB sensor which has the name lpmscu2000573
 
 .. code-block:: cpp
 
-    auto sensorPair = client.obtainSensorByName("LinuxDevice", "lpmscu2000573");
+    auto sensorPair = client.obtainSensorByName("LinuxDevice", "lpmscu2000573", 921600);
 
 Serial devices of sensors (for example /dev/ttyS0) can also be directly
 connected. This will not use the sensor name to lookup the device file
@@ -127,7 +135,7 @@ but connect directly to this file.
 
 .. code-block:: cpp
 
-    auto sensorPair = client.obtainSensorByName("LinuxDevice", "devicefile:/dev/ttyS0");
+    auto sensorPair = client.obtainSensorByName("LinuxDevice", "devicefile:/dev/ttyS0", 921600);
 
 Network Streaming with ZeroMQ
 =============================
@@ -144,7 +152,7 @@ On the machine where the sensor is physically connected to:
 .. code-block:: cpp
 
     // connect to the sensor via the physical interface
-    auto sensorPair = client.obtainSensorByName("SiUsb", "lpmscu2000573");
+    auto sensorPair = client.obtainSensorByName("SiUsb", "lpmscu2000573", 921600);
     auto& sensor = sensorPair.second;
     // publish sensor data via TCP to all hosts on port 8877
     sensor.publishEvents("tcp://*:8877");

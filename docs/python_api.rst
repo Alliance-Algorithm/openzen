@@ -79,8 +79,8 @@ by the interface using the following method:
         zenEvent.component.handle == imu.component.handle:
 
         imu_data = zenEvent.data.imu_data
-        print ("A: {} m/s^2".format(imu_data.a))
-        print ("G: {} degree/s".format(imu_data.g))
+        print ("A: {} g".format(imu_data.a))
+        print ("G: {} degree/s".format(imu_data.g1))
 
 Troubleshooting
 ===============
