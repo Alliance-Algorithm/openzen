@@ -533,6 +533,7 @@ PYBIND11_MODULE(openzen, m) {
         .def("forward_rtk_corrections", &ZenSensorComponent::forwardRtkCorrections);
 
     py::class_<ZenSensor>(m,"ZenSensor")
+        .def_property_readonly("device_name", &ZenSensor::deviceName)
         .def("release", &ZenSensor::release)
 
         // updateFirmwareAsync and

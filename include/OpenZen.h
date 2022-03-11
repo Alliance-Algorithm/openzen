@@ -387,6 +387,11 @@ namespace zen
             return ZenSensorIoType(m_clientHandle, m_sensorHandle);
         }
 
+        std::string deviceName() const noexcept
+        {
+            return ZenSensorName(m_clientHandle, m_sensorHandle);
+        }
+
         /**
          * Compare if a sensor description matches the sensor
          * this instance points to

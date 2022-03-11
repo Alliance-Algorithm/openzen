@@ -34,7 +34,7 @@
 
 namespace zen
 {
-    nonstd::expected<std::shared_ptr<class Sensor>, ZenSensorInitError> make_sensor(SensorConfig config, std::unique_ptr<ModbusCommunicator> communicator, uintptr_t token) noexcept;
+    nonstd::expected<std::shared_ptr<class Sensor>, ZenSensorInitError> make_sensor(SensorConfig config, std::unique_ptr<ModbusCommunicator> communicator, uintptr_t token, std::string deviceName) noexcept;
 
     nonstd::expected<std::shared_ptr<class Sensor>, ZenSensorInitError> make_high_level_sensor(SensorConfig config, std::unique_ptr<EventCommunicator> evCom, uintptr_t token) noexcept;
 
@@ -100,6 +100,8 @@ namespace zen
             to not interfere with the teardown and unsubscribing process when the sensor is
             destroyed */
         void releaseProcessors() noexcept;
+
+        std::string m_deviceName = "*";
 
     private:
         ZenError processReceivedData(uint8_t address, uint8_t function, gsl::span<const std::byte> data) noexcept override;

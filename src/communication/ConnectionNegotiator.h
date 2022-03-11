@@ -39,6 +39,7 @@ namespace zen
         nonstd::expected<SensorConfig, ZenSensorInitError> negotiate(ModbusCommunicator& communicator,
           unsigned int desiredBaudRate) noexcept;
 
+        std::optional<std::string> m_deviceName;
     private:
         ZenError processReceivedData(uint8_t address, uint8_t function,
           gsl::span<const std::byte> data) noexcept override;
@@ -48,7 +49,6 @@ namespace zen
 
         SensorConfig m_config;
         bool m_terminated;
-        std::optional<std::string> m_deviceName;
 
         std::vector<std::pair<std::vector<std::string>, SensorConfig >> m_sensorConfigs;
 
