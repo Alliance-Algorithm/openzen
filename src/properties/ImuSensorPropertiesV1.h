@@ -147,7 +147,9 @@ namespace zen
             case ZenImuProperty_MagSupportedRanges:
             case ZenImuProperty_MagRange:
                 return gsl::make_span(supportedMagRanges.data(), supportedMagRanges.size());
-                
+            
+            default:
+                throw std::runtime_error("Invalid property name for getPropertyOptions()");
             }
         }
 
