@@ -311,6 +311,21 @@ ZEN_API const char* ZenSensorIoType(ZenClientHandle_t clientHandle, ZenSensorHan
     }
 }
 
+ZEN_API const char* ZenSensorName(ZenClientHandle_t clientHandle, ZenSensorHandle_t sensorHandle)
+{
+    if (auto client = getClient(clientHandle))
+    {
+        if (auto sensor = client->findSensor(sensorHandle))
+            return sensor->m_deviceName.data();
+        else
+            return nullptr;
+    }
+    else
+    {
+        return nullptr;
+    }
+}
+
 ZEN_API bool ZenSensorEquals(ZenClientHandle_t clientHandle, ZenSensorHandle_t sensorHandle, const ZenSensorDesc* const desc)
 {
     if (desc == nullptr)

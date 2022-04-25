@@ -103,6 +103,9 @@ extern "C" {
     /** Returns the sensor's IO type */
     ZEN_API const char* ZenSensorIoType(ZenClientHandle_t clientHandle, ZenSensorHandle_t sensorHandle);
 
+    /** Returns the sensor's device name */
+    ZEN_API const char* ZenSensorName(ZenClientHandle_t clientHandle, ZenSensorHandle_t sensorHandle);
+
     /** Returns whether the sensor is equal to the sensor description */
     ZEN_API bool ZenSensorEquals(ZenClientHandle_t clientHandle, ZenSensorHandle_t sensorHandle, const ZenSensorDesc* const desc);
 

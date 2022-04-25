@@ -120,7 +120,8 @@ namespace zen
             const auto token = m_nextToken++;
             lock.unlock();
 
-            auto sensor = make_sensor(std::move(*agreement), std::move(communicator), token);
+            auto deviceName = negotiator.m_deviceName ? *negotiator.m_deviceName : "";
+            auto sensor = make_sensor(std::move(*agreement), std::move(communicator), token, deviceName);
             if (!sensor) {
                 spdlog::error("Sensor object cannot be created");
                 return nonstd::make_unexpected(sensor.error());

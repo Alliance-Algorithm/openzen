@@ -85,9 +85,11 @@ namespace zen
     static auto imuRegistry = make_registry<ImuComponentFactory>(g_zenSensorType_Imu);
     static auto gnssRegistry = make_registry<GnssComponentFactory>(g_zenSensorType_Gnss);
 
-    nonstd::expected<std::shared_ptr<Sensor>, ZenSensorInitError> make_sensor(SensorConfig config, std::unique_ptr<ModbusCommunicator> communicator, uintptr_t token) noexcept
+    nonstd::expected<std::shared_ptr<Sensor>, ZenSensorInitError> make_sensor(SensorConfig config, std::unique_ptr<ModbusCommunicator> communicator, uintptr_t token, std::string deviceName) noexcept
     {
         auto sensor = std::make_shared<Sensor>(std::move(config), std::move(communicator), token);
+        sensor->m_deviceName = deviceName;
+
         if (auto error = sensor->init())
             return nonstd::make_unexpected(error);
 

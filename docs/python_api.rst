@@ -12,8 +12,9 @@ Using Python with OpenZen Releases
 ==================================
 
 The binary releases of OpenZen for Windows and Linux include support for **Python 3.8 64-bit** .
-On Linux, the library file ``openzen.so`` can be directly imported by Python. On Windows this file
-is named ``openzen.pyd``. You can copy this library to the location where you execute your python scripts.
+On Linux, the library file ``openzen.so`` can be directly imported by Python . If the release comes with 
+a ``libOpenZen.so``, please rename it to ``openzen.so``. On Windows this file is named ``openzen.pyd``. 
+You can copy this library to the location where you execute your python scripts.
 
 The other option is to set the ``PYTHONPATH`` environment variable to the folder where ``openzen.so``
 is located so the OpenZen files can be found when you call ``import openzen``.

@@ -6,6 +6,7 @@ Overview
 ========
 The OpenZen ROS driver is hosted in a separate `git repository <https://bitbucket.org/lpresearch/openzenros/>`_. In provides
 the ROS package to readout OpenZen sensors and provide IMU and magnetometer measurements via ROS topics.
+For ROS driver supporting LPMS3, NAV3, and IG1 sensors, please checkout branch ``feature/LPMS3_support``.
 
 .. image:: images/ros-plot.png
    :alt: Visualization of angluar velocity data from an OpenZen sensor in rqt
@@ -72,14 +73,19 @@ a specific sensor, you can use the serial name of the sensor as parameter, for e
 
 .. code-block:: bash
 
-    rosrun openzen_sensor openzen_sensor_node _sensor_name:="LPMSCU2000573"
+    rosrun openzen_sensor openzen_sensor_node _sensor_name:="devicefile:/dev/ttyUSB1"
 
-If your sensor is configured for a different baud rate, you can use the baudrate parameter to
-give a specfic baud rate setting:
+It is always recommended to pass a baud rate:
 
 .. code-block:: bash
 
-    rosrun openzen_sensor openzen_sensor_node _sensor_name:="LPMSCU2000573" _baudrate:=115200
+    rosrun openzen_sensor openzen_sensor_node _sensor_name:="devicefile:/dev/ttyUSB1" _baudrate:=115200
+
+**If the sensor is in USBXpress mode, you may connect the sensor as follow:**
+
+.. code-block:: bash
+
+    rosrun openzen_sensor openzen_sensor_node _sensor_interface:="SiUsb" _sensor_name:="lpmscu2000573"
 
 Now you can print the IMU values from ROS with:
 
@@ -97,14 +103,14 @@ If you want to readout the values of two OpenZen sensors simultanously, you need
 
 .. code-block:: bash
 
-    rosrun openzen_sensor openzen_sensor_node __name:="cu2node" _sensor_name:="LPMSCU2000573" imu:=/cu2_imu
-    rosrun openzen_sensor openzen_sensor_node __name:="ig1_node" _sensor_name:="LPMSIG1000032" imu:=/ig1_imu
+    rosrun openzen_sensor openzen_sensor_node __name:="cu2node" _sensor_name:="devicefile:/dev/ttyUSB0" imu:=/cu2_imu
+    rosrun openzen_sensor openzen_sensor_node __name:="ig1_node" _sensor_name:="devicefile:/dev/ttyUSB1" imu:=/ig1_imu
 
 You can also select another IO interface, for example Bluetooth:
 
 .. code-block:: bash
 
-    rosrun openzen_sensor openzen_sensor _sensor_interface:="Bluetooth" _sensor_name:="00:11:22:33:FF:EE"
+    rosrun openzen_sensor openzen_sensor_node _sensor_interface:="Bluetooth" _sensor_name:="00:11:22:33:FF:EE"
 
 Alternatively, you can use the sample launch file (openzen_lpms_ig1.launch) start data acquisition and plotting using openzen_sensor_node:
 
@@ -160,13 +166,13 @@ Parameters
 ~sensor_name (string, default: null) 
     By default, the library will connect to the first available sensor. If you want to connect to a specific sensor, you can use the serial name of the sensor as sensor_name parameter as follow:
 
-    `$ rosrun openzen_sensor openzen_sensor_node _sensor_name:="LPMSCU2000573"`
+    `$ rosrun openzen_sensor openzen_sensor_node _sensor_name:="devicefile:/dev/ttyUSB1"`
 
 ~sensor_interface (string, default: LinuxDevice)
-    Name of IO system for initiating sensor connection. Use "LinuxDevice" for usb connection in Linux. For more details, please check the documentation in the section :ref:`io-system-label`.
+    Name of IO system for initiating sensor connection. For more details, please check the documentation in the section :ref:`io-system-label`.
 
 ~baudrate (integer, default: 0)
-    Baudrate in bits per seconds used to connect to the sensor. If the baudrate is left at 0, OpenZen will automatically pick the default baudrate for the respective sensor model.
+    Baudrate in bits per seconds used to connect to the sensor. It is recommended to pass the baud rate according to this section :ref:`io-system-label`. If the baud rate is left at 0, OpenZen will automatically pick the default baud rate for the respective sensor model.
 
 ~frame_id (string, default: imu) 
     The frame in which imu readings will be returned.

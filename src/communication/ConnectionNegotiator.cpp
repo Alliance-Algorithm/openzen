@@ -30,39 +30,64 @@ namespace zen
         m_terminated(false)
     {
         // add all supported sensor types and their configurations
-        // only support IG1's Imu yet, second gyroscope and GNSS
-        // comes later
+        // NAV series
+        m_sensorConfigs.push_back( { {"LPMS-NAV3-CAN", "LPMS-NAV3-RS232", "LPMS-NAV3-RS485", "LPMS-NAV3-TTL"},
+        {1,
+            { ComponentConfig{1, g_zenSensorType_Imu, SpecialOptions_OnlyFirstGyro}
+            }
+        }
+        });
+
+        // CURS and AL series share the same names
+        m_sensorConfigs.push_back( { {"LPMS-CURS3-TTL", "LPMS-CURS3-RS232", "LPMS-CURS3-CAN"},
+        {1,
+            { ComponentConfig{1, g_zenSensorType_Imu, SpecialOptions_OnlySecondGyro}
+            }
+        }
+        });
+        
+        // U series
+        m_sensorConfigs.push_back( { {"LPMS-CU3", "LPMS-URS3", "LPMS-UTTL3"},
+        {1,
+            { ComponentConfig{1, g_zenSensorType_Imu, SpecialOptions_OnlySecondGyro}
+            }
+        }
+        });
+
+        // IG1 series
         m_sensorConfigs.push_back( { {"LPMS-IG1-CAN", "LPMS-IG1-RS232", "LPMS-IG1-RS485"},
         {1,
-          { ComponentConfig{1, g_zenSensorType_Imu}
-          }
+            { ComponentConfig{1, g_zenSensorType_Imu}
+            }
         }
-      });
+        });
 
-      m_sensorConfigs.push_back( { {"LPMS-IG1P-CAN", "LPMS-IG1P-RS232", "LPMS-IG1P-RS485"},
-      {1,
-        {
-            ComponentConfig{1, g_zenSensorType_Imu},
-            ComponentConfig{1, g_zenSensorType_Gnss}
+        // IG1 (with GPS)
+        m_sensorConfigs.push_back( { {"LPMS-IG1P-CAN", "LPMS-IG1P-RS232", "LPMS-IG1P-RS485"},
+        {1,
+            {
+                ComponentConfig{1, g_zenSensorType_Imu},
+                ComponentConfig{1, g_zenSensorType_Gnss}
+            }
         }
-      }
-    });
+        });
 
-      m_sensorConfigs.push_back( { {"LPMS-BE1", "LPMS-BE2"},
-      {1,
-        {
-            ComponentConfig{1, g_zenSensorType_Imu, SpecialOptions_OnlySecondGyro}
+        // BE series
+        m_sensorConfigs.push_back( { {"LPMS-BE1", "LPMS-BE2"},
+        {1,
+            {
+                ComponentConfig{1, g_zenSensorType_Imu, SpecialOptions_OnlySecondGyro}
+            }
         }
-      }
-    });
+        });
 
-      // match every other legacy sensor
-      m_sensorConfigs.push_back( { {"*"},
-      {0,
-        { ComponentConfig{0, g_zenSensorType_Imu}
+        // match every other legacy sensor
+        m_sensorConfigs.push_back( { {"*"},
+        {0,
+            { ComponentConfig{0, g_zenSensorType_Imu}
+            }
         }
-      }
-    });
+        });
 
     }
 
