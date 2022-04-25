@@ -44,10 +44,10 @@ if sensor_desc_connect is None:
     sys.exit(1)
 
 # connect to the first sensor found
-# error, sensor = client.obtain_sensor(sensor_desc_connect)
+error, sensor = client.obtain_sensor(sensor_desc_connect)
 
 # or connect to a sensor by name
-error, sensor = client.obtain_sensor_by_name("SiUsb", "ig1pcan000028", 921600)
+# error, sensor = client.obtain_sensor_by_name("SiUsb", "ig1pcan000028", 921600)
 
 # or connect to a sensor by COM
 # error, sensor = client.obtain_sensor_by_name("WindowsDevice", "//./COM25", 921600)
