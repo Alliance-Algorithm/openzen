@@ -198,13 +198,13 @@ namespace zen
 
         sensor_parsing_util::parseAndStoreScalar(data, &imuData.frameCount);
 
-        float timestampMultiplier = 0.0f;
+        double timestampMultiplier = 0.0;
         if (const auto samplingRate = m_properties->getInt32(ZenImuProperty_SamplingRate)){
             // When the VR firmware runs with 800 Hz, it also runs with an internal
             // frequency of 800 Hz which means we need to multiply wtih 0.00125 to comput the
             // correct timestamp.
             // therefore, this value is set depending on the IMU variant.
-            timestampMultiplier = samplingRate.value() > 400 ? 0.00125f : 0.0025f;
+            timestampMultiplier = samplingRate.value() > 400 ? 0.00125 : 0.0025;
         } else {
             spdlog::error("Cannot query sampling rate to comput timestamp");
             return nonstd::make_unexpected(samplingRate.error());;
