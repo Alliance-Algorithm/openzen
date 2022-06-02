@@ -148,6 +148,12 @@ if(ZEN_PYTHON)
 endif()
 
 if(ZEN_CSHARP)
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64-bit
+        set(SWIG_FLAGS "-DSWIGWORDSIZE64")
+    else() # 32-bit
+        set(SWIG_FLAGS "-DSWIGWORDSIZE32")
+    endif()
+
     list (APPEND zen_sources
         ## run
         # swig -csharp -small -c++ -debug-typedef -DSWIGWORDSIZE64 -o OpenZenCSharp/OpenZen_wrap_csharp.cxx -outdir OpenZenCSharp OpenZen.i

@@ -76,6 +76,12 @@ cmake -DZEN_BLUETOOTH=OFF -DZEN_PYTHON=ON ..
 | ZEN_TESTS              | ON      | Compile with OpenZen tests                                                      |
 | ZEN_EXAMPLES           | ON      | Compile with OpenZen examples                                                   |
 
+**Note:** The existing C# binding is for 64-bit machine. If you wish to run our sample C# project on a 32-bit machine, please execute the following code in the `bindings` folder BEFORE building OpenZen:
+
+```
+swig -csharp -small -c++ -debug-typedef -DSWIGWORDSIZE64 -o OpenZenCSharp/OpenZen_wrap_csharp.cxx -outdir OpenZenCSharp OpenZen.i
+```
+
 ## Deployment
 
 If you want to compile OpenZen and use the binary library on other systems, you can use CMake for that too. To build a standlone version of OpenZen, you can use the following command:
