@@ -131,6 +131,8 @@ namespace zen
             m_sensors.insert(*sensor);
             lock.unlock();
 
+            spdlog::info("Sensor {} is connected", deviceName);
+
             return std::move(*sensor);
         }
         else {
@@ -154,6 +156,8 @@ namespace zen
             lock.lock();
             m_sensors.insert(*sensor);
             lock.unlock();
+
+            spdlog::info("High level sensor is connected");
 
             return std::move(*sensor);
         }
