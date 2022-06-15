@@ -20,16 +20,36 @@
 
 namespace zen
 {
-    namespace imu::v1
+    namespace gnss::v1
     {
-        constexpr EDevicePropertyV1 map(ZenProperty_t property, bool isGetter)
+        constexpr EDevicePropertyV1 mapCommand(ZenProperty_t command)
         {
-            switch (property)
+            switch (command)
             {
             default:
                 return EDevicePropertyV1::Ack;
             }
         }
+
+        constexpr EDevicePropertyV1 map(ZenProperty_t property, bool isGetter)
+        {
+            const auto set_or = [isGetter](EDevicePropertyV1 prop) {
+                return isGetter ? EDevicePropertyV1::Ack : prop;
+            };
+            const auto get_set = [isGetter](EDevicePropertyV1 x, EDevicePropertyV1 y) {
+                return isGetter ? x : y;
+            };
+
+            switch (property)
+            {
+            case EZenGnssProperty::ZenGnssProperty_RtkCorrectionMessage:
+                return set_or(EDevicePropertyV1::SetRtkCorrection);
+
+            default:
+                return EDevicePropertyV1::Ack;
+            }
+        }
+    }
 }
 
 #endif

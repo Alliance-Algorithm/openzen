@@ -15,7 +15,7 @@
 #include <vector>
 
 #include "communication/SyncedModbusCommunicator.h"
-#include "components/ImuComponent.h"
+#include "components/GnssComponent.h"
 
 namespace zen
 {
@@ -32,6 +32,18 @@ namespace zen
 
         /** If successful sets the boolean property, otherwise returns an error. */
         ZenError setBool(ZenProperty_t property, bool value) noexcept override;
+
+        /** If successful sets the array properties, otherwise returns an error. */
+        ZenError setArray(ZenProperty_t property, ZenPropertyType type, gsl::span<const std::byte> buffer) noexcept override;
+
+        /** Returns whether the property is an array type */
+        bool isArray(ZenProperty_t property) const noexcept override;
+
+        /** Returns whether the property can be executed as a command */
+        bool isExecutable(ZenProperty_t property) const noexcept override;
+
+        /** Returns whether the property is constant. If so, the property cannot be set */
+        bool isConstant(ZenProperty_t property) const noexcept override;
 
         /** Returns the type of the property */
         ZenPropertyType type(ZenProperty_t property) const noexcept override;
