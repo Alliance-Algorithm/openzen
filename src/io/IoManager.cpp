@@ -21,9 +21,11 @@
 #endif
 #if WIN32
     #if ZEN_USE_BINARY_LIBRARIES
-    #include "io/systems/PcanBasicSystem.h"
-    #include "io/systems/FtdiUsbSystem.h"
-    #include "io/systems/SiUsbSystem.h"
+        #if ZEN_PCAN
+            #include "io/systems/PcanBasicSystem.h"
+        #endif
+        #include "io/systems/FtdiUsbSystem.h"
+        #include "io/systems/SiUsbSystem.h"
     #endif
 #include "io/systems/windows/WindowsDeviceSystem.h"
 #elif __linux__
@@ -47,9 +49,11 @@ namespace zen
 
 #if WIN32
     #if ZEN_USE_BINARY_LIBRARIES
-    static auto pcanRegistry = makeRegistry<PcanBasicSystem>();
-    static auto siUsbRegistry = makeRegistry<SiUsbSystem>();
-    static auto ftdiUsbRegistry = makeRegistry<FtdiUsbSystem>();
+        #if ZEN_PCAN
+            static auto pcanRegistry = makeRegistry<PcanBasicSystem>();
+        #endif  
+        static auto siUsbRegistry = makeRegistry<SiUsbSystem>();
+        static auto ftdiUsbRegistry = makeRegistry<FtdiUsbSystem>();
     #endif
 
     // [XXX] Need to re-evaluate the usage
