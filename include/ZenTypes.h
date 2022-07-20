@@ -654,6 +654,8 @@ typedef enum EZenGnssProperty
     ZenGnssProperty_OutputEsfStatusNumSens,
     ZenGnssProperty_OutputEsfStatusSensStatus,
 
+    ZenGnssProperty_RtkCorrectionMessage,
+
     ZenGnssProperty_Max
 } EZenGnssProperty;
 

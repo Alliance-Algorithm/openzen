@@ -37,9 +37,9 @@ namespace zen
         if (!data.empty() && data.data() == nullptr)
             return ZenError_IsNull;
 
-        // [TODO] Split up into smaller messages
-        if (data.size() > std::numeric_limits<uint8_t>::max())
-            return ZenError_Io_MsgTooBig;
+        //// [TODO] Split up into smaller messages
+        //if (data.size() > std::numeric_limits<uint8_t>::max())
+        //    return ZenError_Io_MsgTooBig;
 
         const auto frame = m_factory->makeFrame(address, function, data.data(), static_cast<uint8_t>(data.size()));
         return m_ioInterface->send(frame);

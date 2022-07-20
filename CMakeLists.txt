@@ -65,6 +65,7 @@ option(ZEN_USE_STATIC_LIBS "Whether to compile OpenZen as a static library" OFF)
 option(ZEN_STATIC_LINK_LIBCXX "Option to statically link libstdc++ to be portable to older systems (Linux only)" OFF)
 # linux needs libbluetooth-dev to be able to compile, so disable it by default
 option(ZEN_BLUETOOTH "Compile OpenZen with bluetooth support" ${ZEN_BLUETOOTH_DEFAULT})
+option(ZEN_PCAN "Compile OpenZen Peak CAN USB adapter support" OFF)
 option(ZEN_BLUETOOTH_BLE "Compile OpenZen with bluetooth low-energy support, needs Qt installed" OFF)
 option(ZEN_NETWORK "Compile OpenZen with support for network streaming of measurement data" OFF)
 option(ZEN_CSHARP "Compile C# bindings for OpenZen" ON)
@@ -206,15 +207,7 @@ set(io_sources
     src/io/IoManager.h
 )
 
-set(io_can_sources
-    src/io/can/CanManager.cpp
-    src/io/can/CanManager.h
-    src/io/can/ICanChannel.h
-)
-
 set(io_interfaces_sources
-    src/io/interfaces/CanInterface.cpp
-    src/io/interfaces/CanInterface.h
     src/io/interfaces/TestSensorInterface.cpp
     src/io/interfaces/TestSensorInterface.h
 )
@@ -258,6 +251,19 @@ set(utility_sources
     src/utility/gnss/RTCM3SerialSource.cpp
     src/utility/gnss/RTCM3Parser.h
 )
+
+if(ZEN_PCAN)
+    set(io_can_sources
+        src/io/can/CanManager.cpp
+        src/io/can/CanManager.h
+        src/io/can/ICanChannel.h
+    )
+
+    set(io_interfaces_sources
+        src/io/interfaces/CanInterface.cpp
+        src/io/interfaces/CanInterface.h
+    )
+endif()
 
 if(ZEN_BLUETOOTH_BLE)
     set(io_ble_sources
@@ -412,10 +418,17 @@ if(WIN32)
 
     # add drivers which need binary libraries
     if (ZEN_USE_BINARY_LIBRARIES)
-        set(io_can_sources ${io_can_sources}
-            src/io/can/PcanBasicChannel.cpp
-            src/io/can/PcanBasicChannel.h
-        )
+        if(ZEN_PCAN)
+            list(APPEND io_can_sources
+                src/io/can/PcanBasicChannel.cpp
+                src/io/can/PcanBasicChannel.h
+            )
+
+            list (APPEND io_systems_sources
+                src/io/systems/PcanBasicSystem.cpp
+                src/io/systems/PcanBasicSystem.h
+            )
+        endif()
 
         list (APPEND io_interfaces_sources
             src/io/interfaces/SiUsbInterface.cpp
@@ -425,8 +438,6 @@ if(WIN32)
         )
 
         list (APPEND io_systems_sources
-            src/io/systems/PcanBasicSystem.cpp
-            src/io/systems/PcanBasicSystem.h
             src/io/systems/SiUsbSystem.cpp
             src/io/systems/SiUsbSystem.h
             src/io/systems/FtdiUsbSystem.cpp

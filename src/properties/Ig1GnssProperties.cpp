@@ -10,9 +10,10 @@
 
 #include "properties/Ig1GnssProperties.h"
 
-#include "properties/ImuSensorPropertiesV1.h"
+//#include "properties/ImuSensorPropertiesV1.h"
+#include "properties/GnssSensorPropertiesV1.h"
 
-#include "SensorProperties.h"
+//#include "SensorProperties.h"
 #include "InternalTypes.h"
 #include "utility/Finally.h"
 
@@ -164,7 +165,7 @@ template <> struct OutputDataFlag<ZenImuProperty_OutputLowPrecision>
                         setBool(ZenImuProperty_StreamData, true);
                 });
 
-                const auto function = static_cast<DeviceProperty_t>(imu::v1::mapCommand(command));
+                const auto function = static_cast<DeviceProperty_t>(gnss::v1::mapCommand(command));
                 return m_communicator.sendAndWaitForAck(0, function, function, {});
             }
             else
@@ -214,17 +215,85 @@ template <> struct OutputDataFlag<ZenImuProperty_OutputLowPrecision>
         }
     }
 
+    ZenError Ig1GnssProperties::setArray(ZenProperty_t property, ZenPropertyType propertyType, gsl::span<const std::byte> buffer) noexcept
+    {
+        if (!isConstant(property) && isArray(property))
+        {
+            if (type(property) != propertyType)
+                return ZenError_WrongDataType;
+
+            if (auto streaming = getBool(ZenImuProperty_StreamData))
+            {
+                if (*streaming)
+                    if (auto error = setBool(ZenImuProperty_StreamData, false))
+                        return error;
+
+                auto guard = finally([&]() {
+                    if (*streaming)
+                        setBool(ZenImuProperty_StreamData, true);
+                    });
+
+                const auto function = static_cast<DeviceProperty_t>(gnss::v1::map(property, false));
+                if (auto error = m_communicator.sendAndWaitForAck(0, function, function, buffer))
+                    return error;
+
+                notifyPropertyChange(property, buffer);
+                return ZenError_None;
+            }
+            else
+            {
+                return streaming.error();
+            }
+        }
+
+        return ZenError_UnknownProperty;
+    }
+
+    bool Ig1GnssProperties::isArray(ZenProperty_t property) const noexcept
+    {
+        switch (property) {
+        case ZenGnssProperty_RtkCorrectionMessage:
+            return true;
+        default:
+            return false;
+        }
+    }
+
+    bool Ig1GnssProperties::isConstant(ZenProperty_t) const noexcept
+    {
+        return false;
+    }
+
+    bool Ig1GnssProperties::isExecutable(ZenProperty_t) const noexcept
+    {
+        return false;
+    }
+
     ZenPropertyType Ig1GnssProperties::type(ZenProperty_t property) const noexcept
     {
-        if (property == ZenImuProperty_StreamData) {
-            return ZenPropertyType_Bool;
-        }
+        switch (property)
+        {
+        case ZenImuProperty_StreamData:
 
-        // all our other properties are bool
-        if (outputGpsDataFlagMapping.find(property) != outputGpsDataFlagMapping.end()) {
+        case ZenImuProperty_OutputRawAcc:
+        case ZenImuProperty_OutputRawGyr:
+        case ZenImuProperty_OutputRawMag:
+        case ZenImuProperty_OutputEuler:
+        case ZenImuProperty_OutputQuat:
+        case ZenImuProperty_OutputAngularVel:
+        case ZenImuProperty_OutputLinearAcc:
+        case ZenImuProperty_OutputHeaveMotion:
+            // [TODO] Should these go here?
+        case ZenImuProperty_OutputAltitude:
+        case ZenImuProperty_OutputPressure:
+        case ZenImuProperty_OutputTemperature:
             return ZenPropertyType_Bool;
-        }
 
-        return ZenPropertyType_Invalid;
+        case ZenGnssProperty_RtkCorrectionMessage:
+            return ZenPropertyType_Byte;
+
+        default:
+            return ZenPropertyType_Invalid;
+        }
     }
 }

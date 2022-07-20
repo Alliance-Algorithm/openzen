@@ -15,7 +15,11 @@
 #include "communication/EventCommunicator.h"
 #include "components/ComponentFactoryManager.h"
 #include "io/IoManager.h"
-#include "io/can/CanManager.h"
+
+#ifdef ZEN_PCAN
+    #include "io/can/CanManager.h"
+#endif
+
 #include "utility/StringView.h"
 
 #include <spdlog/spdlog.h>
@@ -234,10 +238,12 @@ namespace zen
 
     void SensorManager::sensorLoop()
     {
+#ifdef ZEN_PCAN
         while (!m_terminate)
         {
             CanManager::get().poll();
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
+#endif
     }
 }
