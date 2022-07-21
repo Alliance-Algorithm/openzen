@@ -26,7 +26,7 @@ namespace zen {
 class DummyFrameFactory : public modbus::IFrameFactory {
 public:
  std::vector<std::byte> makeFrame(uint8_t, uint8_t,
-   const std::byte*, uint8_t) const override{
+   const std::byte*, uint16_t) const override{
     return {};
   }
 };

@@ -15,7 +15,7 @@
 namespace
 {
 
-    uint16_t lrcLp(uint8_t address, uint8_t function, const std::byte* data, uint8_t length) noexcept
+    uint16_t lrcLp(uint8_t address, uint8_t function, const std::byte* data, uint16_t length) noexcept
     {
         // TODO:
         // LP Sensor firmware computes the additions for
@@ -70,9 +70,9 @@ namespace zen::modbus
     }
 
 
-    std::vector<std::byte> LpFrameFactory::makeFrame(uint8_t address, uint8_t function, const std::byte* data, uint8_t length) const
+    std::vector<std::byte> LpFrameFactory::makeFrame(uint8_t address, uint8_t function, const std::byte* data, uint16_t length) const
     {
-        constexpr uint8_t WRAPPER_SIZE = 9; // 1 (start) + 2 (address) + 2 (function) + 2 (LRC) + 2 (end)
+        constexpr uint16_t WRAPPER_SIZE = 9; // 1 (start) + 2 (address) + 2 (function) + 2 (LRC) + 2 (end)
         std::vector<std::byte> frame(WRAPPER_SIZE + 2 + length);
 
         frame[0] = std::byte(0x3a);
