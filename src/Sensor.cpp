@@ -58,7 +58,7 @@ namespace zen
             else if (version == 1)
                 return std::make_unique<modbus::LpFrameFactory>();
 
-            return std::make_unique<modbus::RTUFrameFactory>();
+            return std::make_unique<modbus::LpFrameFactory>();
         }
 
         std::unique_ptr<modbus::IFrameParser> getParser(uint32_t version) noexcept
@@ -68,7 +68,7 @@ namespace zen
             if (version == 1)
                 return std::make_unique<modbus::LpFrameParser>();
 
-            return std::make_unique<modbus::RTUFrameParser>();
+            return std::make_unique<modbus::LpFrameParser>();
         }
 
         std::unique_ptr<ModbusCommunicator> moveCommunicator(std::unique_ptr<ModbusCommunicator> communicator, IModbusFrameSubscriber& newSubscriber, uint32_t version)
