@@ -42,7 +42,8 @@ Now you can open and compile OpenZen with Visual Studio. When starting Visual St
 1. Install gcc7 (requires C++17 support) or newer: `sudo apt-get install gcc-7`
 2. Install CMake (requires version 3.11 or newer)
 3. Clone the OpenZen repository: `git clone --recurse-submodules https://bitbucket.org/lpresearch/openzen.git`
-4. Create a build folder and run cmake:
+4. (for Linux) Install additional libraries depending on your use case. More [details](https://lpresearch.bitbucket.io/openzen/latest/setup.html#linux).
+5. Create a build folder and run cmake:
 ```
 cd openzen
 mkdir build && cd build
@@ -54,7 +55,7 @@ make -j4
 examples/OpenZenExample
 ```
 
-An example of how to use the OpenZen API is included with the repository. If you are looking for more information on how to use the API, visit the documentation on the [Wiki](https://bitbucket.org/lpresearch/openzen/wiki/API%20Documentation).
+An example of how to use the OpenZen API is included with the repository. If you are looking for more information on how to use the API, visit the documentation on the [Wiki](https://lpresearch.bitbucket.io/openzen/latest/getting_started.html).
 
 ## Available Build Options
 
@@ -68,8 +69,8 @@ cmake -DZEN_BLUETOOTH=OFF -DZEN_PYTHON=ON ..
 |------------------------|---------|---------------------------------------------------------------------------------|
 | ZEN_USE_STATIC_LIBS    | OFF     | Compile OpenZen as a static library                                             |
 | ZEN_STATIC_LINK_LIBCXX | OFF     | Option to statically link libstdc++ to be portable to older systems (Linux only)|
-| ZEN_BLUETOOTH          | ON      | Compile with bluetooth support                                                  |
-| ZEN_BLUETOOTH_BLE      | OFF     | Compile with bluetooth low-energy support, needs Qt installed                   |
+| ZEN_BLUETOOTH          | ON      | Compile with bluetooth support ([details](https://lpresearch.bitbucket.io/openzen/latest/setup.html#linux))                                                  |
+| ZEN_BLUETOOTH_BLE      | OFF     | Compile with bluetooth low-energy support, needs Qt installed ([details](https://lpresearch.bitbucket.io/openzen/latest/setup.html#linux))                  |
 | ZEN_NETWORK            | OFF     | Compile with support for network streaming of measurement data                  |
 | ZEN_CSHARP             | ON      | Compile C# bindings for OpenZen                                                 |
 | ZEN_PYTHON             | OFF     | Compile Python bindings for OpenZen                                             |
@@ -79,7 +80,7 @@ cmake -DZEN_BLUETOOTH=OFF -DZEN_PYTHON=ON ..
 **Note:** The existing C# binding is for 64-bit machine. If you wish to run our sample C# project on a 32-bit machine, please execute the following code in the `bindings` folder BEFORE building OpenZen:
 
 ```
-swig -csharp -small -c++ -debug-typedef -DSWIGWORDSIZE64 -o OpenZenCSharp/OpenZen_wrap_csharp.cxx -outdir OpenZenCSharp OpenZen.i
+swig -csharp -small -c++ -debug-typedef -DSWIGWORDSIZE32 -o OpenZenCSharp/OpenZen_wrap_csharp.cxx -outdir OpenZenCSharp OpenZen.i
 ```
 
 ## Deployment
