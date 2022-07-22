@@ -2,8 +2,8 @@
 #
 # OpenZen Python example
 #
-# Make sure the openzen.pyd (for Windows) or openzen.so (Linux/Mac)
-# are in the same folder as this file.
+# Make sure the openzen.pyd (for Windows) or openzen.so (Linux/Mac, simply rename 
+# libOpenZen.so to openzen.so) are in the same folder as this file.
 #
 # If you want to connect to USB sensors on Windows, the file SiUSBXp.dll
 # should also be in the same folder.
@@ -47,7 +47,7 @@ if sensor_desc_connect is None:
     print("No sensors found")
     sys.exit(1)
 
-# connect to the first sensor found
+# connect to the first sensor found, more on https://lpresearch.bitbucket.io/openzen/latest/io_systems.html
 error, sensor = client.obtain_sensor(sensor_desc_connect)
 
 # or connect to a sensor by name
@@ -156,7 +156,8 @@ while True:
         imu_data = zenEvent.data.imu_data
         print ("ts: {} s".format(imu_data.timestamp))
         print ("A: {} g".format(imu_data.a))
-        print ("G: {} degree/s".format(imu_data.g1))
+        print ("G1: {} degree/s".format(imu_data.g1))   # depending on sensor, gyro data is outputted to g1, g2 or both
+        print ("G2: {} degree/s".format(imu_data.g2))   # read more on https://lpresearch.bitbucket.io/openzen/latest/getting_started.html#id1
         print ("B: {} microT".format(imu_data.b))
 
     runSome = runSome + 1

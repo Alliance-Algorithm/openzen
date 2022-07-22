@@ -37,6 +37,7 @@ int main(int argc, char* argv[])
     }
 
     // connect to sensor on IO System by the sensor name
+    // more on https://lpresearch.bitbucket.io/openzen/latest/io_systems.html
     // auto sensorPair = client.obtainSensorByName("WindowsDevice", "\\\\.\\COM7", 921600);
     auto sensorPair = client.obtainSensorByName("SiUsb", "lpmscu2000573", 921600);
     auto& obtainError = sensorPair.first;
@@ -93,7 +94,10 @@ int main(int argc, char* argv[])
             std::cout << "> Acceleration: \t x = " << event.second.data.imuData.a[0]
                 << "\t y = " << event.second.data.imuData.a[1]
                 << "\t z = " << event.second.data.imuData.a[2] << std::endl;
-            std::cout << "> Gyro: \t\t x = " << event.second.data.imuData.g1[0]
+
+            // depending on sensor, gyro data is outputted to g1, g2 or both
+            // read more on https://lpresearch.bitbucket.io/openzen/latest/getting_started.html#id1
+            std::cout << "> Gyro 1: \t\t x = " << event.second.data.imuData.g1[0]
                 << "\t y = " << event.second.data.imuData.g1[1]
                 << "\t z = " << event.second.data.imuData.g1[2] << std::endl;
         }

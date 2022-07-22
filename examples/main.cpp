@@ -7,7 +7,7 @@
 // SPDX-License-Identifier: MIT
 //
 //===========================================================================//
-
+#define OPENZEN_CXX14
 #include "OpenZen.h"
 
 #include <array>
