@@ -14,13 +14,17 @@ Will all sensors models, the data which is transmitted can be selected individua
 latency of the data transfer. Therefore, you need to ensure the data item you want to read out is enabled for output.
 There are two ways to enable or disable the output of a data item.
 
-**1. Use the graphical user interface tools LPMSControl2 and OpenMAT**
+**1. Use the graphical user interface tools**
 
-You can download theses tools from our `support website <https://lp-research.atlassian.net/wiki/spaces/LKB/pages/1138294814/LPMS+Data+Acquisition+Software>`_. Then connect to the sensor
+- *LPMSControl2*: for LPMS3 sensors.
+
+- *OpenMAT*: for LPMS2 sensors
+
+:ref:`io-system-label` gives an overview of LPMS2/3 sensors. You can download these tools from our `support website <https://lp-research.atlassian.net/wiki/spaces/LKB/pages/1138294814/LPMS+Data+Acquisition+Software>`_. Then connect to the sensor
 and enable the output of the data you require. After enabling the output please ensure the settings are persisent by writing
 them to the sensor flash.
 
-Here is an example where to change the sensor data output:
+Here is an example where to change the sensor data output on *OpenMAT*:
 
 .. image:: images/lpms-sensor_output.png
    :alt: LpmsControl enable data ouput
@@ -43,63 +47,66 @@ by all LP-Research sensors.
 **The latest data structure could be found in** 
 `ZenTypes.h <https://bitbucket.org/lpresearch/openzen/src/master/include/ZenTypes.h>`__.
 
-+------------+------------------+------------------------------------+
-| Field Name | Unit             | Description                        |
-+============+==================+====================================+
-| frameCount | no unit          | Data frame number assigned to this |
-|            |                  | measurement by the firmware.       |
-+------------+------------------+------------------------------------+
-| timestamp  | s                | Timestamp of the measurement data. |
-|            |                  | The start point of this timestamp  |
-|            |                  | is arbitrary but subsequent        |
-|            |                  | measurements are guaranteed to have|
-|            |                  | the distance to each other in time.|
-+------------+------------------+------------------------------------+
-| a          | g                | Accleration measurment after all   |
-|            |                  | corrections have been applied      |
-+------------+------------------+------------------------------------+
-| g          | deg/s            | Gyroscope measurment after all     |
-|            |                  | corrections have been applied      |
-+------------+------------------+------------------------------------+
-| b          | :math:`\mu T`    | Magnetometer measurment after all  |
-|            |                  | corrections have been applied      |
-+------------+------------------+------------------------------------+
-| aRaw       | m/s^2            | Accleration measurment before all  |
-|            |                  | corrections have been applied      |
-+------------+------------------+------------------------------------+
-| gRaw       | deg/s            | Gyroscope measurment before all    |
-|            |                  | corrections have been applied      |
-+------------+------------------+------------------------------------+
-| w          | deg/s            | Angular veloctiy.                  |
-|            |                  | This angular velocity takes into   |
-|            |                  | account if an orientation offset   |
-|            |                  | has been.                          |
-+------------+------------------+------------------------------------+
-| r          | deg/s            | Three euler angles representing    |
-|            |                  | the current rotation of the sensor.|
-|            |                  | See the sensor documenation how    |
-|            |                  | the angles are defined             |
-+------------+------------------+------------------------------------+
-| q          | no unit          | Quaternion representing the current|
-|            |                  | rotation of the sensor in this     |
-|            |                  | order: w, x, y,z                   |
-|            |                  | See the sensor documenation how the|
-|            |                  | rotation axes are defined.         |
-+------------+------------------+------------------------------------+
-| rotationM  | no unit          | (Not available) Orientation data as|
-|            |                  | rotation matrix without offset     |
-|            |                  | applied.                           |
-+------------+------------------+------------------------------------+
-| rotOffsetM | no unit          | (Not available) Orientation data as|
-|            |                  | rotation matrix with offset applied|
-|            |                  | .                                  |
-+------------+------------------+------------------------------------+
-| pressure   | mPa              | Barometric pressure measurement.   |
-|            |                  | Not supported by all sensor models.|
-+------------+------------------+------------------------------------+
-| heaveMotion| m                | Heave motion output.               |
-|            |                  | Not supported by all sensor models.|
-+------------+------------------+------------------------------------+
++-------------+-----------------------+-------------------------------------+
+| Field Name  | Unit                  | Description                         |
++=============+=======================+=====================================+
+|| frameCount || no unit              || Data frame number assigned to this |
+||            ||                      || measurement by the firmware.       |
++-------------+-----------------------+-------------------------------------+
+|| timestamp  || s                    || Timestamp of the measurement data. |
+||            ||                      || The start point of this timestamp  |
+||            ||                      || is arbitrary but subsequent        |
+||            ||                      ||                                    |
+||            ||                      ||                                    |
++-------------+-----------------------+-------------------------------------+
+|| a          || g                    || Accleration measurment after all   |
+||            ||                      || corrections have been applied      |
++-------------+-----------------------+-------------------------------------+
+|| g0         || deg/s                || Gyro I measurment after all        |
+||            ||                      || corrections have been applied      |
++-------------+-----------------------+-------------------------------------+
+|| g1         || deg/s                || Gyro II measurment after all       |
+||            ||                      || corrections have been applied      |
++-------------+-----------------------+-------------------------------------+
+|| b          || :math:`\mu T`        || Magnetometer measurment after all  |
+||            ||                      || corrections have been applied      |
++-------------+-----------------------+-------------------------------------+
+|| aRaw       || m/s^2                || Accleration measurment before all  |
+||            ||                      || corrections have been applied      |
++-------------+-----------------------+-------------------------------------+
+|| gRaw       || deg/s                || Gyroscope measurment before all    |
+||            ||                      || corrections have been applied      |
++-------------+-----------------------+-------------------------------------+
+|| w          || deg/s                || Angular veloctiy.                  |
+||            ||                      || This angular velocity takes into   |
+||            ||                      || account if an orientation offset   |
+||            ||                      || has been.                          |
++-------------+-----------------------+-------------------------------------+
+|| r          || deg/s                || Three euler angles representing    |
+||            ||                      || See the sensor documenation how    |
+||            ||                      || the angles are defined             |
+||            ||                      ||                                    |
++-------------+-----------------------+-------------------------------------+
+|| q          || no unit              ||                                    |
+||            ||                      || rotation of the sensor in this     |
+||            ||                      || order: w, x, y,z                   |
+||            ||                      || rotation axes are defined.         |
+||            ||                      ||                                    |
++-------------+-----------------------+-------------------------------------+
+|| rotationM  || no unit              ||                                    |
+||            ||                      || rotation matrix without offset     |
+||            ||                      || applied.                           |
++-------------+-----------------------+-------------------------------------+
+|| rotOffsetM || no unit              ||                                    |
+||            ||                      || .                                  |
+||            ||                      ||                                    |
++-------------+-----------------------+-------------------------------------+
+|| pressure   || mPa                  ||                                    |
+||            ||                      ||                                    |
++-------------+-----------------------+-------------------------------------+
+|| m          || Heave motion output. ||                                    |
+||            ||                      ||                                    |
++-------------+-----------------------+-------------------------------------+
 
 Global Position: ZenGnssData
 ============================

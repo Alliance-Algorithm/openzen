@@ -4,6 +4,13 @@
 Examples for OpenZen Usage
 ###########################
 
+Basic examples
+===============
+
+For connecting to a single sensor, toggling sensor settings and output sensor data, please refer to :ref:`getting-started-label`.
+If you prefer to study and run a full code example, please have a look
+at this `example source file <https://bitbucket.org/lpresearch/openzen/src/master/examples/main.cpp>`_.
+
 Connecting multiple Sensors
 ===========================
 

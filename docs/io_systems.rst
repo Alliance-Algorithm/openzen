@@ -25,7 +25,7 @@ on Windows. The advantage is that the sensor can
 be configured via string name. This name is always the same, no matter on which USB port the sensor
 is connected or which other peripheral devices are connected.
 
-Sensor can be toggled between COM / USBXpress mode by clicking **"Convert" button** in LPMSControl2.
+Sensor can be toggled between COM / USBXpress mode by clicking **"Convert" button** in `LPMSControl2 <https://lp-research.atlassian.net/wiki/spaces/LKB/pages/1138294814/LPMS+Data+Acquisition+Software>`__ (only for LPMS3 sensors).
 
 =======================     ============
 Name in OpenZen             SiUsb
@@ -47,7 +47,7 @@ on Windows. The baudrate needs to be provided with the call to ``obtainSensorByN
 is the COM-port named assigned to the sensor by Windows. This name can be different on different systems,
 depending how much other COM-Port devices are connected.
 
-Sensor can be toggled between COM / USBXpress mode by clicking **"Convert" button** in LPMSControl2.
+Sensor can be toggled between COM / USBXpress mode by clicking **"Convert" button** in `LPMSControl2 <https://lp-research.atlassian.net/wiki/spaces/LKB/pages/1138294814/LPMS+Data+Acquisition+Software>`__ (only for LPMS3 sensors).
 
 =======================     =============
 Name in OpenZen             WindowsDevice
