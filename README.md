@@ -23,7 +23,13 @@ You can download the newest pre-compiled version of OpenZen for your platform he
 
 <https://bitbucket.org/lpresearch/openzen/downloads/>
 
-At this time, we provide a binary release for Windows x64-bit, Ubuntu 16.04 (and newer) x64-bit and ARM64-bit. Please contact us, if you need a binary release for a platform that is not provided yet.
+At this time, we provide a binary release for
+
+- Windows x64-bit (support CSharp, Python and Bluetooth),
+- Ubuntu 16.04 (and newer) x64-bit,
+- ARM64-bit. 
+
+Please contact us, if you need a binary release for a platform that is not provided yet.
 
 ## Build OpenZen from Source
 
