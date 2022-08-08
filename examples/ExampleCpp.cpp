@@ -20,6 +20,8 @@ using namespace zen;
 /**
  * This example demonstrates the C++ interface of the OpenZen library. This interface
  * does also work for C++ compilers which do not support the C++17 standard yet.
+ * 
+ * Check our docs for more https://lpresearch.bitbucket.io/openzen/latest/getting_started.html
  */
 int main(int argc, char* argv[])
 {

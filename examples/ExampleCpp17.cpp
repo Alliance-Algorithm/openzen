@@ -18,6 +18,8 @@ using namespace zen;
 
 /**
  * This example demonstrates the C++17 interface of the OpenZen library.
+ * 
+ * Check our docs for more https://lpresearch.bitbucket.io/openzen/latest/getting_started.html
  */
 int main(int argc, char* argv[])
 {
@@ -34,8 +36,8 @@ int main(int argc, char* argv[])
 
     // connect to sensor on IO System by the sensor name
     // more on https://lpresearch.bitbucket.io/openzen/latest/io_systems.html
-    // auto [obtainError, sensor] = client.obtainSensorByName("WindowsDevice", "\\\\.\\COM7", 921600);
     auto [obtainError, sensor] = client.obtainSensorByName("SiUsb", "lpmscu2000573", 921600);
+    // auto [obtainError, sensor] = client.obtainSensorByName("WindowsDevice", "\\\\.\\COM7", 921600);
     if (obtainError)
     {
         std::cout << "Cannot connect to sensor" << std::endl;

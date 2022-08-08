@@ -13,6 +13,13 @@
 #
 ###########################################################################
 
+
+#
+# Python examples on connecting to sensor, toggling sensor settings and print sensor data.
+#
+# Check our docs for more https://lpresearch.bitbucket.io/openzen/latest/getting_started.html
+#
+
 import sys
 import openzen
 

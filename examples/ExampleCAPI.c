@@ -4,6 +4,8 @@
     It also serves to verify that no C++ snuck into the API.
 
     The example lists all available sensors to stdout.
+
+    Check our docs for more https://lpresearch.bitbucket.io/openzen/latest/getting_started.html
 */
 
 #include <stdio.h>
