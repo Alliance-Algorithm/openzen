@@ -121,6 +121,7 @@ namespace zen
         const auto property = static_cast<EDevicePropertyV0>(function);
         switch (property)
         {
+        case EDevicePropertyV0::GetImuId:
         case EDevicePropertyV0::GetLinearCompensationRate:
         case EDevicePropertyV0::GetFilterMode:
         case EDevicePropertyV0::GetFilterPreset:

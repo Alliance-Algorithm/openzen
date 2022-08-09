@@ -57,6 +57,9 @@ namespace zen
 
             switch (property)
             {
+            case ZenImuProperty_Id:
+                return get_set(EDevicePropertyV0::GetImuId, EDevicePropertyV0::SetImuId);
+
             case ZenImuProperty_SamplingRate:
                 return set_or(EDevicePropertyV0::SetSamplingRate);
 

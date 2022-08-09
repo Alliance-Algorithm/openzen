@@ -976,6 +976,7 @@ namespace zen
         case ZenImuProperty_CanHeartbeat:
             return ZenPropertyType_Float;
 
+        case ZenImuProperty_Id:
         case ZenImuProperty_SamplingRate:
         case ZenImuProperty_SupportedSamplingRates:
         case ZenImuProperty_FilterMode:
@@ -986,7 +987,6 @@ namespace zen
         case ZenImuProperty_GyrSupportedRanges:
         case ZenImuProperty_MagRange:
         case ZenImuProperty_MagSupportedRanges:
-
         case ZenImuProperty_CanChannelMode:
         case ZenImuProperty_CanPointMode:
         case ZenImuProperty_CanStartId:

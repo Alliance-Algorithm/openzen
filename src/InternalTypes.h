@@ -58,6 +58,9 @@ enum class EDevicePropertyV0 : DeviceProperty_t
 
     SetOrientationOffsetMode = 18,      // uint32_t
 
+    SetImuId = 20,                      // uint32_t
+    GetImuId = 21,                      // uint32_t
+
     StartGyroCalibration = 22,          // void
     SetGyrUseAutoCalibration = 23,      // bool
     SetGyrRange = 25,                   // uint32
