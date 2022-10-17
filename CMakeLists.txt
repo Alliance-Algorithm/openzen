@@ -541,7 +541,7 @@ endif()
 
 target_compile_features(OpenZen
     PRIVATE
-        "cxx_std_${ZEN_CXX_VERSION}"
+        "cxx_std_${ZEN_INTERNAL_CXX_VERSION}"
 )
 
 set_property(TARGET OpenZen PROPERTY CXX_EXTENSIONS FALSE)
