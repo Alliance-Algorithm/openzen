@@ -62,7 +62,7 @@ pipelines:
           script:
             - git submodule update --init
             - mkdir ../linux_x64_build && cd ../linux_x64_build
-            - cmake -DZEN_NETWORK=ON -DZEN_PYTHON=ON -DZEN_INTERNAL_CXX_VERSION=20 ../build
+            - /opt/cmake-3.16.3-Linux-x86_64/bin/cmake -DZEN_NETWORK=ON -DZEN_PYTHON=ON -DZEN_INTERNAL_CXX_VERSION=20 ../build
             - make
             - ./OpenZenTests
       - step:
