@@ -58,6 +58,14 @@ pipelines:
             - make
             - ./OpenZenTests
       - step:
+          name: Linux x64 Build in C++20 with Python and zmq options
+          script:
+            - git submodule update --init
+            - mkdir ../linux_x64_build && cd ../linux_x64_build
+            - cmake -DZEN_NETWORK=ON -DZEN_PYTHON=ON -DZEN_INTERNAL_CXX_VERSION=20 ../build
+            - make
+            - ./OpenZenTests
+      - step:
           name: Linux x64 CMake Package compile and Standalone test
           script:
             - git submodule update --init

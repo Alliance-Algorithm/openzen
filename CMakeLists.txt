@@ -74,6 +74,9 @@ option(ZEN_TESTS "Compile with OpenZen tests" ON)
 option(ZEN_EXAMPLES "Compile with OpenZen examples" ON)
 option(ZEN_USE_BINARY_LIBRARIES "If set to true, binaries libraries are downloaded during the build" ON)
 
+# This is used for automated tests.  We use C++17, but when built as parts of other projects, cmake can 
+set(ZEN_INTERNAL_CXX_VERSION 17 CACHE STRING "For compatibility testing, specifies the C++ version to use for building the OpenZen library, doesn't affect its interface (which is always C).  Needs at least 17, i.e. C++17")
+
 # Enable this line and set it to the correct Qt installation path if you want to compile
 # with bluetooth support on Windows
 #set(CMAKE_PREFIX_PATH "C://Qt//5.12.3//msvc2017_64//")
@@ -538,7 +541,7 @@ endif()
 
 target_compile_features(OpenZen
     PRIVATE
-        cxx_std_17
+        "cxx_std_${ZEN_CXX_VERSION}"
 )
 
 set_property(TARGET OpenZen PROPERTY CXX_EXTENSIONS FALSE)
