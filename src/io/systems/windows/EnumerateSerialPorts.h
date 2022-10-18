@@ -15,7 +15,11 @@
 #include <vector>
 
 namespace zen {
-    bool EnumerateSerialPorts(std::vector<std::string>& ports);
+    struct PortAndSerial {
+        std::string port;
+        std::string serialNumber;
+    };
+    bool EnumerateSerialPorts(std::vector<PortAndSerial>& ports);
 }
 
 #endif

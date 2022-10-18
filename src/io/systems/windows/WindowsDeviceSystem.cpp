@@ -18,21 +18,21 @@ namespace zen
 {
     ZenError WindowsDeviceSystem::listDevices(std::vector<ZenSensorDesc>& outDevices)
     {
-        std::vector<std::string> serialPorts;
+        std::vector<PortAndSerial> serialPorts;
         if (!EnumerateSerialPorts(serialPorts))
             return ZenError_Device_ListingFailed;
 
         for (auto it = serialPorts.begin(); it != serialPorts.end(); ++it) {
             ZenSensorDesc desc;
 
-            const std::string name("COM PORT #" + it->substr(3));
+            const std::string name("COM PORT #" + it->port.substr(3));
             std::memcpy(desc.name, name.c_str(), name.size());
             desc.name[name.size()] = '\0';
 
-            desc.serialNumber[0] = '\0';
+            std::memcpy(desc.serialNumber, it->serialNumber.c_str(), (std::max)(sizeof desc.serialNumber, it->serialNumber.size()));
             std::memcpy(desc.ioType, WindowsDeviceSystem::KEY, sizeof(WindowsDeviceSystem::KEY));
 
-            const std::string filename("\\\\.\\" + *it);
+            const std::string filename("\\\\.\\" + it->port);
             std::memcpy(desc.identifier, filename.c_str(), filename.size());
             desc.identifier[filename.size()] = '\0';
 

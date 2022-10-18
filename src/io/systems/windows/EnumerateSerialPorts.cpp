@@ -70,51 +70,106 @@ namespace {
     }
 }
 
-bool zen::EnumerateSerialPorts(std::vector<std::string>& ports)
+bool zen::EnumerateSerialPorts(std::vector<PortAndSerial>& vAvailablePortAndSerial)
 {
-    ports = {};
+    // Find all known SiLabs devices in VCP mode.
+    std::vector<PortAndSerial> vPortAndSerialAll;
+    {
+        HKEY hKey = 0;
+        auto closeReg = gsl::finally([&hKey]() { if (hKey) RegCloseKey(hKey); });
+        // This key contains all devices with this known vendor and product id. pid = EA60 is VCP mode, EA61 is USBXpress
+        LSTATUS nStatus = ::RegOpenKeyExA(HKEY_LOCAL_MACHINE, R"(SYSTEM\CurrentControlSet\Enum\USB\VID_10C4&PID_EA60)", 0,
+            KEY_QUERY_VALUE | KEY_READ, &hKey);
+        if (nStatus != ERROR_SUCCESS)
+            return false;
 
-    HKEY hKey = 0;
-    auto closeReg = gsl::finally([&hKey]() { if (hKey) RegCloseKey(hKey); });
-    LSTATUS nStatus = ::RegOpenKeyExA(HKEY_LOCAL_MACHINE, R"(HARDWARE\DEVICEMAP\SERIALCOMM)", 0,
-        KEY_QUERY_VALUE, &hKey);
-    if (nStatus != ERROR_SUCCESS)
-        return false;
+        // Get the max value name and max value lengths
+        DWORD cSubKeys = 0;
+        nStatus = ::RegQueryInfoKeyA(hKey, nullptr, nullptr, nullptr, &cSubKeys, nullptr,
+            nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+        if (nStatus != ERROR_SUCCESS)
+            return false;
 
-    // Get the max value name and max value lengths
-    DWORD dwMaxValueNameLen = 0;
-    nStatus = ::RegQueryInfoKeyA(hKey, nullptr, nullptr, nullptr, nullptr, nullptr,
-        nullptr, nullptr, &dwMaxValueNameLen, nullptr, nullptr, nullptr);
-    if (nStatus != ERROR_SUCCESS)
-        return false;
+        for (DWORD i = 0; i < cSubKeys; i++)
+        {
+            std::vector<char> vSerialNumber(16383);
+            DWORD len = (DWORD)vSerialNumber.size();
+            auto retCode = RegEnumKeyExA(hKey, i,
+                vSerialNumber.data(),
+                &len,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr);
 
-    const DWORD dwMaxValueNameSizeInChars = dwMaxValueNameLen + 1; //Include space for the null terminator
+            if (retCode != ERROR_SUCCESS)
+                continue;
+            auto serialNumber = std::string(vSerialNumber.data(), len);
 
-    //Allocate some space for the value name
+            HKEY hSubKey = 0;
+            auto closeSubKey = gsl::finally([&hSubKey] { if (hSubKey) RegCloseKey(hSubKey); });
+            std::string sKey = std::string(serialNumber) + "\\Device Parameters";
+            nStatus = ::RegOpenKeyExA(hKey, sKey.c_str(), 0, KEY_QUERY_VALUE | KEY_READ, &hSubKey);
+            if (nStatus != ERROR_SUCCESS)
+                continue;
 
-    // Enumerate all the values underneath HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\SERIALCOMM
-    DWORD dwIndex = 0;
-    while (true) {
+            std::string sPortName;
+            if (::GetRegistryString(hSubKey, "PortName", sPortName)) {
+                vPortAndSerialAll.push_back(PortAndSerial{ sPortName, serialNumber });
+            }
+        }
+    }
+
+    // Filter for the ones associated to a live COM port.
+    vAvailablePortAndSerial = {};
+    {
+        HKEY hKey = 0;
+        auto closeReg = gsl::finally([&hKey]() { if (hKey) RegCloseKey(hKey); });
+        LSTATUS nStatus = ::RegOpenKeyExA(HKEY_LOCAL_MACHINE, R"(HARDWARE\DEVICEMAP\SERIALCOMM)", 0,
+            KEY_QUERY_VALUE, &hKey);
+        if (nStatus != ERROR_SUCCESS)
+            return false;
+
+        // Get the max value name and max value lengths
+        DWORD dwMaxValueNameLen = 0;
+        nStatus = ::RegQueryInfoKeyA(hKey, nullptr, nullptr, nullptr, nullptr, nullptr,
+            nullptr, nullptr, &dwMaxValueNameLen, nullptr, nullptr, nullptr);
+        if (nStatus != ERROR_SUCCESS)
+            return false;
+
+        const DWORD dwMaxValueNameSizeInChars = dwMaxValueNameLen + 1; //Include space for the null terminator
+
+        // Enumerate all the values underneath HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\SERIALCOMM
+        DWORD dwIndex = 0;
         std::vector<char> valueName(dwMaxValueNameSizeInChars, 0);
-        DWORD dwValueNameSize = dwMaxValueNameSizeInChars;
-        if (::RegEnumValueA(hKey, dwIndex++, valueName.data(), &dwValueNameSize,
+        while (true) {
+            DWORD dwValueNameSize = dwMaxValueNameSizeInChars;
+            if (::RegEnumValueA(hKey, dwIndex++, valueName.data(), &dwValueNameSize,
                 nullptr, nullptr, nullptr, nullptr) != ERROR_SUCCESS)
-            break;
+                break;
 
-        std::string sPortName;
-        if (::GetRegistryString(hKey, valueName.data(), sPortName))
-            ports.emplace_back(std::move(sPortName));
+            std::string sPortName;
+            if (::GetRegistryString(hKey, valueName.data(), sPortName)) {
+                // Insert this port into list if it is an SiLabs device, i.e. if it is included
+                // in the previous list.
+                for (auto& pas : vPortAndSerialAll) {
+                    if (pas.port == sPortName)
+                        vAvailablePortAndSerial.emplace_back(pas);
+                }
+            }
+        }
     }
 
     // Sort the output.
-    std::sort(ports.begin(), ports.end(),
-        [](std::string_view left, std::string_view right) -> bool {
+    std::sort(vAvailablePortAndSerial.begin(), vAvailablePortAndSerial.end(),
+        [](const PortAndSerial& left, const PortAndSerial& right) -> bool {
             // Strings are either COMx, COMxx or COMxxx with no leading zeros.
             // COMx comes before COMxx, COMxxx etc.
-            if (left.size() != right.size())
-                return left.size() < right.size();
+            if (left.port.size() != right.port.size())
+                return left.port.size() < right.port.size();
             // Compare the digit strings which are guaranteed to be of the same length.
-            return left.substr(3) < right.substr(3);
+            return left.port.substr(3) < right.port.substr(3);
         });
+
     return true;
 }
