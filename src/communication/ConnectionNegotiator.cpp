@@ -72,6 +72,13 @@ namespace zen
         }
         });
 
+        m_sensorConfigs.push_back( { {"LPMS-INC1-CAN", "LPMS-INC1-RS232", "LPMS-INC1-RS485", "LPMS-INC1-TTL"},
+        {1,
+            { ComponentConfig{1, g_zenSensorType_Imu}
+            }
+        }
+        });
+
         // BE series
         m_sensorConfigs.push_back( { {"LPMS-BE1", "LPMS-BE2"},
         {1,
