@@ -2,7 +2,7 @@
 
 High performance sensor data streaming and processing
 
-Full documentation: <https://lpresearch.bitbucket.io/openzen/>
+## [Full documentation here](https://lp-research.atlassian.net/wiki/spaces/LKB/pages/2005630977/OpenZen+Documentations)
 
 ![OpenZen Unity plugin connected to a LPMS-CU2 sensor and live visualization of sensor orientation](https://lpresearch.bitbucket.io/openzen_resources/OpenZenUnityDemo.gif)
 
