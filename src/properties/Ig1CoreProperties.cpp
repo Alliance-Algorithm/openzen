@@ -7,7 +7,6 @@
 // SPDX-License-Identifier: MIT
 //
 //===========================================================================//
-
 #include "Ig1CoreProperties.h"
 
 #include <cstring>

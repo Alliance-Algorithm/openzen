@@ -331,7 +331,7 @@ namespace zen
             SensorManager::get().release({ m_token });
     }
 
-    ZenError Sensor::processReceivedData(uint8_t, uint8_t function, gsl::span<const std::byte> data) noexcept
+    ZenError Sensor::processReceivedData(uint8_t, uint16_t function, gsl::span<const std::byte> data) noexcept
     {
         if (m_config.version == 0)
         {

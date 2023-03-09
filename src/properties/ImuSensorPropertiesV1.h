@@ -75,6 +75,9 @@ namespace zen
             case ZenImuProperty_GyrUseThreshold:
                 return get_set(EDevicePropertyV1::GetGyrThreshold, EDevicePropertyV1::SetGyrThreshold);
 
+            case ZenImuProperty_GyrFilter:
+                return get_set(EDevicePropertyV1::GetGyrFilter, EDevicePropertyV1::SetGyrFilter);
+
             case ZenImuProperty_MagRange:
                 return get_set(EDevicePropertyV1::GetMagRange, EDevicePropertyV1::SetMagRange);
 

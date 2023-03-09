@@ -32,7 +32,7 @@ namespace zen
         return ZenSensorInitError_None;
     }
 
-    ZenError GnssComponent::processData(uint8_t /*function*/, gsl::span<const std::byte> /*data*/) noexcept
+    ZenError GnssComponent::processData(uint16_t /*function*/, gsl::span<const std::byte> /*data*/) noexcept
     {
         return ZenError_Io_UnsupportedFunction;
     }

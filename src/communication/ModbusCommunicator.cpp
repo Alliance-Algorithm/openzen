@@ -30,9 +30,9 @@ namespace zen
         m_ioInterface = std::move(ioInterface);
     }
 
-    ZenError ModbusCommunicator::send(uint8_t address, uint8_t function, gsl::span<const std::byte> data) noexcept
+    ZenError ModbusCommunicator::send(uint8_t address, uint16_t function, gsl::span<const std::byte> data) noexcept
     {
-        SPDLOG_DEBUG("sending address: {0} function: {1} data size: {2} data: {3}",
+        spdlog::debug("sending address: {0} function: {1} data size: {2} data: {3}",
             address, function, data.size(), util::spanToString(data));
         if (!data.empty() && data.data() == nullptr)
             return ZenError_IsNull;
@@ -57,9 +57,9 @@ namespace zen
                 m_parserBusy.clear(std::memory_order_release);
             });
 
-            if (modbus::FrameParseError_None != m_parser->parse(data))
+            if (auto parserError = m_parser->parse(data); parserError != modbus::FrameParseError_None)
             {
-                SPDLOG_DEBUG("Parsing of packet failed, can happen when OpenZen started to parse in the middle of a package.");
+                spdlog::debug("Parsing of packet failed, can happen when OpenZen started to parse in the middle of a package. Error: {}", parserError);
                 // drop first byte and look for new start character
                 m_parser->reset();
                 data = data.subspan(1);
@@ -71,13 +71,13 @@ namespace zen
             {
                 const auto& frame = m_parser->frame();
 
-                SPDLOG_DEBUG("Received and parsed message with address {} function {} and data size {}",
+                spdlog::debug("Received and parsed message with address {} function {} and data size {}",
                     std::to_string(frame.address), std::to_string(frame.function), frame.data.size());
 
                 if (auto error = m_subscriber->processReceivedData(frame.address, frame.function, frame.data); error && error != ZenError_BufferTooSmall)
                 {
-                    spdlog::error("Failed to process message with address {} function {} data {}",
-                        std::to_string(frame.address), std::to_string(frame.function), util::spanToString(frame.data));
+                    spdlog::error("Failed to process message with address {} function {} data {}. Error: {}",
+                        std::to_string(frame.address), std::to_string(frame.function), util::spanToString(frame.data), error);
                 }
                 m_parser->reset();
             }

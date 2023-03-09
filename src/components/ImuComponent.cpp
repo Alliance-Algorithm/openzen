@@ -116,7 +116,7 @@ namespace zen
         return ZenSensorInitError_None;
     }
 
-    ZenError ImuComponent::processData(uint8_t function, gsl::span<const std::byte> data) noexcept
+    ZenError ImuComponent::processData(uint16_t function, gsl::span<const std::byte> data) noexcept
     {
         const auto property = static_cast<EDevicePropertyV0>(function);
         switch (property)

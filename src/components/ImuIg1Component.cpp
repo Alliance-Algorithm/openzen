@@ -7,7 +7,6 @@
 // SPDX-License-Identifier: MIT
 //
 //===========================================================================//
-
 #include "components/ImuIg1Component.h"
 
 #define _USE_MATH_DEFINES
@@ -39,7 +38,7 @@ namespace zen
         return ZenSensorInitError_None;
     }
 
-    ZenError ImuIg1Component::processData(uint8_t function, gsl::span<const std::byte> data) noexcept
+    ZenError ImuIg1Component::processData(uint16_t function, gsl::span<const std::byte> data) noexcept
     {
         const auto property = static_cast<EDevicePropertyV1>(function);
         switch (property)
@@ -50,6 +49,7 @@ namespace zen
         case EDevicePropertyV1::GetGyrRange:
         case EDevicePropertyV1::GetMagRange:
         case EDevicePropertyV1::GetGyrThreshold:
+        case EDevicePropertyV1::GetGyrFilter:
         case EDevicePropertyV1::GetEnableGyrAutoCalibration:
         case EDevicePropertyV1::GetImuTransmitData:
         case EDevicePropertyV1::GetStreamFreq:
