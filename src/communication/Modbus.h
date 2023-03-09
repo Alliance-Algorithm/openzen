@@ -24,7 +24,7 @@ namespace zen::modbus
     {
         std::vector<std::byte> data;
         uint8_t address;
-        uint8_t function;
+        uint16_t function;
     };
 
     typedef enum FrameParseError : uint8_t
@@ -45,7 +45,7 @@ namespace zen::modbus
     public:
         virtual ~IFrameFactory() = default;
 
-        virtual std::vector<std::byte> makeFrame(uint8_t address, uint8_t function, const std::byte* data, uint16_t length) const = 0;
+        virtual std::vector<std::byte> makeFrame(uint8_t address, uint16_t function, const std::byte* data, uint16_t length) const = 0;
     };
 
     class IFrameParser
@@ -96,7 +96,7 @@ namespace zen::modbus
 
     class LpFrameFactory : public IFrameFactory
     {
-        std::vector<std::byte> makeFrame(uint8_t address, uint8_t function, const std::byte* data, uint16_t length) const override;
+        std::vector<std::byte> makeFrame(uint8_t address, uint16_t function, const std::byte* data, uint16_t length) const override;
     };
 
     class LpFrameParser : public IFrameParser

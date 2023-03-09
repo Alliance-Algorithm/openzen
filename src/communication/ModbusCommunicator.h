@@ -32,7 +32,7 @@ namespace zen
 
         void init(std::unique_ptr<IIoInterface> ioInterface) noexcept;
 
-        virtual ZenError send(uint8_t address, uint8_t function, gsl::span<const std::byte> data) noexcept;
+        virtual ZenError send(uint8_t address, uint16_t function, gsl::span<const std::byte> data) noexcept;
 
         /** Returns whether the IO interface equals the sensor description */
         bool equals(const ZenSensorDesc& desc) const noexcept { return m_ioInterface->equals(desc); }
@@ -86,7 +86,7 @@ namespace zen
     class IModbusFrameSubscriber
     {
     public:
-        virtual ZenError processReceivedData(uint8_t address, uint8_t function,
+        virtual ZenError processReceivedData(uint8_t address, uint16_t function,
           gsl::span<const std::byte> data) noexcept = 0;
     };
 }

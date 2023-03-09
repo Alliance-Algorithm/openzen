@@ -599,6 +599,7 @@ typedef enum EZenImuProperty
 
     /* Component properties */
     ZenImuProperty_Id,
+    ZenImuProperty_GyrFilter,
 
     ZenImuProperty_Max
 } EZenImuProperty;

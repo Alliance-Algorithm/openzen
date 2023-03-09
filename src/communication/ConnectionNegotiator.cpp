@@ -224,12 +224,12 @@ namespace zen
         }
     }
 
-    ZenError ConnectionNegotiator::processReceivedData(uint8_t, uint8_t function, gsl::span<const std::byte> data) noexcept
+    ZenError ConnectionNegotiator::processReceivedData(uint8_t, uint16_t function, gsl::span<const std::byte> data) noexcept
     {
         if ((function == ZenProtocolFunction_Handshake) ||
-            (function == uint8_t(EDevicePropertyV1::Ack)) ||
-            (function == uint8_t(EDevicePropertyV1::GetFirmwareInfo)) ||
-            (function == uint8_t(EDevicePropertyV1::GetSensorModel))) {
+            (function == uint16_t(EDevicePropertyV1::Ack)) ||
+            (function == uint16_t(EDevicePropertyV1::GetFirmwareInfo)) ||
+            (function == uint16_t(EDevicePropertyV1::GetSensorModel))) {
             // fine, thats a package we can use during the connection negotiation
         }
         else {
@@ -246,7 +246,7 @@ namespace zen
             m_cv.notify_one();
         });
 
-        if (function == uint8_t(EDevicePropertyV1::GetFirmwareInfo)) {
+        if (function == uint16_t(EDevicePropertyV1::GetFirmwareInfo)) {
             // legacy sensor, providing just a 32-bit integer
             spdlog::debug("ConnectionNegotiator received data size {0} when loading the firmware version", data.size());
             if (data.size() == 4) {
@@ -260,7 +260,7 @@ namespace zen
             }
         }
 
-        if (function == uint8_t(EDevicePropertyV1::GetSensorModel)) {
+        if (function == uint16_t(EDevicePropertyV1::GetSensorModel)) {
             auto name = std::string(reinterpret_cast<char const*>(data.data()), data.size());
             // device name can have some trailing zeros
             name = util::right_trim(name);

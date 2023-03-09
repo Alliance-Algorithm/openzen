@@ -14,7 +14,7 @@
 #include <cstdint>
 #include <optional>
 
-using DeviceProperty_t = uint8_t;
+using DeviceProperty_t = uint16_t;
 
 enum class EDevicePropertyInternal : DeviceProperty_t
 {
@@ -240,7 +240,10 @@ enum class EDevicePropertyV1 : DeviceProperty_t
     SaveGpsState = 162,                 // void
     ClearGpsState = 163,                // void
 
-    SetRtkCorrection = 166,                // void
+    SetRtkCorrection = 166,             // void
+
+    SetGyrFilter = 366,                 // uint32
+    GetGyrFilter = 367                  // uint32
 };
 
 #endif

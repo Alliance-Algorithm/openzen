@@ -7,7 +7,6 @@
 // SPDX-License-Identifier: MIT
 //
 //===========================================================================//
-
 #include "Modbus.h"
 
 #include <stdexcept>
@@ -15,7 +14,7 @@
 namespace
 {
 
-    uint16_t lrcLp(uint8_t address, uint8_t function, const std::byte* data, uint16_t length) noexcept
+    uint16_t lrcLp(uint8_t address, uint16_t function, const std::byte* data, uint16_t length) noexcept
     {
         // TODO:
         // LP Sensor firmware computes the additions for
@@ -23,11 +22,12 @@ namespace
         // and function 2-byte integers, check this is working
         // here
         uint16_t total = address;
-        total += function;
+        total += function & 0xff;
+        total += (function >> 8) & 0xff;
         total += length;
-
-        for (auto i = 0; i < length; ++i)
+        for (auto i = 0; i < length; ++i) {
             total += std::to_integer<uint8_t>(data[i]);
+        }
 
         return total;
     }
@@ -70,7 +70,7 @@ namespace zen::modbus
     }
 
 
-    std::vector<std::byte> LpFrameFactory::makeFrame(uint8_t address, uint8_t function, const std::byte* data, uint16_t length) const
+    std::vector<std::byte> LpFrameFactory::makeFrame(uint8_t address, uint16_t function, const std::byte* data, uint16_t length) const
     {
         constexpr uint16_t WRAPPER_SIZE = 9; // 1 (start) + 2 (address) + 2 (function) + 2 (LRC) + 2 (end)
         std::vector<std::byte> frame(WRAPPER_SIZE + 2 + length);
@@ -78,8 +78,8 @@ namespace zen::modbus
         frame[0] = std::byte(0x3a);
         frame[1] = std::byte(address);
         frame[2] = std::byte(0);
-        frame[3] = std::byte(function);
-        frame[4] = std::byte(0);
+        frame[3] = std::byte(function & 0xff);
+        frame[4] = std::byte((function >> 8) & 0xff);
         frame[5] = std::byte(length);
         frame[6] = std::byte(0);
         if (length > 0) {
@@ -134,7 +134,7 @@ namespace zen::modbus
                 break;
 
             case LpFrameParseState::Function2:
-                m_frame.function = std::to_integer<uint8_t>(m_buffer);
+                m_frame.function = combine(std::to_integer<uint8_t>(m_buffer), std::to_integer<uint8_t>(data[0]));
                 m_state = LpFrameParseState::Length1;
                 break;
 
@@ -144,7 +144,7 @@ namespace zen::modbus
                 break;
 
             case LpFrameParseState::Length2:
-                m_length = static_cast<uint8_t>(combine(std::to_integer<uint8_t>(m_buffer), std::to_integer<uint8_t>(data[0])));
+                m_length = combine(std::to_integer<uint8_t>(m_buffer), std::to_integer<uint8_t>(data[0]));
                 m_frame.data.reserve(m_length);
                 m_state = m_length != 0 ? LpFrameParseState::Data : LpFrameParseState::Check1;
                 break;

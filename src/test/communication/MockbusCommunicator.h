@@ -25,7 +25,7 @@ namespace zen {
 
 class DummyFrameFactory : public modbus::IFrameFactory {
 public:
- std::vector<std::byte> makeFrame(uint8_t, uint8_t,
+ std::vector<std::byte> makeFrame(uint8_t, uint16_t,
    const std::byte*, uint16_t) const override{
     return {};
   }
@@ -60,7 +60,7 @@ public:
 
   }
 
-  ZenError send(uint8_t address, uint8_t function, gsl::span<const std::byte>) noexcept override {
+  ZenError send(uint8_t address, uint16_t function, gsl::span<const std::byte>) noexcept override {
     // check if we can supply that result
     auto itReply = std::find_if(m_replies.begin(), m_replies.end(),
       [address,function](auto const& entry ){

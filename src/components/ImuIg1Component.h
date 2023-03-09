@@ -32,7 +32,7 @@ namespace zen
          */
         ZenSensorInitError init() noexcept override;
 
-        ZenError processData(uint8_t function, gsl::span<const std::byte> data) noexcept override;
+        ZenError processData(uint16_t function, gsl::span<const std::byte> data) noexcept override;
 
         nonstd::expected<ZenEventData, ZenError> processEventData(ZenEventType eventType, gsl::span<const std::byte> data) noexcept override;
 

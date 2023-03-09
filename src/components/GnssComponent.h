@@ -57,7 +57,7 @@ namespace zen
         /**
         Not implemented for GNSS Component
         */
-        ZenError processData(uint8_t function, gsl::span<const std::byte> data) noexcept override;
+        ZenError processData(uint16_t function, gsl::span<const std::byte> data) noexcept override;
 
         /**
         Call this to start forwarding RTK corrections

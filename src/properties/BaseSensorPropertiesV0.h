@@ -23,11 +23,11 @@ namespace zen
     {
         namespace internal
         {
-            constexpr std::optional<EDevicePropertyInternal> map(uint8_t function)
+            constexpr std::optional<EDevicePropertyInternal> map(uint16_t function)
             {
-                if (function <= static_cast<uint8_t>(EDevicePropertyInternal::Nack))
+                if (function <= static_cast<uint16_t>(EDevicePropertyInternal::Nack))
                     return static_cast<EDevicePropertyInternal>(function);
-                else if (function == static_cast<uint8_t>(EDevicePropertyInternal::ConfigImuOutputDataBitset))
+                else if (function == static_cast<uint16_t>(EDevicePropertyInternal::ConfigImuOutputDataBitset))
                     return EDevicePropertyInternal::ConfigImuOutputDataBitset;
 
                 return {};

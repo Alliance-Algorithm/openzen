@@ -48,18 +48,18 @@ namespace zen
         bool equals(const ZenSensorDesc& desc) const noexcept { return m_communicator->equals(desc); }
 
         /** Sends data to the IO interface, and waits for an acknowledgment */
-        ZenError sendAndWaitForAck(uint8_t address, uint8_t function, ZenProperty_t property, gsl::span<const std::byte> data) noexcept;
+        ZenError sendAndWaitForAck(uint8_t address, uint16_t function, ZenProperty_t property, gsl::span<const std::byte> data) noexcept;
 
-        ZenError sendAndDontWait(uint8_t address, uint8_t function, ZenProperty_t property,
+        ZenError sendAndDontWait(uint8_t address, uint16_t function, ZenProperty_t property,
             gsl::span<const std::byte> data) noexcept;
 
         /** Sends data to the IO interface, and waits for a result array.  Returns the number of bytes.  */
         template <typename T>
-        std::pair<ZenError, size_t> sendAndWaitForArray(uint8_t address, uint8_t function, ZenProperty_t property, gsl::span<const std::byte> data, gsl::span<T> outArray) noexcept;
+        std::pair<ZenError, size_t> sendAndWaitForArray(uint8_t address, uint16_t function, ZenProperty_t property, gsl::span<const std::byte> data, gsl::span<T> outArray) noexcept;
 
         /** Sends data to the IO interface, and waits for a result value */
         template <typename T>
-        nonstd::expected<T, ZenError> sendAndWaitForResult(uint8_t address, uint8_t function, ZenProperty_t property, gsl::span<const std::byte> data) noexcept;
+        nonstd::expected<T, ZenError> sendAndWaitForResult(uint8_t address, uint16_t function, ZenProperty_t property, gsl::span<const std::byte> data) noexcept;
 
         /** Publish an acknowledgement from the IO interface */
         ZenError publishAck(ZenProperty_t property, ZenError error) noexcept;

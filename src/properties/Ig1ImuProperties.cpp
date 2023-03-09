@@ -7,7 +7,6 @@
 // SPDX-License-Identifier: MIT
 //
 //===========================================================================//
-
 #include "properties/Ig1ImuProperties.h"
 
 #include <math.h>
@@ -513,11 +512,9 @@ namespace zen
 
                 // Communication protocol only supports uint32_t
                 uint32_t uiValue = static_cast<uint32_t>(imu::v1::mapToSupportedOption(property, value));
-
                 const auto function = static_cast<DeviceProperty_t>(imu::v1::map(property, false));
                 if (auto error = m_communicator.sendAndWaitForAck(0, function, function, gsl::make_span(reinterpret_cast<const std::byte*>(&uiValue), sizeof(uiValue))))
                     return error;
-
                 notifyPropertyChange(property, value);
                 return ZenError_None;
             }
@@ -633,6 +630,7 @@ namespace zen
         case ZenImuProperty_AccSupportedRanges:
         case ZenImuProperty_GyrRange:
         case ZenImuProperty_GyrSupportedRanges:
+        case ZenImuProperty_GyrFilter:
         case ZenImuProperty_MagRange:
         case ZenImuProperty_MagSupportedRanges:
         case ZenImuProperty_CanStartId:

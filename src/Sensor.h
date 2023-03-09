@@ -104,7 +104,7 @@ namespace zen
         std::string m_deviceName = "*";
 
     private:
-        ZenError processReceivedData(uint8_t address, uint8_t function, gsl::span<const std::byte> data) noexcept override;
+        ZenError processReceivedData(uint8_t address, uint16_t function, gsl::span<const std::byte> data) noexcept override;
 
         ZenError processReceivedEvent(ZenEvent) noexcept override;
 
