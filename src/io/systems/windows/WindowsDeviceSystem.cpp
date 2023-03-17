@@ -23,18 +23,20 @@ namespace zen
             return ZenError_Device_ListingFailed;
 
         for (auto it = serialPorts.begin(); it != serialPorts.end(); ++it) {
-            ZenSensorDesc desc;
+            ZenSensorDesc desc{}; // Zeros all char buffers -> no need to copy NUL below.
 
             const std::string name("COM PORT #" + it->port.substr(3));
-            std::memcpy(desc.name, name.c_str(), name.size());
-            desc.name[name.size()] = '\0';
+            assert(name.length() <= sizeof desc.name - 1);
+            std::memcpy(desc.name, name.c_str(), name.length());
 
-            std::memcpy(desc.serialNumber, it->serialNumber.c_str(), (std::max)(sizeof desc.serialNumber, it->serialNumber.size()));
+            std::memcpy(desc.serialNumber, it->serialNumber.c_str(),
+               (std::min)(sizeof desc.serialNumber - 1, it->serialNumber.length()));
+            static_assert(sizeof desc.ioType >= sizeof WindowsDeviceSystem::KEY);
             std::memcpy(desc.ioType, WindowsDeviceSystem::KEY, sizeof(WindowsDeviceSystem::KEY));
 
             const std::string filename("\\\\.\\" + it->port);
-            std::memcpy(desc.identifier, filename.c_str(), filename.size());
-            desc.identifier[filename.size()] = '\0';
+            assert(filename.length() <= sizeof desc.identifier - 1);
+            std::memcpy(desc.identifier, filename.c_str(), filename.length());
 
             desc.baudRate = 921600;
             outDevices.emplace_back(desc);
