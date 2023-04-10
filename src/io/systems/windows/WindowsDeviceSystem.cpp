@@ -47,7 +47,7 @@ namespace zen
     nonstd::expected<std::unique_ptr<IIoInterface>, ZenSensorInitError> WindowsDeviceSystem::obtain(const ZenSensorDesc& desc, IIoDataSubscriber& subscriber) noexcept
     {
         auto handle = ::CreateFileA(desc.identifier, GENERIC_READ | GENERIC_WRITE,
-            0, nullptr, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, nullptr);
+            0, nullptr, OPEN_EXISTING, 0, nullptr);
         if (handle == INVALID_HANDLE_VALUE) {
             spdlog::error("Cannot open Windows IO file {0}", desc.identifier);
             return nonstd::make_unexpected(ZenSensorInitError_InvalidAddress);
@@ -77,8 +77,8 @@ namespace zen
         }
 
         COMMTIMEOUTS timeoutConfig;
-        timeoutConfig.ReadIntervalTimeout = 1;
-        timeoutConfig.ReadTotalTimeoutMultiplier = 1;
+        timeoutConfig.ReadIntervalTimeout = 0;
+        timeoutConfig.ReadTotalTimeoutMultiplier = 0;
         timeoutConfig.ReadTotalTimeoutConstant = 1;
         timeoutConfig.WriteTotalTimeoutMultiplier = 1;
         timeoutConfig.WriteTotalTimeoutConstant = 1;
@@ -88,22 +88,7 @@ namespace zen
             return nonstd::make_unexpected(ZenSensorInitError_IoFailed);
         }
 
-        // Create overlapped objects for asynchronous communication
-        OVERLAPPED ioReader{ 0 };
-        ioReader.hEvent = ::CreateEventA(nullptr, false, false, nullptr);
-        if (!ioReader.hEvent) {
-            spdlog::error("Cannot create Windows IO event for reader");
-            return nonstd::make_unexpected(ZenSensorInitError_IoFailed);
-        }
-
-        OVERLAPPED ioWriter{ 0 };
-        ioWriter.hEvent = ::CreateEventA(nullptr, false, false, nullptr);
-        if (!ioWriter.hEvent) {
-            spdlog::error("Cannot create Windows IO event for writer");
-            return nonstd::make_unexpected(ZenSensorInitError_IoFailed);
-        }
-
-        auto ioInterface = std::make_unique<WindowsDeviceInterface>(subscriber, desc.identifier, handle, ioReader, ioWriter);
+        auto ioInterface = std::make_unique<WindowsDeviceInterface>(subscriber, desc.identifier, handle);
 
         // Note: Setting of baudrate is not needed here because its done by the connection negotiator
         spdlog::debug("Windows device interface for {0} created", desc.identifier);

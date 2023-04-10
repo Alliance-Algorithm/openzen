@@ -28,7 +28,7 @@ namespace zen
     class WindowsDeviceInterface : public IIoInterface
     {
     public:
-        WindowsDeviceInterface(IIoDataSubscriber& subscriber, std::string_view identifier, HANDLE handle, OVERLAPPED ioReader, OVERLAPPED ioWriter) noexcept;
+        WindowsDeviceInterface(IIoDataSubscriber& subscriber, std::string_view identifier, HANDLE handle) noexcept;
         ~WindowsDeviceInterface();
 
         /** Send data to IO interface */
@@ -52,14 +52,13 @@ namespace zen
     private:
         int run();
 
-        std::array<std::byte, 256> m_buffer;
+        // Minimal size of a single data packet is 5 bytes, so we never run behind by more than one packet.
+        std::array<std::byte, 8> m_buffer;
 
         std::string m_identifier;
 
         DCB m_config;
         HANDLE m_handle;
-        OVERLAPPED m_ioReader;
-        OVERLAPPED m_ioWriter;
 
         std::atomic_bool m_terminate;
         std::thread m_pollingThread;
