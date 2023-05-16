@@ -178,6 +178,7 @@ typedef struct ZenImuData
     float a[3];
 
     /// Alignment+Bias Calibrated gyroscope sensor data.
+    /// differences between g1 / g2: https://lp-research.atlassian.net/wiki/spaces/LKB/pages/2005630977/OpenZen+Documentations#Keys-for-Sensor-Data-Access
     /// Unit: degree/s
     float g1[3], g2[3];
 
@@ -194,6 +195,7 @@ typedef struct ZenImuData
     float aRaw[3];
 
     /// Raw gyroscope sensor data.
+    /// differences between g1 / g2: https://lp-research.atlassian.net/wiki/spaces/LKB/pages/2005630977/OpenZen+Documentations#Keys-for-Sensor-Data-Access
     /// Unit: degree/s
     float g1Raw[3], g2Raw[3];
 
