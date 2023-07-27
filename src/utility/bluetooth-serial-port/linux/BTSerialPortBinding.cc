@@ -25,7 +25,6 @@ extern "C"{
 #include <bluetooth/sdp_lib.h>
 #include <bluetooth/rfcomm.h>
 }
-
 using namespace std;
 
 struct bluetooth_data
@@ -97,8 +96,22 @@ void BTSerialPortBinding::Close()
 		close(data->s);
 		// we don't care about the return value at this point
 		// tell the compiler so there is no unused return warning
-		[[maybe_unused]] auto ret = write(data->rep[1], "close", (strlen("close") + 1));
+		if (data->rep[1] != 0)
+		{
+			[[maybe_unused]] auto ret = write(data->rep[1], "close", (strlen("close") + 1));
+		}
 		data->s = 0;
+
+	}
+	if (data->rep[0] != 0)
+	{
+		close(data->rep[0]);
+		data->rep[0] = 0;
+	} 
+	if (data->rep[1] != 0)
+	{
+		close(data->rep[1]);
+		data->rep[1] = 0;
 	}
 }
 
