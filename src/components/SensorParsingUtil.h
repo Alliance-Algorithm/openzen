@@ -176,7 +176,8 @@ namespace zen {
             const size_t floatSize = useLowPrecision ? sizeof(uint16_t) : sizeof(float);
 
             (*target) = useLowPrecision ? parseFloat16(data, denominator_16bit) : parseFloat32(data);
-            safe_subspan(data, floatSize);
+            //parFloat16 or parFloat32 has been subspan for data;
+            //safe_subspan(data, floatSize);
         }
 
         /**
