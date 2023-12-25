@@ -24,18 +24,6 @@
 
 namespace zen
 {
-    namespace details
-    {
-        template <int... Is>
-        struct index {};
-
-        template <int N, int... Is>
-        struct gen_seq : gen_seq<N - 1, N - 1, Is...> {};
-
-        template <int... Is>
-        struct gen_seq<0, Is...> : index<Is...> {};
-    }
-
     class IAutoIoSystemRegistry;
 
     class IoManager
@@ -109,15 +97,10 @@ namespace zen
         }
 
     private:
-        template <int... Is>
-        bool initialize(std::tuple<Args...>& t, details::index<Is...>) noexcept
-        {
-            return IoManager::get().registerIoSystem(SystemT::KEY, std::make_unique<SystemT>(std::get<Is>(t)...));
-        }
-
         bool initialize(std::tuple<Args...>& t) noexcept
         {
-            return initialize(t, details::gen_seq<sizeof...(Args)>{});
+            return IoManager::get().registerIoSystem(
+                SystemT::KEY, std::apply(std::make_unique<SystemT>, t));
         }
 
     private:
