@@ -93,16 +93,10 @@ namespace zen
 
         bool initialize() noexcept override
         {
-            return initialize(m_args);
-        }
-
-    private:
-        bool initialize(std::tuple<Args...>& t) noexcept
-        {
             return IoManager::get().registerIoSystem(
-                SystemT::KEY, std::apply(std::make_unique<SystemT>, t));
+                SystemT::KEY,
+                std::apply(std::make_unique<SystemT>, std::move(m_args)));
         }
-
     private:
         std::tuple<Args...> m_args;
     };
