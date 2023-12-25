@@ -15,6 +15,7 @@
 #include <memory>
 #include <mutex>
 #include <optional>
+#include <string_view>
 #include <tuple>
 #include <unordered_map>
 #include <vector>
