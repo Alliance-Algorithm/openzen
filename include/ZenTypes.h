@@ -378,7 +378,7 @@ typedef struct ZenGnssData
     uint8_t second;
 
     /// All the date and time values above are rounded
-    /// so they can be represented as integeres. This
+    /// so they can be represented as integers. This
     /// is the time in nanoseconds that the above date & time values need
     /// to be shifted to arrive at the exact time measured by the GNSS receiver.
     int32_t nanoSecondCorrection;
@@ -396,7 +396,7 @@ typedef struct ZenSensorDesc
 
     /**
     Hardware serial number of the sensor. If the IO subsystem
-    cannot read of the serial number, this can be another form
+    cannot read of the serial number this can be another form
     of identification number.
     */
     char serialNumber[64];
@@ -414,7 +414,7 @@ typedef struct ZenSensorDesc
 
     /**
      baud rate to use with the device. A baud rate of 0 indicates
-     that OpenZen should use the default baudrate or negotiagte a
+     that OpenZen should use the default baudrate or negotiate a
      suitable baud rate with the device.
      */
     uint32_t baudRate;
@@ -576,11 +576,11 @@ typedef enum EZenImuProperty
     ZenImuProperty_OutputGyr1AlignCalib,         // bool
     ZenImuProperty_OutputMagCalib,               // bool
 
-    /* switch between degrees or radian output (only for IG1 and newer) */
-    /* If set to true, radians will be used as output unit */
-    /* If set to false, degrees will be used as output unit */
-    /* OpenZen will automatically convert to degrees in case the unit is set to */
-    /* before outputting values to the user.*/
+    /* switch between degrees or radian output (only for IG1 and newer)
+       If set to true, radians will be used as output unit
+       If set to false, degrees will be used as output unit
+       OpenZen will automatically convert to degrees in case the unit is set to
+       before outputting values to the user.  */
     ZenImuProperty_DegRadOutput,                 // bool
 
     /* CAN bus properties */
