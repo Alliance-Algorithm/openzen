@@ -37,6 +37,7 @@ to maintain a single distribution point for the source code.
 //  6) indentation, function names, "::" prefixes, etc. in line with OpenZen habits
 
 #include <algorithm>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -44,99 +45,85 @@ to maintain a single distribution point for the source code.
 
 namespace {
     // Gets the string valued registry key sans trailing NULs.
-    bool GetRegistryString(HKEY key, LPCSTR lpValueName, std::string& sValue)
+    std::optional<std::string> GetRegistryString(HKEY key, LPCSTR lpValueName)
     {
+
         // Query for the size of the registry value
         ULONG nBytes = 0;
         DWORD dwType = 0;
-        LSTATUS nStatus = ::RegQueryValueExA(key, lpValueName, nullptr, &dwType, nullptr, &nBytes);
-        if (nStatus != ERROR_SUCCESS)
-            return false;
-        if ((dwType != REG_SZ) && (dwType != REG_EXPAND_SZ))
-            return false;
+        if (::RegQueryValueExA(key, lpValueName,
+                nullptr, &dwType, nullptr, &nBytes) != ERROR_SUCCESS)
+            return std::nullopt;
+
+        if (dwType != REG_SZ && dwType != REG_EXPAND_SZ)
+            return std::nullopt;
 
         // Allocate enough bytes for the return value
-        sValue.resize(static_cast<size_t>(nBytes));
+        std::string result(static_cast<size_t>(nBytes), '\0');
 
         // Call again, now actually loading the string.
-        nStatus = ::RegQueryValueExA(key, lpValueName, nullptr, &dwType,
-            reinterpret_cast<LPBYTE>(sValue.data()), &nBytes);
-        if (nStatus != ERROR_SUCCESS)
-            return false;
+        if (::RegQueryValueExA(key, lpValueName, nullptr, &dwType,
+                reinterpret_cast<LPBYTE>(result.data()), &nBytes) != ERROR_SUCCESS)
+            return std::nullopt;
 
         // COM1 at least has a NUL in the end, clean up.
-        sValue.erase(std::find(sValue.begin(), sValue.end(), '\0'), sValue.end());
-        return true;
+        result.erase(std::find(result.begin(), result.end(), '\0'), result.end());
+        return result;
     }
-}
 
-bool zen::EnumerateSerialPorts(std::vector<PortAndSerial>& vAvailablePortAndSerial)
-{
-    // Find all known SiLabs devices in VCP mode.
-    std::vector<PortAndSerial> vPortAndSerialAll;
-    {
+    auto enumerateAllVcpPorts()
+        -> std::vector<zen::PortAndSerial>
+    {    
+        std::vector<zen::PortAndSerial> vPortAndSerialAll;
         HKEY hKey = 0;
         auto closeReg = gsl::finally([&hKey]() { if (hKey) RegCloseKey(hKey); });
         // This key contains all devices with this known vendor and product id. pid = EA60 is VCP mode, EA61 is USBXpress
-        LSTATUS nStatus = ::RegOpenKeyExA(HKEY_LOCAL_MACHINE, R"(SYSTEM\CurrentControlSet\Enum\USB\VID_10C4&PID_EA60)", 0,
-            KEY_QUERY_VALUE | KEY_READ, &hKey);
-        if (nStatus != ERROR_SUCCESS)
-            return false;
+        if (::RegOpenKeyExA(HKEY_LOCAL_MACHINE, R"(SYSTEM\CurrentControlSet\Enum\USB\VID_10C4&PID_EA60)", 0,
+                KEY_QUERY_VALUE | KEY_READ, &hKey) != ERROR_SUCCESS)
+            return {};
 
         // Get the max value name and max value lengths
         DWORD cSubKeys = 0;
-        nStatus = ::RegQueryInfoKeyA(hKey, nullptr, nullptr, nullptr, &cSubKeys, nullptr,
-            nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
-        if (nStatus != ERROR_SUCCESS)
-            return false;
+        if (::RegQueryInfoKeyA(hKey, nullptr, nullptr, nullptr, &cSubKeys, nullptr,
+                nullptr, nullptr, nullptr, nullptr, nullptr, nullptr) != ERROR_SUCCESS)
+            return {};
 
-        for (DWORD i = 0; i < cSubKeys; i++)
-        {
+        for (DWORD i = 0; i < cSubKeys; i++) {
             std::vector<char> vSerialNumber(16383);
             DWORD len = (DWORD)vSerialNumber.size();
-            auto retCode = RegEnumKeyExA(hKey, i,
-                vSerialNumber.data(),
-                &len,
-                nullptr,
-                nullptr,
-                nullptr,
-                nullptr);
-
-            if (retCode != ERROR_SUCCESS)
+            if (RegEnumKeyExA(hKey, i,
+                    vSerialNumber.data(), &len,
+                    nullptr, nullptr, nullptr, nullptr) != ERROR_SUCCESS)
                 continue;
             auto serialNumber = std::string(vSerialNumber.data(), len);
 
-            HKEY hSubKey = 0;
-            auto closeSubKey = gsl::finally([&hSubKey] { if (hSubKey) RegCloseKey(hSubKey); });
-            std::string sKey = std::string(serialNumber) + "\\Device Parameters";
-            nStatus = ::RegOpenKeyExA(hKey, sKey.c_str(), 0, KEY_QUERY_VALUE | KEY_READ, &hSubKey);
-            if (nStatus != ERROR_SUCCESS)
-                continue;
-
-            std::string sPortName;
-            if (::GetRegistryString(hSubKey, "PortName", sPortName)) {
-                vPortAndSerialAll.push_back(PortAndSerial{ sPortName, serialNumber });
+            std::string sKey = serialNumber + "\\Device Parameters";
+            if (HKEY hSubKey = 0
+                ; ::RegOpenKeyExA(hKey, sKey.c_str(), 0, KEY_QUERY_VALUE | KEY_READ, &hSubKey) == ERROR_SUCCESS) {
+                if (auto pPortName = GetRegistryString(hSubKey, "PortName"))
+                    vPortAndSerialAll.push_back({ std::move(pPortName.value()), std::move(serialNumber) });
+                RegCloseKey(hSubKey);
             }
         }
+        return vPortAndSerialAll;
     }
 
-    // Filter for the ones associated to a live COM port.
-    vAvailablePortAndSerial = {};
+    auto enumerateAllActiveComPorts()
+        -> std::optional<std::vector<std::string>>
     {
         HKEY hKey = 0;
         auto closeReg = gsl::finally([&hKey]() { if (hKey) RegCloseKey(hKey); });
-        LSTATUS nStatus = ::RegOpenKeyExA(HKEY_LOCAL_MACHINE, R"(HARDWARE\DEVICEMAP\SERIALCOMM)", 0,
-            KEY_QUERY_VALUE, &hKey);
-        if (nStatus != ERROR_SUCCESS)
-            return false;
+        if (::RegOpenKeyExA(HKEY_LOCAL_MACHINE, R"(HARDWARE\DEVICEMAP\SERIALCOMM)", 0,
+                KEY_QUERY_VALUE, &hKey) != ERROR_SUCCESS)
+            return std::nullopt;
 
         // Get the max value name and max value lengths
         DWORD dwMaxValueNameLen = 0;
-        nStatus = ::RegQueryInfoKeyA(hKey, nullptr, nullptr, nullptr, nullptr, nullptr,
-            nullptr, nullptr, &dwMaxValueNameLen, nullptr, nullptr, nullptr);
-        if (nStatus != ERROR_SUCCESS)
-            return false;
+        if (::RegQueryInfoKeyA(hKey, nullptr, nullptr, nullptr, nullptr, nullptr,
+               nullptr, nullptr, &dwMaxValueNameLen, nullptr, nullptr, nullptr) != ERROR_SUCCESS)
+            return std::nullopt;
 
+        std::vector<std::string> result;
         const DWORD dwMaxValueNameSizeInChars = dwMaxValueNameLen + 1; //Include space for the null terminator
 
         // Enumerate all the values underneath HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\SERIALCOMM
@@ -145,19 +132,34 @@ bool zen::EnumerateSerialPorts(std::vector<PortAndSerial>& vAvailablePortAndSeri
         while (true) {
             DWORD dwValueNameSize = dwMaxValueNameSizeInChars;
             if (::RegEnumValueA(hKey, dwIndex++, valueName.data(), &dwValueNameSize,
-                nullptr, nullptr, nullptr, nullptr) != ERROR_SUCCESS)
+                    nullptr, nullptr, nullptr, nullptr) != ERROR_SUCCESS)
                 break;
 
             std::string sPortName;
-            if (::GetRegistryString(hKey, valueName.data(), sPortName)) {
-                // Insert this port into list if it is an SiLabs device, i.e. if it is included
-                // in the previous list.
-                for (auto& pas : vPortAndSerialAll) {
-                    if (pas.port == sPortName)
-                        vAvailablePortAndSerial.emplace_back(pas);
-                }
+            if (auto pPortName = ::GetRegistryString(hKey, valueName.data())) {
+                result.push_back(std::move(pPortName.value()));
             }
         }
+        return result;
+    }
+}
+
+bool zen::EnumerateSerialPorts(std::vector<PortAndSerial>& vAvailablePortAndSerial)
+{
+    // Find all known SiLabs devices in VCP mode.
+    std::vector<PortAndSerial> vPortAndSerialAll = enumerateAllVcpPorts();
+
+    // Find all live COM port.
+    auto pActivePorts = enumerateAllActiveComPorts();
+    if (!pActivePorts)
+        return false;
+
+    // VCP ports which are live are the sensors we can connect to.
+    vAvailablePortAndSerial = {};    
+    for (auto& pas : vPortAndSerialAll) {
+        if (auto it = std::find(pActivePorts->begin(), pActivePorts->end(), pas.port)
+            ; it != pActivePorts->end())
+            vAvailablePortAndSerial.emplace_back(pas);
     }
 
     // Sort the output.
