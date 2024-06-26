@@ -144,11 +144,6 @@ if(ZEN_PYTHON)
         src/bindings/OpenZenPython.cpp
     )
     list (APPEND zen_optional_libs pybind11)
-    # select C++17 if we do a Python build because the C++17 interface of OpenZen.h
-    # is more convenient than the C++11 version
-    list (APPEND zen_optional_compile_definitions_private
-        OPENZEN_CXX17
-    )
 endif()
 
 if(ZEN_CSHARP)
