@@ -101,7 +101,7 @@ namespace zen {
                 strMsg.type = msg_type;
                 return strMsg;
             } else {
-            spdlog::error("Zmq Streaming message of type {0} not supported", msg_type);
+            spdlog::error("Zmq Streaming message of type {0} not supported", fmt::underlying(msg_type));
             }
 
             return std::nullopt;
