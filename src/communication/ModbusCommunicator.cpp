@@ -59,7 +59,8 @@ namespace zen
 
             if (auto parserError = m_parser->parse(data); parserError != modbus::FrameParseError_None)
             {
-                spdlog::debug("Parsing of packet failed, can happen when OpenZen started to parse in the middle of a package. Error: {}", parserError);
+                spdlog::debug("Parsing of packet failed, can happen when OpenZen started to parse in the middle of a package. Error: {}",
+                    fmt::underlying(parserError));
                 // drop first byte and look for new start character
                 m_parser->reset();
                 data = data.subspan(1);
@@ -72,12 +73,12 @@ namespace zen
                 const auto& frame = m_parser->frame();
 
                 spdlog::debug("Received and parsed message with address {} function {} and data size {}",
-                    std::to_string(frame.address), std::to_string(frame.function), frame.data.size());
+                    frame.address, frame.function, frame.data.size());
 
                 if (auto error = m_subscriber->processReceivedData(frame.address, frame.function, frame.data); error && error != ZenError_BufferTooSmall)
                 {
                     spdlog::error("Failed to process message with address {} function {} data {}. Error: {}",
-                        std::to_string(frame.address), std::to_string(frame.function), util::spanToString(frame.data), error);
+                        frame.address, frame.function, util::spanToString(frame.data), fmt::underlying(error));
                 }
                 m_parser->reset();
             }

@@ -99,7 +99,7 @@ ZEN_API ZenError ZenSetLogLevel(ZenLogLevel logLevel) {
     else if (logLevel == ZenLogLevel::ZenLogLevel_Error) {
         spdlog::set_level(spdlog::level::err);
     } else {
-        spdlog::error("Log Level {} not suppored", logLevel);
+        spdlog::error("Log Level {} not suppored", fmt::underlying(logLevel));
         return ZenError_InvalidArgument;
     }
 
