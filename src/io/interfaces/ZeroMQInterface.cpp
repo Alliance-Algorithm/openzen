@@ -98,7 +98,7 @@ namespace zen
                               publishReceivedData(*zenEvent);
                           } else {
                               spdlog::error("Cannot convert streaming message of type {0} to ZenEvent",
-                                  unpackedMessage->type);
+                                  fmt::underlying(unpackedMessage->type));
                           }
                       }
                   }
