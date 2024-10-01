@@ -64,6 +64,8 @@ namespace zen
 
         uint32_t getDefaultBaudrate() override { return 921600; }
 
+        bool enumerateUsbXpressDevices();
+
     private:
         void* m_handle;
     };

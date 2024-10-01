@@ -11,12 +11,21 @@
 #include "io/systems/SiUsbSystem.h"
 
 #include <iostream>
+#include <string>
+#include <vector>
 
 #include <spdlog/spdlog.h>
 
 #include "SensorManager.h"
 #include "io/interfaces/SiUsbInterface.h"
 #include "utility/IPlatformDll.h"
+
+#ifdef _WIN32
+    #include <windows.h>
+    #include <setupapi.h>
+
+    #pragma comment(lib, "setupapi.lib")
+#endif
 
 namespace zen
 {
@@ -82,11 +91,79 @@ namespace zen
         return false;
     }
 
+#ifdef _WIN32
+    bool SiUsbSystem::enumerateUsbXpressDevices() 
+    {
+        bool usbxDeviceFound = false;
+
+        spdlog::debug("Enumerating USBXpress devices");
+
+        const std::string USBXPRESS_VID = "VID_10C4";
+        const std::string USBXPRESS_PID = "PID_EA61";
+
+        HDEVINFO deviceInfoSet = SetupDiGetClassDevs(NULL, "USB", NULL, DIGCF_PRESENT | DIGCF_ALLCLASSES);
+        if (deviceInfoSet == INVALID_HANDLE_VALUE) {
+            spdlog::debug("Failed to get device information set.");
+            return false;
+        }
+
+        SP_DEVINFO_DATA deviceInfoData;
+        deviceInfoData.cbSize = sizeof(SP_DEVINFO_DATA);
+
+        for (DWORD i = 0; SetupDiEnumDeviceInfo(deviceInfoSet, i, &deviceInfoData); ++i) {
+            DWORD dataType, bufferSize = 0;
+            std::vector<char> buffer;
+
+            // Get the hardware ID
+            if (!SetupDiGetDeviceRegistryProperty(deviceInfoSet, &deviceInfoData, SPDRP_HARDWAREID, &dataType, NULL, 0, &bufferSize) && GetLastError() != ERROR_INSUFFICIENT_BUFFER) {
+                continue;
+            }
+
+            buffer.resize(bufferSize);
+            if (!SetupDiGetDeviceRegistryProperty(deviceInfoSet, &deviceInfoData, SPDRP_HARDWAREID, &dataType, reinterpret_cast<PBYTE>(buffer.data()), bufferSize, &bufferSize)) {
+                continue;
+            }
+
+            std::string hardwareId(buffer.begin(), buffer.end());
+            if (hardwareId.find(USBXPRESS_VID) == std::string::npos || hardwareId.find(USBXPRESS_PID) == std::string::npos) {
+                continue;
+            }
+
+            spdlog::debug("Found USBXpress device: {0}", hardwareId);
+            usbxDeviceFound = true;
+
+            // Get the device description
+            if (!SetupDiGetDeviceRegistryProperty(deviceInfoSet, &deviceInfoData, SPDRP_DEVICEDESC, &dataType, NULL, 0, &bufferSize) && GetLastError() != ERROR_INSUFFICIENT_BUFFER) {
+                continue;
+            }
+
+            buffer.resize(bufferSize);
+            if (!SetupDiGetDeviceRegistryProperty(deviceInfoSet, &deviceInfoData, SPDRP_DEVICEDESC, &dataType, reinterpret_cast<PBYTE>(buffer.data()), bufferSize, &bufferSize)) {
+                continue;
+            }
+
+            std::string deviceDesc(buffer.begin(), buffer.end());
+            spdlog::debug("Device Description: {0}", deviceDesc);
+        }
+
+        SetupDiDestroyDeviceInfoList(deviceInfoSet);
+
+        return usbxDeviceFound;
+    }
+#endif
+
     ZenError SiUsbSystem::listDevices(std::vector<ZenSensorDesc>& outDevices)
     {
+#ifdef _WIN32
+        spdlog::debug("Manually checking for USBXpress devices as getNumDevices crashes if no device present");
+        if (!enumerateUsbXpressDevices()) return ZenError_Io_GetFailed;
+#endif
+
         DWORD nDevices;
         if (auto error = SiUsbSystem::fnTable.getNumDevices(&nDevices))
             return ZenError_Io_GetFailed;
+
+        spdlog::debug("Found {0} SiUsb devices", nDevices);
 
         for (DWORD idx = 0; idx < nDevices; ++idx)
         {
