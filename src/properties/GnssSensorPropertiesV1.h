@@ -36,9 +36,6 @@ namespace zen
             const auto set_or = [isGetter](EDevicePropertyV1 prop) {
                 return isGetter ? EDevicePropertyV1::Ack : prop;
             };
-            const auto get_set = [isGetter](EDevicePropertyV1 x, EDevicePropertyV1 y) {
-                return isGetter ? x : y;
-            };
 
             switch (property)
             {

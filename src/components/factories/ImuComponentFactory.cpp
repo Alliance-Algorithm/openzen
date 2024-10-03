@@ -121,6 +121,8 @@ namespace zen
                 case SpecialOptions_OnlySecondGyro:
                     hasFirstGyro = false;
                     break;
+                case SpecialOptions_None:
+                    break;                    
             }
 
             return std::make_unique<ImuIg1Component>(std::move(properties), communicator, version, hasFirstGyro, hasSecondGyro);
