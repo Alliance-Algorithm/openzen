@@ -52,7 +52,7 @@ namespace zen
         if (res == -1)
             return ZenError_Io_SendFailed;
 
-        if (res != data.size())
+        if ((long unsigned int)res != data.size())
             return ZenError_Io_SendFailed;
 
         return ZenError_None;
