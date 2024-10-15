@@ -173,11 +173,7 @@ namespace zen {
         template <>
         inline void parseAndStoreScalar(
             gsl::span<const std::byte>& data, float *target, bool useLowPrecision, float denominator_16bit) {
-            const size_t floatSize = useLowPrecision ? sizeof(uint16_t) : sizeof(float);
-
             (*target) = useLowPrecision ? parseFloat16(data, denominator_16bit) : parseFloat32(data);
-            //parFloat16 or parFloat32 has been subspan for data;
-            //safe_subspan(data, floatSize);
         }
 
         /**
