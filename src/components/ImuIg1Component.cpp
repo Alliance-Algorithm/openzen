@@ -101,7 +101,7 @@ namespace zen
         const auto begin = data.begin();
         const auto size = data.size();
 
-        if (std::distance(begin, data.begin() + sizeof(uint32_t)) > size)
+        if ((long unsigned int)std::distance(begin, data.begin() + sizeof(uint32_t)) > size)
             return nonstd::make_unexpected(ZenError_Io_MsgCorrupt);
 
         const auto isRadOutput = *m_properties->getBool(ZenImuProperty_DegRadOutput);

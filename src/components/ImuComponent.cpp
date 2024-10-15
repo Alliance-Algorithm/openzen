@@ -194,7 +194,7 @@ namespace zen
         const auto begin = data.begin();
 
         const auto size = data.size();
-        if (std::distance(begin, data.begin() + sizeof(uint32_t)) > size)
+        if ((long unsigned int)std::distance(begin, data.begin() + sizeof(uint32_t)) > size)
             return nonstd::make_unexpected(ZenError_Io_MsgCorrupt);;
 
         sensor_parsing_util::parseAndStoreScalar(data, &imuData.frameCount);
@@ -220,7 +220,7 @@ namespace zen
             {
                 if (*enabled)
                 {
-                    if (data.size() < (long int)(3 * floatSize)) {
+                    if (data.size() < (long unsigned int)(3 * floatSize)) {
                         spdlog::error("Can't parse gyroscope because data entries missing.");
                         return nonstd::make_unexpected(ZenError_Io_MsgCorrupt);
                     }
@@ -246,7 +246,7 @@ namespace zen
             {
                 if (*enabled)
                 {
-                    if (data.size() < (long int)(3 * floatSize)) {
+                    if (data.size() < (long unsigned int)(3 * floatSize)) {
                         spdlog::error("Can't parse acceleration because data entries missing.");
                         return nonstd::make_unexpected(ZenError_Io_MsgCorrupt);
                     }
@@ -272,7 +272,7 @@ namespace zen
             {
                 if (*enabled)
                 {
-                    if (data.size() < (long int)(3 * floatSize)) {
+                    if (data.size() < (long unsigned int)(3 * floatSize)) {
                         spdlog::error("Can't parse magnetometer because data entries missing.");
                         return nonstd::make_unexpected(ZenError_Io_MsgCorrupt);
                     }
@@ -300,7 +300,7 @@ namespace zen
             {
                 if (*enabled)
                 {
-                    if (data.size() < (long int)(3 * floatSize)) {
+                    if (data.size() < (long unsigned int)(3 * floatSize)) {
                         spdlog::error("Can't parse angular velocity because data entries missing.");
                         return nonstd::make_unexpected(ZenError_Io_MsgCorrupt);
                     }
@@ -318,7 +318,7 @@ namespace zen
             {
                 if (*enabled)
                 {
-                    if (data.size() < (long int)(4 * floatSize)) {
+                    if (data.size() < (long unsigned int)(4 * floatSize)) {
                         spdlog::error("Can't parse quaternion because data entries missing.");
                         return nonstd::make_unexpected(ZenError_Io_MsgCorrupt);
                     }
@@ -342,7 +342,7 @@ namespace zen
             {
                 if (*enabled)
                 {
-                    if (data.size() < (long int)(3 * floatSize)) {
+                    if (data.size() < (long unsigned int)(3 * floatSize)) {
                         spdlog::error("Can't parse euler angles because data entries missing.");
                         return nonstd::make_unexpected(ZenError_Io_MsgCorrupt);
                     }
@@ -360,7 +360,7 @@ namespace zen
             {
                 if (*enabled)
                 {
-                    if (data.size() < (long int)(3 * floatSize)) {
+                    if (data.size() < (long unsigned int)(3 * floatSize)) {
                         spdlog::error("Can't parse linear acceleration because data entries missing.");
                         return nonstd::make_unexpected(ZenError_Io_MsgCorrupt);
                     }
@@ -378,7 +378,7 @@ namespace zen
             {
                 if (*enabled)
                 {
-                    if (data.size() < (long int)floatSize) {
+                    if (data.size() < (long unsigned int)floatSize) {
                         spdlog::error("Can't parse pressure because data entries missing.");
                         return nonstd::make_unexpected(ZenError_Io_MsgCorrupt);
                     }
@@ -395,7 +395,7 @@ namespace zen
             {
                 if (*enabled)
                 {
-                    if (data.size() < (long int)floatSize) {
+                    if (data.size() < (long unsigned int)floatSize) {
                         spdlog::error("Can't parse altitude because data entries missing.");
                         return nonstd::make_unexpected(ZenError_Io_MsgCorrupt);
                     }
@@ -412,7 +412,7 @@ namespace zen
             {
                 if (*enabled)
                 {
-                    if (data.size() < (long int)floatSize) {
+                    if (data.size() < (long unsigned int)floatSize) {
                         spdlog::error("Can't parse temperature because data entries missing.");
                         return nonstd::make_unexpected(ZenError_Io_MsgCorrupt);
                     }
@@ -429,7 +429,7 @@ namespace zen
             {
                 if (*enabled)
                 {
-                    if (data.size() < (long int)floatSize) {
+                    if (data.size() < (long unsigned int)floatSize) {
                         spdlog::error("Can't parse heave motion because data entries missing.");
                         return nonstd::make_unexpected(ZenError_Io_MsgCorrupt);
                     }

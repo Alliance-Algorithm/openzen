@@ -166,7 +166,7 @@ namespace zen
             if (buffer.data() == nullptr)
                 return std::make_pair(ZenError_IsNull, supported.size());
 
-            std::copy(supported.cbegin(), supported.cend(), buffer.begin());
+            std::copy(supported.begin(), supported.end(), buffer.begin());
             return std::make_pair(ZenError_None, supported.size());
         }
 

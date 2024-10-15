@@ -19,7 +19,7 @@
 
 #include "properties/BaseSensorPropertiesV0.h"
 
-#include <gsl/string_span>
+#include <gsl/zstring>
 
 #include <chrono>
 #include <thread>

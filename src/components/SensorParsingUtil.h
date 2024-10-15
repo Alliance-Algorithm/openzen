@@ -26,7 +26,7 @@
 namespace zen {
     namespace sensor_parsing_util {
         inline void safe_subspan(gsl::span<const std::byte>& data, size_t shortenBy) {
-            if (int(shortenBy) >= data.size()) {
+            if (shortenBy >= data.size()) {
                 // subspan with zero cannot be made, so nullify the span here;
                 data = {};
             } else {
@@ -96,7 +96,7 @@ namespace zen {
             if (*enabled) {
                 const size_t floatSize = lowPrecision ? sizeof(uint16_t) : sizeof(float);
 
-                if (data.size() < int(N * floatSize)) {
+                if (data.size() < (long unsigned int)(N * floatSize)) {
                     spdlog::error("Cannot parse Vector{0} because data buffer too small", N);
                     return ZenError_Io_MsgCorrupt;
                 }
@@ -196,7 +196,7 @@ namespace zen {
                     checkSize = lowPrecision ? int(sizeof(int16_t)) : int(sizeof(float));
                 }
 
-                if (data.size() < checkSize) {
+                if (data.size() < (long unsigned int)checkSize) {
                     spdlog::error("Cannot parse scaler value because data buffer too small");
                     return ZenError_Io_MsgCorrupt;
                 }
