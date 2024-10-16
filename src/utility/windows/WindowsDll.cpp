@@ -16,7 +16,7 @@
 #include <string>
 #include <type_traits>
 
-#include <gsl/gsl_util>
+#include <gsl/gsl>
 #include <Windows.h>
 
 #include "FindThisModule.h"
