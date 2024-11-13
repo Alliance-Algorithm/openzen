@@ -87,6 +87,10 @@ extern "C" {
     /** Returns true and fills the next event on the queue when there is a new one, otherwise returns false upon a call to ZenShutdown() */
     ZEN_API bool ZenWaitForNextEvent(ZenClientHandle_t handle, ZenEvent* const outEvent);
 
+    /** Returns true and fills the next event on the queue when there is a new one, otherwise returns false upon a call to ZenShutdown()
+        or after the given timeout in milliseconds  */
+    ZEN_API bool ZenWaitForNextEventForMs(ZenClientHandle_t handle, long long waitTimeMs, ZenEvent* const outEvent);
+
     /** Publish all data events encountered by OpenZen over a network interface */
     ZEN_API ZenError ZenPublishEvents(ZenClientHandle_t clientHandle, ZenSensorHandle_t sensorHandle, const char* endpoint);
 

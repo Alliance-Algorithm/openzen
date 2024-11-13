@@ -740,7 +740,22 @@ namespace zen
          */
         std::optional<ZenEvent> waitForNextEvent() noexcept
         {
-            if (ZenEvent event; ZenWaitForNextEvent(m_handle, &event)) {
+            return waitForNextEventFor(std::chrono::milliseconds::max());
+        }
+
+        /**
+         * Wait for the next event from the queue of this ZenClient. This method will
+         * return immediately if an entry is available. Otherwise the method call will
+         * block until an event is available or the waitTime passes. If the sensor
+         * connection is released on
+         * another thread, the method call will return.
+         * If no event is available on the queue, the std::optional
+         * will be empty.
+         */
+        template<class Rep, class Period>
+        std::optional<ZenEvent> waitForNextEventFor(std::chrono::duration<Rep, Period> waitTime) noexcept
+        {
+            if (ZenEvent event; ZenWaitForNextEventForMs(m_handle, std::chrono::duration_cast<std::chrono::milliseconds>(waitTime).count(), &event)) {
                 return event;
             }
             else {
@@ -758,8 +773,23 @@ namespace zen
          */
         std::pair<bool, ZenEvent> waitForNextEvent() noexcept
         {
+            return waitForNextEventFor(std::chrono::milliseconds::max());
+        }
+
+        /**
+         * Wait for the next event from the queue of this ZenClient. This method will
+         * return immediately if an entry is available. Otherwise the method call will
+         * block until an event is available or the waitTime passes. If the sensor
+         * connection is released on
+         * another thread, the method call will return.
+         * If no event is available on the queue, the std::optional
+         * will be empty.
+         */
+        template<class Rep, class Period>
+        std::pair<bool, ZenEvent> waitForNextEventFor(std::chrono::duration<Rep, Period> waitTime) noexcept
+        {
             ZenEvent event;
-            if (ZenWaitForNextEvent(m_handle, &event)) {
+            if (ZenWaitForNextEventForMs(m_handle, std::chrono::duration_cast<std::chrono::milliseconds>(waitTime).count(), &event)) {
                 return std::make_pair(true, std::move(event));
             }
             else {

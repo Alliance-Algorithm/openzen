@@ -238,6 +238,34 @@ ZEN_API bool ZenWaitForNextEvent(ZenClientHandle_t handle, ZenEvent* const outEv
     }
 }
 
+ZEN_API bool ZenWaitForNextEventForMs(ZenClientHandle_t handle, long long waitTimeMs, ZenEvent* const outEvent)
+{
+    if (outEvent == nullptr)
+        return false;
+
+    if (auto client = getClient(handle))
+    {
+        // Prevent the thread from holding on to the client resource.
+        // The SensorClient destructor guarantees that waiting threads are released before the resource is destroyed
+        auto& clientRef = *client.get();
+        client.reset();
+
+        if (auto event = clientRef.waitForNextEventFor(std::chrono::milliseconds(waitTimeMs)))
+        {
+            *outEvent = std::move(*event);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
 ZEN_API ZenError ZenSensorComponents(ZenClientHandle_t clientHandle, ZenSensorHandle_t sensorHandle, const char* const type, ZenComponentHandle_t** outComponentHandles, size_t* const outLength)
 {
     if (outLength == nullptr)
