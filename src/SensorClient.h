@@ -43,11 +43,17 @@ namespace zen
 
         ZenError release(std::shared_ptr<Sensor> sensor) noexcept;
 
-        /** Returns true and fills the next event on the queue if there is one, otherwise returns false. */
+        /** Returns the next event on the queue if there is one, otherwise returns std::nullopt. */
         std::optional<ZenEvent> pollNextEvent() noexcept;
 
-        /** Returns true and fills the next event on the queue when there is a new one, otherwise returns false upon a call to ZenShutdown() */
+        /** Returns the next event on the queue when there is a new one, otherwise returns std::nullopt upon a call to ZenShutdown() */
         std::optional<ZenEvent> waitForNextEvent() noexcept;
+
+        /** Returns the next event on the queue when there is a new one, otherwise returns std::nullopt on timeout or upon a call to ZenShutdown() */
+        template<class Rep, class Period>
+        std::optional<ZenEvent> waitForNextEventFor(std::chrono::duration<Rep, Period> waitTime) noexcept {
+            return m_eventQueue.waitToPopFor(waitTime);
+        }
 
         /** Open an OpenZen publisher socket and send all events there. This could be improved by
         having a dedicated subscriber only for the ZeroMQ submission.

@@ -31,7 +31,7 @@ namespace zen
         {
             std::unique_lock<std::mutex> lock(m_mutex);
             m_terminate = true;
-            
+
             lock.unlock();
             m_cv.notify_all();
 
@@ -88,11 +88,21 @@ namespace zen
 
         std::optional<T> waitToPop() noexcept
         {
+            // Wait a long time.
+            return waitToPopFor(std::chrono::hours(24 * 365 * 100));
+        }
+
+        template <class Rep, class Period>
+        std::optional<T> waitToPopFor(std::chrono::duration<Rep, Period> waitTime) noexcept
+        {
             std::unique_lock<std::mutex> lock(m_mutex);
 
             ++m_nWaiters;
-            m_cv.wait(lock, [this]() { return !m_container.empty() || m_terminate; });
+            auto waitResult = m_cv.wait_for(lock, waitTime, [this]() { return !m_container.empty() || m_terminate; });
             --m_nWaiters;
+
+            if (!waitResult)
+                return std::nullopt;
 
             if (m_terminate)
             {
