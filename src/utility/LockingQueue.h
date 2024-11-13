@@ -89,7 +89,7 @@ namespace zen
         std::optional<T> waitToPop() noexcept
         {
             // Wait a long time.
-            return waitToPopFor(std::chrono::hours(24 * 365 * 100));
+            return waitToPopFor(std::chrono::milliseconds::max());
         }
 
         template <class Rep, class Period>
