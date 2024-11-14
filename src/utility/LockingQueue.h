@@ -98,11 +98,8 @@ namespace zen
             std::unique_lock<std::mutex> lock(m_mutex);
 
             ++m_nWaiters;
-            auto waitResult = m_cv.wait_for(lock, waitTime, [this]() { return !m_container.empty() || m_terminate; });
+            m_cv.wait_for(lock, waitTime, [this]() { return !m_container.empty() || m_terminate; });
             --m_nWaiters;
-
-            if (!waitResult)
-                return std::nullopt;
 
             if (m_terminate)
             {
@@ -110,6 +107,9 @@ namespace zen
                 m_cv.notify_all();
                 return std::nullopt;
             }
+
+            if (m_container.empty())
+                return std::nullopt;
 
             std::optional<T> result(std::move(m_container.front()));
             m_container.pop_front();
