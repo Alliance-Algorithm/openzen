@@ -50,7 +50,7 @@ void pollLoop(std::reference_wrapper<ZenClient> client)
         const bool success = pair.first;
         auto& event = pair.second;
         if (!success)
-            break;
+            continue;
 
         if (!event.component.handle)
         {
