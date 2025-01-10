@@ -31,7 +31,7 @@ namespace zen
     {
         // add all supported sensor types and their configurations
         // NAV series
-        m_sensorConfigs.push_back( { {"LPMS-NAV3-CAN", "LPMS-NAV3-RS232", "LPMS-NAV3-RS485", "LPMS-NAV3-TTL"},
+        m_sensorConfigs.push_back( { {"LPMS-NAV3-CAN", "LPMS-NAV3-RS232", "LPMS-NAV3-RS485", "LPMS-NAV3-TTL","LPMS-NAV3-CANOPEN"},
         {1,
             { ComponentConfig{1, g_zenSensorType_Imu, SpecialOptions_OnlyFirstGyro}
             }
@@ -39,7 +39,7 @@ namespace zen
         });
 
         // CURS and AL series share the same names
-        m_sensorConfigs.push_back( { {"LPMS-CURS3-TTL", "LPMS-CURS3-RS232", "LPMS-CURS3-CAN"},
+        m_sensorConfigs.push_back( { {"LPMS-CURS3-TTL", "LPMS-CURS3-RS232", "LPMS-CURS3-CAN", "LPMS-SI2-USB", "LPMS-SI2-RS232","LPMS-CURS3-CANOPEN"},
         {1,
             { ComponentConfig{1, g_zenSensorType_Imu, SpecialOptions_OnlySecondGyro}
             }
@@ -55,7 +55,7 @@ namespace zen
         });
 
         // IG1 series
-        m_sensorConfigs.push_back( { {"LPMS-IG1-CAN", "LPMS-IG1-RS232", "LPMS-IG1-RS485"},
+        m_sensorConfigs.push_back( { {"LPMS-IG1-CAN", "LPMS-IG1-RS232", "LPMS-IG1-RS485","LPMS-IG1W","LPMS-IG1-CANOPEN"},
         {1,
             { ComponentConfig{1, g_zenSensorType_Imu}
             }
@@ -63,7 +63,7 @@ namespace zen
         });
 
         // IG1 (with GPS)
-        m_sensorConfigs.push_back( { {"LPMS-IG1P-CAN", "LPMS-IG1P-RS232", "LPMS-IG1P-RS485"},
+        m_sensorConfigs.push_back( { {"LPMS-IG1P-CAN", "LPMS-IG1P-RS232", "LPMS-IG1P-RS485","LPMS-IG1P-CANOPEN"},
         {1,
             {
                 ComponentConfig{1, g_zenSensorType_Imu},
@@ -72,7 +72,7 @@ namespace zen
         }
         });
 
-        m_sensorConfigs.push_back( { {"LPMS-INC1-CAN", "LPMS-INC1-RS232", "LPMS-INC1-RS485", "LPMS-INC1-TTL"},
+        m_sensorConfigs.push_back( { {"LPMS-INC1-CAN", "LPMS-INC1-RS232", "LPMS-INC1-RS485", "LPMS-INC1-TTL","LPMS-TS1-RS485","LPMS-TS1-RS232"},
         {1,
             { ComponentConfig{1, g_zenSensorType_Imu}
             }
@@ -81,6 +81,15 @@ namespace zen
 
         // BE series
         m_sensorConfigs.push_back( { {"LPMS-BE1", "LPMS-BE2"},
+        {1,
+            {
+                ComponentConfig{1, g_zenSensorType_Imu, SpecialOptions_OnlySecondGyro}
+            }
+        }
+        });
+
+        //BE-SM series
+        m_sensorConfigs.push_back( { {"LPMS-BE-SM"},
         {1,
             {
                 ComponentConfig{1, g_zenSensorType_Imu, SpecialOptions_OnlySecondGyro}
