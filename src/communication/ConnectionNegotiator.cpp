@@ -47,7 +47,7 @@ namespace zen
         });
         
         // U series
-        m_sensorConfigs.push_back( { {"LPMS-CU3", "LPMS-URS3", "LPMS-UTTL3"},
+        m_sensorConfigs.push_back( { {"LPMS-CU3", "LPMS-URS3", "LPMS-UTTL3", "LPMS-CU3-CANOPEN"},
         {1,
             { ComponentConfig{1, g_zenSensorType_Imu, SpecialOptions_OnlySecondGyro}
             }
