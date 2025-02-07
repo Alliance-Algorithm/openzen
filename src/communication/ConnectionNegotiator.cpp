@@ -31,7 +31,7 @@ namespace zen
     {
         // add all supported sensor types and their configurations
         // NAV series
-        m_sensorConfigs.push_back( { {"LPMS-NAV3-CAN", "LPMS-NAV3-RS232", "LPMS-NAV3-RS485", "LPMS-NAV3-TTL","LPMS-NAV3-CANOPEN"},
+        m_sensorConfigs.push_back( { {"LPMS-NAV3-CAN", "LPMS-NAV3-RS232", "LPMS-NAV3-RS485", "LPMS-NAV3-TTL", "LPMS-NAV3-RS422", "LPMS-NAV3-CANOPEN"},
         {1,
             { ComponentConfig{1, g_zenSensorType_Imu, SpecialOptions_OnlyFirstGyro}
             }
@@ -39,7 +39,7 @@ namespace zen
         });
 
         // CURS and AL series share the same names
-        m_sensorConfigs.push_back( { {"LPMS-CURS3-TTL", "LPMS-CURS3-RS232", "LPMS-CURS3-CAN", "LPMS-SI2-USB", "LPMS-SI2-RS232","LPMS-CURS3-CANOPEN"},
+        m_sensorConfigs.push_back( { {"LPMS-CURS3-TTL", "LPMS-CURS3-RS232", "LPMS-CURS3-CAN" , "LPMS-CURS3-USB", "LPMS-SI2-USB", "LPMS-SI2-RS232","LPMS-CURS3-CANOPEN"},
         {1,
             { ComponentConfig{1, g_zenSensorType_Imu, SpecialOptions_OnlySecondGyro}
             }
